@@ -106,8 +106,8 @@ export function MainNavigation() {
           <div className="hidden lg:flex items-center gap-1 xl:gap-4 flex-1 justify-center">
             <Button 
               variant="ghost" 
-              onClick={() => navigate('/casillero')}
-              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/casillero') ? 'text-primary' : ''}`}
+              onClick={() => navigate('/personas')}
+              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/personas') ? 'text-primary' : ''}`}
             >
               <Package className="h-4 w-4 transition-transform group-hover:rotate-12" />
               Personas
@@ -115,8 +115,8 @@ export function MainNavigation() {
 
             <Button 
               variant="ghost" 
-              onClick={() => navigate('/calculator')}
-              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/calculator') ? 'text-primary' : ''}`}
+              onClick={() => navigate('/cotizador')}
+              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/cotizador') ? 'text-primary' : ''}`}
             >
               <Calculator className="h-4 w-4 transition-transform group-hover:rotate-12" />
               Cotizador
@@ -124,8 +124,8 @@ export function MainNavigation() {
 
             <Button 
               variant="ghost" 
-              onClick={() => navigate('/b2b')}
-              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/b2b') ? 'text-primary' : ''}`}
+              onClick={() => navigate('/empresas')}
+              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/empresas') ? 'text-primary' : ''}`}
             >
               <Building2 className="h-4 w-4 transition-transform group-hover:rotate-12" />
               Empresas
@@ -196,11 +196,11 @@ export function MainNavigation() {
                   <div className="p-6 space-y-3">
                     <button
                       onClick={() => {
-                        navigate('/casillero');
+                        navigate('/personas');
                         setMobileOpen(false);
                       }}
                       className={`group w-full flex items-center gap-4 text-left px-6 py-4 text-base font-medium rounded-xl hover:bg-primary/10 active:scale-95 transition-all animate-fade-in ${
-                        isActive('/casillero') ? 'text-primary bg-primary/10' : ''
+                        isActive('/personas') ? 'text-primary bg-primary/10' : ''
                       }`}
                       style={{ animationDelay: '0.1s', animationFillMode: 'backwards' }}
                     >
@@ -212,11 +212,11 @@ export function MainNavigation() {
 
                     <button
                       onClick={() => {
-                        navigate('/calculator');
+                        navigate('/cotizador');
                         setMobileOpen(false);
                       }}
                       className={`group w-full flex items-center gap-4 text-left px-6 py-4 text-base font-medium rounded-xl hover:bg-primary/10 active:scale-95 transition-all animate-fade-in ${
-                        isActive('/calculator') ? 'text-primary bg-primary/10' : ''
+                        isActive('/cotizador') ? 'text-primary bg-primary/10' : ''
                       }`}
                       style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}
                     >
@@ -228,11 +228,11 @@ export function MainNavigation() {
 
                     <button
                       onClick={() => {
-                        navigate('/b2b');
+                        navigate('/empresas');
                         setMobileOpen(false);
                       }}
                       className={`group w-full flex items-center gap-4 text-left px-6 py-4 text-base font-medium rounded-xl hover:bg-primary/10 active:scale-95 transition-all animate-fade-in ${
-                        isActive('/b2b') ? 'text-primary bg-primary/10' : ''
+                        isActive('/empresas') ? 'text-primary bg-primary/10' : ''
                       }`}
                       style={{ animationDelay: '0.3s', animationFillMode: 'backwards' }}
                     >
