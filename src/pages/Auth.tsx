@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { X } from 'lucide-react';
 import logoFull from '@/assets/logo-boxifly-full.png';
+import SEO from '@/components/SEO';
 
 interface AuthProps {
   defaultView?: 'login' | 'register';
@@ -69,8 +70,18 @@ const Auth = ({ defaultView = 'login' }: AuthProps) => {
     }
   };
 
+  const pageTitle = isLogin
+    ? "Iniciar Sesión | Accede a tu Casillero Boxifly"
+    : "Registrarse en Boxifly | Crea tu Casillero Gratis en USA";
+  const pageDescription = isLogin
+    ? "Accede a tu casillero internacional de Boxifly para prealertar tus paquetes, ver tarifas y rastrear tus envíos a Perú."
+    : "Regístrate en Boxifly y obtén tu dirección de casillero gratuito en Miami para traer tus compras de USA a Perú de forma rápida y segura.";
+  const pagePath = isLogin ? "/iniciar-sesion" : "/registrarse";
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary via-secondary to-primary p-4 relative">
+    <>
+      <SEO title={pageTitle} description={pageDescription} path={pagePath} />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary via-secondary to-primary p-4 relative">
       <Button
         variant="ghost"
         size="icon"
@@ -170,6 +181,7 @@ const Auth = ({ defaultView = 'login' }: AuthProps) => {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

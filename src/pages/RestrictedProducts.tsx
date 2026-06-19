@@ -3,10 +3,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MainNavigation } from "@/components/MainNavigation";
+import SEO from "@/components/SEO";
 
 const RestrictedProducts = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <SEO
+        title="Productos Prohibidos y Restringidos en Aduanas de Perú | Boxifly"
+        description="Consulta la lista completa de artículos prohibidos y restringidos para importar a Perú desde USA. Evita retenciones en aduanas y conoce qué requiere permisos."
+        path="/restricted-products"
+      />
+      <div className="min-h-screen bg-background">
       <MainNavigation />
       <div className="container mx-auto px-4 py-8 md:py-12">
         {/* Header */}
@@ -486,6 +493,7 @@ const RestrictedProducts = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
