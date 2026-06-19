@@ -1,169 +1,179 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://boxifly.lovable.app/</loc>
+    <loc>https://www.boxifly.pe</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/inicio</loc>
+    <loc>https://www.boxifly.pe/inicio</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/casillero</loc>
+    <loc>https://www.boxifly.pe/personas</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/personal-shopper</loc>
+    <loc>https://www.boxifly.pe/personal-shopper</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/personal-shopper/landing</loc>
+    <loc>https://www.boxifly.pe/personal-shopper/landing</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/viajeros</loc>
+    <loc>https://www.boxifly.pe/viajeros</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/viajeros/cliente</loc>
+    <loc>https://www.boxifly.pe/viajeros/cliente</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/viajeros/viajero</loc>
+    <loc>https://www.boxifly.pe/viajeros/viajero</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/viajeros/legales</loc>
+    <loc>https://www.boxifly.pe/viajeros/legales</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/shop</loc>
+    <loc>https://www.boxifly.pe/shop</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/calculator</loc>
+    <loc>https://www.boxifly.pe/cotizador</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/tariffs</loc>
+    <loc>https://www.boxifly.pe/tariffs</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/restricted-products</loc>
+    <loc>https://www.boxifly.pe/restricted-products</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/como-comprar-en-usa</loc>
+    <loc>https://www.boxifly.pe/como-comprar-en-usa</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/tiendas-en-usa</loc>
+    <loc>https://www.boxifly.pe/tiendas-en-usa</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/tipos-de-entrega</loc>
+    <loc>https://www.boxifly.pe/tipos-de-entrega</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/b2b</loc>
+    <loc>https://www.boxifly.pe/empresas</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/blog</loc>
+    <loc>https://www.boxifly.pe/blog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/nosotros</loc>
+    <loc>https://www.boxifly.pe/nosotros</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/contacto</loc>
+    <loc>https://www.boxifly.pe/contacto</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/afiliados</loc>
+    <loc>https://www.boxifly.pe/afiliados</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/boxifly-puntos</loc>
+    <loc>https://www.boxifly.pe/boxifly-puntos</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/guias-de-compras</loc>
+    <loc>https://www.boxifly.pe/guias-de-compras</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/ganadores-de-concursos</loc>
+    <loc>https://www.boxifly.pe/ganadores-de-concursos</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/atencion-por-whatsapp</loc>
+    <loc>https://www.boxifly.pe/atencion-por-whatsapp</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/centro-de-ayuda</loc>
+    <loc>https://www.boxifly.pe/centro-de-ayuda</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/preguntas-frecuentes</loc>
+    <loc>https://www.boxifly.pe/preguntas-frecuentes</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/terminos-y-condiciones</loc>
+    <loc>https://www.boxifly.pe/terminos-y-condiciones</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/politica-privacidad</loc>
+    <loc>https://www.boxifly.pe/politica-privacidad</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/politica-cambios-devoluciones</loc>
+    <loc>https://www.boxifly.pe/politica-cambios-devoluciones</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/libro-de-reclamaciones</loc>
+    <loc>https://www.boxifly.pe/libro-de-reclamaciones</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://boxifly.lovable.app/legales</loc>
+    <loc>https://www.boxifly.pe/legales</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.boxifly.pe/iniciar-sesion</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.boxifly.pe/registrarse</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://boxifly.lovable.app/sitemap.xml
+Sitemap: https://www.boxifly.pe/sitemap.xml
