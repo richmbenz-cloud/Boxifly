@@ -71,14 +71,7 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
               { title: "Disputas", url: "/cliente/disputes", icon: AlertCircle },
             ]
           },
-          {
-            label: "Compras",
-            items: [
-              { title: "Personal Shopper", url: "/cliente/personal-shopper", icon: ShoppingBag },
-              { title: "Tienda", url: "/shop", icon: ShoppingCart },
-              { title: "Mis Pedidos", url: "/my-orders", icon: FileText },
-            ]
-          },
+
           {
             label: "Recompensas",
             items: [
@@ -144,14 +137,7 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
               { title: "Disputas", url: "/admin/disputes", icon: AlertCircle },
             ]
           },
-          {
-            label: "E-commerce",
-            items: [
-              { title: "Productos", url: "/admin/products", icon: ShoppingBag },
-              { title: "Pedidos", url: "/admin/orders", icon: ShoppingCart },
-              { title: "Personal Shopper", url: "/admin/personal-shopper", icon: ShoppingBag },
-            ]
-          },
+
           {
             label: "Configuración",
             items: [

@@ -36,18 +36,6 @@ const services = [
     description: 'Soluciones corporativas y empresariales',
     icon: Building2,
     path: '/b2b/dashboard'
-  },
-  {
-    title: 'Viajero',
-    description: 'Envía paquetes con viajeros verificados',
-    icon: Plane,
-    path: '/traveler/dashboard'
-  },
-  {
-    title: 'Personal Shopper',
-    description: 'Compras asistidas en USA',
-    icon: ShoppingBag,
-    path: '/cliente/shopping-requests'
   }
 ];
 
