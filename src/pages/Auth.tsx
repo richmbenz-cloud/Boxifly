@@ -66,7 +66,7 @@ const Auth = () => {
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => navigate('/landing')}
+        onClick={() => navigate('/')}
         className="absolute top-4 right-4 h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 text-white hover:text-white transition-all duration-300 hover:rotate-90 hover:scale-110 z-10"
       >
         <X className="h-5 w-5" />
@@ -74,7 +74,7 @@ const Auth = () => {
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="space-y-4 text-center">
           <div className="flex justify-center mb-2">
-            <Link to="/landing" className="cursor-pointer">
+            <Link to="/" className="cursor-pointer">
               <img src={logoFull} alt="Boxifly" className="h-16 hover:opacity-90 transition-opacity" />
             </Link>
           </div>

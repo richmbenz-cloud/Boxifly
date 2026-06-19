@@ -113,7 +113,7 @@ function AppContent() {
   useLoyaltyNotifications();
   
   // Hide cart on landing page
-  const isLandingPage = location.pathname === '/landing' || location.pathname === '/' || location.pathname === '/inicio';
+  const isLandingPage = location.pathname === '/' || location.pathname === '/inicio';
 
   return (
     <>
@@ -122,7 +122,7 @@ function AppContent() {
       <Routes>
         {/* Main routes */}
         <Route path="/" element={<Inicio />} />
-        <Route path="/landing" element={<Inicio />} />
+        
         <Route path="/inicio" element={<Inicio />} />
         <Route path="/cotizador" element={<ShippingCalculator />} />
         <Route path="/tariffs" element={<Tariffs />} />

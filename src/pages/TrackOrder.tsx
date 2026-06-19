@@ -94,7 +94,7 @@ export default function TrackOrder() {
             </div>
           )}
           
-          <Button variant="ghost" onClick={() => navigate("/landing")} className="mb-4">
+          <Button variant="ghost" onClick={() => navigate('/')} className="mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver al inicio
           </Button>

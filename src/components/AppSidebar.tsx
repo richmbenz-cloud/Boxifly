@@ -218,7 +218,7 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
         {/* Logo */}
         <div className="p-4 border-b flex items-center justify-center bg-gradient-to-b from-primary/5 to-transparent">
           <button 
-            onClick={() => navigate('/landing')}
+            onClick={() => navigate('/')}
             className="transition-all duration-300 hover:scale-110 cursor-pointer rounded-lg p-2 hover:bg-primary/10"
             title="Ir a la página principal"
           >

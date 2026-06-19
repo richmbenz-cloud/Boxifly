@@ -91,7 +91,7 @@ export function MainNavigation() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo - Tamaños optimizados */}
           <button 
-            onClick={() => navigate('/landing')} 
+            onClick={() => navigate('/')} 
             className="flex items-center focus:outline-none hover:opacity-80 transition-opacity"
           >
             <img 
