@@ -115,24 +115,6 @@ export function MainNavigation() {
 
             <Button 
               variant="ghost" 
-              onClick={() => navigate('/personal-shopper')}
-              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/personal-shopper') ? 'text-primary' : ''}`}
-            >
-              <ShoppingBag className="h-4 w-4 transition-transform group-hover:rotate-12" />
-              Personal Shopper
-            </Button>
-
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/viajeros')}
-              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/viajeros') ? 'text-primary' : ''}`}
-            >
-              <Plane className="h-4 w-4 transition-transform group-hover:rotate-12" />
-              Viajero
-            </Button>
-
-            <Button 
-              variant="ghost" 
               onClick={() => navigate('/b2b')}
               className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/b2b') ? 'text-primary' : ''}`}
             >
@@ -140,14 +122,6 @@ export function MainNavigation() {
               B2B
             </Button>
 
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/shop')}
-              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/shop') ? 'text-primary' : ''}`}
-            >
-              <Store className="h-4 w-4 transition-transform group-hover:rotate-12" />
-              Tienda
-            </Button>
 
             <Button 
               variant="ghost" 
@@ -237,38 +211,7 @@ export function MainNavigation() {
                       <span>Casillero</span>
                     </button>
 
-                    <button
-                      onClick={() => {
-                        navigate('/personal-shopper');
-                        setMobileOpen(false);
-                      }}
-                      className={`group w-full flex items-center gap-4 text-left px-6 py-4 text-base font-medium rounded-xl hover:bg-primary/10 active:scale-95 transition-all animate-fade-in ${
-                        isActive('/personal-shopper') ? 'text-primary bg-primary/10' : ''
-                      }`}
-                      style={{ animationDelay: '0.15s', animationFillMode: 'backwards' }}
-                    >
-                      <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                        <ShoppingBag className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
-                      </div>
-                      <span>Personal Shopper</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        navigate('/viajeros');
-                        setMobileOpen(false);
-                      }}
-                      className={`group w-full flex items-center gap-4 text-left px-6 py-4 text-base font-medium rounded-xl hover:bg-primary/10 active:scale-95 transition-all animate-fade-in ${
-                        isActive('/viajeros') ? 'text-primary bg-primary/10' : ''
-                      }`}
-                      style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}
-                    >
-                      <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                        <Plane className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
-                      </div>
-                      <span>Viajero</span>
-                    </button>
-
+                    
                     <button
                       onClick={() => {
                         navigate('/b2b');
@@ -285,21 +228,7 @@ export function MainNavigation() {
                       <span>B2B</span>
                     </button>
 
-                    <button
-                      onClick={() => {
-                        navigate('/shop');
-                        setMobileOpen(false);
-                      }}
-                      className={`group w-full flex items-center gap-4 text-left px-6 py-4 text-base font-medium rounded-xl hover:bg-primary/10 active:scale-95 transition-all animate-fade-in ${
-                        isActive('/shop') ? 'text-primary bg-primary/10' : ''
-                      }`}
-                      style={{ animationDelay: '0.3s', animationFillMode: 'backwards' }}
-                    >
-                      <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                        <Store className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
-                      </div>
-                      <span>Tienda</span>
-                    </button>
+  
 
                     <button
                       onClick={() => {
