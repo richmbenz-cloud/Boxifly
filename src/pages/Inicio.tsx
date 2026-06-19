@@ -528,7 +528,7 @@ const Inicio = () => {
                 </div>
               </Card>
 
-              <div className="text-center mt-8">
+              {/* <div className="text-center mt-8">
                 <p className="text-muted-foreground mb-4">
                   ¿Buscas otros servicios?
                 </p>
@@ -543,7 +543,7 @@ const Inicio = () => {
                     Soluciones B2B
                   </Button>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
