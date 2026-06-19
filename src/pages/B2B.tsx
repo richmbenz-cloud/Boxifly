@@ -86,7 +86,7 @@ const B2B = () => {
   return <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
-        <SEO title="Importaciones para empresas (B2B) | Boxifly" description="Soluciones de importación a Perú para empresas: tarifas preferenciales, consolidaciones y soporte dedicado. Cotiza con Boxifly." path="/b2b" />
+        <SEO title="Importaciones para empresas (B2B) | Boxifly" description="Soluciones de importación a Perú para empresas: tarifas preferenciales, consolidaciones y soporte dedicado. Cotiza con Boxifly." path="/empresas" />
         <MainNavigation />
 
         {/* Hero Section */}

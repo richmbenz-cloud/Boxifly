@@ -335,7 +335,7 @@ const TiendasEnUSA = () => {
               <a href="/auth">Obtener mi casillero</a>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <a href="/calculator">Calcular envío</a>
+              <a href="/cotizador">Calcular envío</a>
             </Button>
           </div>
         </div>

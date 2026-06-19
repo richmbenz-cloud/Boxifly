@@ -320,7 +320,7 @@ const ViajeroCliente = () => {
                   Solicitar un Viajero Ahora
                   <ChevronRight className="ml-2 w-5 h-5" />
                 </Button>
-                <Button size="lg" variant="ghost" className="border-2 border-white/50 text-white hover:bg-white/10 text-lg px-10 py-6 h-auto backdrop-blur-sm" onClick={() => navigate('/calculator')}>
+                <Button size="lg" variant="ghost" className="border-2 border-white/50 text-white hover:bg-white/10 text-lg px-10 py-6 h-auto backdrop-blur-sm" onClick={() => navigate('/cotizador')}>
                   Cotizar mi Envío
                 </Button>
               </div>

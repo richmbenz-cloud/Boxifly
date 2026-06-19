@@ -90,7 +90,7 @@ const Casillero = () => {
     <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
-        <SEO title="Casillero gratis en Miami | Boxifly" description="Obtén tu casillero gratuito en Doral, Miami. Recibe tus compras de EE.UU. y reenvíalas a Perú con tarifas claras y entrega rápida." path="/casillero" />
+        <SEO title="Casillero gratis en Miami | Boxifly" description="Obtén tu casillero gratuito en Doral, Miami. Recibe tus compras de EE.UU. y reenvíalas a Perú con tarifas claras y entrega rápida." path="/personas" />
         <MainNavigation />
 
         {/* Hero Section */}
@@ -125,7 +125,7 @@ const Casillero = () => {
                   size="lg" 
                   variant="ghost"
                   className="border-2 border-white/50 text-white hover:bg-white/10 hover:border-white text-lg px-10 py-6 h-auto backdrop-blur-sm"
-                  onClick={() => navigate('/calculator')}
+                  onClick={() => navigate('/cotizador')}
                 >
                   Calcular Costo de Envío
                 </Button>
@@ -229,7 +229,7 @@ const Casillero = () => {
                   size="lg" 
                   variant="ghost"
                   className="border-2 border-white/50 text-white hover:bg-white/10 hover:border-white text-lg px-10 py-6 h-auto"
-                  onClick={() => navigate('/calculator')}
+                  onClick={() => navigate('/cotizador')}
                 >
                   Ver Tarifas
                 </Button>

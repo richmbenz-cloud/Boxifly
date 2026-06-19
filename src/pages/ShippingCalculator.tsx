@@ -74,7 +74,7 @@ export default function ShippingCalculator() {
     }, 1500);
   };
   return <>
-      <SEO title="Calculadora de envío EE.UU.–Perú | Boxifly" description="Estima en segundos el costo de envío de tu paquete desde EE.UU. a Perú. Incluye flete, impuestos y manejo." path="/calculator" />
+      <SEO title="Calculadora de envío EE.UU.–Perú | Boxifly" description="Estima en segundos el costo de envío de tu paquete desde EE.UU. a Perú. Incluye flete, impuestos y manejo." path="/cotizador" />
       <MainNavigation />
       <Dialog open={showHighValueModal} onOpenChange={setShowHighValueModal}>
         <DialogContent className="sm:max-w-md">

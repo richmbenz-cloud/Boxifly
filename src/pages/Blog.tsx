@@ -308,7 +308,7 @@ const Blog = () => {
         <div class="bg-primary/10 border border-primary/20 rounded-lg p-6 mt-8">
           <h3 class="text-2xl font-bold mb-3">🧮 Calcula tus costos ahora</h3>
           <p class="mb-4">Usa nuestra calculadora de envíos para conocer el costo exacto de tu importación antes de comprar.</p>
-          <a href="/calculator" class="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+          <a href="/cotizador" class="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
             Ir a la Calculadora →
           </a>
         </div>

@@ -128,7 +128,7 @@ const Inicio = () => {
 
     iconColor: 'text-blue-600',
 
-    href: '/casillero',
+    href: '/personas',
 
     benefits: ['Consolidación gratis', 'Tracking 24/7', 'Entrega 7-10 días']
 
@@ -146,7 +146,7 @@ const Inicio = () => {
 
     iconColor: 'text-orange-600',
 
-    href: '/b2b',
+    href: '/empresas',
 
     benefits: ['Tarifas corporativas', 'Dashboard exclusivo', 'Soporte dedicado']
 
@@ -682,7 +682,7 @@ const Inicio = () => {
 
                 </Button>
 
-                <Button size="lg" variant="ghost" className="border-2 border-white/50 text-white hover:bg-white/10 hover:border-white text-lg px-10 py-6 h-auto backdrop-blur-sm" onClick={() => navigate('/calculator')}>
+                <Button size="lg" variant="ghost" className="border-2 border-white/50 text-white hover:bg-white/10 hover:border-white text-lg px-10 py-6 h-auto backdrop-blur-sm" onClick={() => navigate('/cotizador')}>
 
                   <Calculator className="mr-2 w-5 h-5" />
 
@@ -1034,7 +1034,7 @@ const Inicio = () => {
 
                         </div>
 
-                        <Button variant="outline" className="w-full" onClick={() => navigate('/calculator')}>
+                        <Button variant="outline" className="w-full" onClick={() => navigate('/cotizador')}>
 
                           Ver desglose completo
 
@@ -1080,7 +1080,7 @@ const Inicio = () => {
 
                   </Button>
 
-                  <Button variant="outline" onClick={() => navigate('/b2b')}>
+                  <Button variant="outline" onClick={() => navigate('/empresas')}>
 
                     Soluciones B2B
 
@@ -1612,13 +1612,13 @@ const Inicio = () => {
 
                 <ul className="space-y-2 text-sm">
 
-                  <li><a href="/casillero" className="text-white/70 hover:text-white transition-colors">Casillero</a></li>
+                  <li><a href="/personas" className="text-white/70 hover:text-white transition-colors">Casillero</a></li>
 
                   <li><a href="/personal-shopper" className="text-white/70 hover:text-white transition-colors">Personal Shopper</a></li>
 
                   <li><a href="/viajeros" className="text-white/70 hover:text-white transition-colors">Viajero</a></li>
 
-                  <li><a href="/b2b" className="text-white/70 hover:text-white transition-colors">Aliado Comercial B2B</a></li>
+                  <li><a href="/empresas" className="text-white/70 hover:text-white transition-colors">Aliado Comercial B2B</a></li>
 
                   <li><a href="/shop" className="text-white/70 hover:text-white transition-colors">Tienda</a></li>
 
@@ -1636,7 +1636,7 @@ const Inicio = () => {
 
                 <ul className="space-y-2 text-sm">
 
-                  <li><a href="/calculator" className="text-white/70 hover:text-white transition-colors">Cotizador</a></li>
+                  <li><a href="/cotizador" className="text-white/70 hover:text-white transition-colors">Cotizador</a></li>
 
                   <li><a href="/tariffs" className="text-white/70 hover:text-white transition-colors">Tarifas</a></li>
 

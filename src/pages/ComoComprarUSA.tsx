@@ -603,7 +603,7 @@ Phone: (786) 322-3333`;
                 </a>
               </Button>
               <Button size="lg" variant="outline" asChild className="gap-2">
-                <a href="/calculator">
+                <a href="/cotizador">
                   Calcular envío
                 </a>
               </Button>

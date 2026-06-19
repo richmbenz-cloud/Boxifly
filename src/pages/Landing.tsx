@@ -417,10 +417,10 @@ const Landing = () => {
             <div>
               <h3 className="font-semibold mb-4">Servicios</h3>
               <ul className="space-y-2 text-sm text-white/70">
-                <li><a href="/casillero" className="hover:text-white transition-colors">Casillero</a></li>
+                <li><a href="/personas" className="hover:text-white transition-colors">Casillero</a></li>
                 <li><a href="/personal-shopper" className="hover:text-white transition-colors">Personal Shopper</a></li>
                 <li><a href="/viajero" className="hover:text-white transition-colors">Viajero</a></li>
-                <li><a href="/b2b" className="hover:text-white transition-colors">Aliado comercial B2B</a></li>
+                <li><a href="/empresas" className="hover:text-white transition-colors">Aliado comercial B2B</a></li>
               </ul>
             </div>
 
