@@ -5,12 +5,15 @@ import { useNavigate } from 'react-router-dom';
 
 export type UserRole = 'customer' | 'warehouse' | 'admin' | 'b2b' | 'traveler' | 'shopper';
 
+type OAuthProvider = 'google' | 'apple';
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   userRole: UserRole | null;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, fullName: string, role: UserRole) => Promise<{ error: any }>;
+  signInWithProvider: (provider: OAuthProvider) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   loading: boolean;
 }
@@ -99,6 +102,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
+  const signInWithProvider = async (provider: OAuthProvider) => {
+    // After authenticating with Google/Apple, the user is sent back here.
+    // onAuthStateChange (above) picks up the session automatically.
+    const redirectUrl = `${window.location.origin}/dashboard`;
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: redirectUrl,
+      },
+    });
+
+    return { error };
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -108,7 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, userRole, signIn, signUp, signOut, loading }}>
+    <AuthContext.Provider value={{ user, session, userRole, signIn, signUp, signInWithProvider, signOut, loading }}>
       {children}
     </AuthContext.Provider>
   );
