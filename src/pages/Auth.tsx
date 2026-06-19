@@ -15,7 +15,11 @@ interface AuthProps {
 }
 
 const Auth = ({ defaultView = 'login' }: AuthProps) => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(defaultView === 'login');
+
+  useEffect(() => {
+    setIsLogin(defaultView === 'login');
+  }, [defaultView]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
