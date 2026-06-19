@@ -1,0 +1,38 @@
+# Boxifly
+
+> Compra en EE.UU. y recibe en Perú. Casillero gratis en Miami, Personal Shopper y red de viajeros para envíos rápidos, seguros y sin complicaciones.
+
+Boxifly es una empresa peruana de envíos internacionales que opera un casillero en Doral/Miami, un servicio de Personal Shopper (asistido y en vivo), una red de viajeros para encomiendas, y una tienda online con productos importados de EE.UU. Entrega exclusivamente dentro de Perú.
+
+## Pages
+
+- [Inicio](/inicio): Página principal con todos los servicios de Boxifly.
+- [Casillero en Miami](/casillero): Casillero gratuito en EE.UU. para recibir compras y reenviar a Perú.
+- [Personal Shopper](/personal-shopper): Compramos por ti en tiendas de EE.UU. Modos asistido y en vivo.
+- [Viajeros](/viajeros): Red de viajeros que traen tus encomiendas desde EE.UU. a Perú.
+- [Tienda](/shop): Productos importados disponibles para compra directa con entrega en Perú.
+- [Calculadora de envío](/calculator): Estima el costo de envío de tu paquete desde EE.UU. a Perú.
+- [Aranceles](/tariffs): Información de impuestos y aranceles para importaciones.
+- [Productos restringidos](/restricted-products): Lista de productos que no pueden importarse.
+- [Cómo comprar en EE.UU.](/como-comprar-en-usa): Guía paso a paso para usar el casillero.
+- [Tiendas en EE.UU.](/tiendas-en-usa): Catálogo de tiendas recomendadas para comprar.
+- [Tipos de entrega](/tipos-de-entrega): Modalidades y tiempos de entrega disponibles.
+- [B2B](/b2b): Servicio de importaciones para empresas.
+- [Boxifly Puntos](/boxifly-puntos): Programa de fidelidad y beneficios VIP.
+- [Afiliados](/afiliados): Programa de referidos y recompensas.
+- [Preguntas frecuentes](/preguntas-frecuentes): Respuestas a las preguntas más comunes.
+- [Centro de ayuda](/centro-de-ayuda): Soporte y guías para clientes.
+- [Atención por WhatsApp](/atencion-por-whatsapp): Contacto directo por WhatsApp.
+- [Contacto](/contacto): Información de contacto y formulario.
+- [Nosotros](/nosotros): Sobre Boxifly y su misión.
+- [Blog](/blog): Artículos, guías y novedades de Boxifly.
+
+## Optional
+
+- [Guías de compra](/guias-de-compras): Recursos descargables sobre cómo comprar online.
+- [Ganadores de concursos](/ganadores-de-concursos): Resultados de sorteos y promociones.
+- [Términos y condiciones](/terminos-y-condiciones)
+- [Política de privacidad](/politica-privacidad)
+- [Política de cambios y devoluciones](/politica-cambios-devoluciones)
+- [Libro de reclamaciones](/libro-de-reclamaciones)
+- [Legales](/legales)

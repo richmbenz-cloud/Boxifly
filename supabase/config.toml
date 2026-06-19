@@ -1,0 +1,13 @@
+project_id = "ivkfyzdsfpcjymlzerxf"
+
+[functions.izipay-webhook]
+verify_jwt = false
+
+[functions.loyalty-points-expiration-check]
+verify_jwt = false
+
+[functions.vip-upgrade-notification]
+verify_jwt = false
+
+[functions.generate-profile-images]
+verify_jwt = true

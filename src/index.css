@@ -1,0 +1,297 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Boxifly Brand Colors - Official Palette */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 29%; /* #4A4A4A */
+    
+    /* Boxifly Blue (#1A73E8) - Primary brand color */
+    --primary: 215 80% 51%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Boxifly Orange (#F5A623) - Secondary highlights */
+    --secondary: 37 90% 55%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Navy Deep (#0D1B2A) - Headers, menus */
+    --navy: 212 51% 11%;
+    --navy-foreground: 0 0% 100%;
+    
+    /* Gray Neutral - Backgrounds, cards */
+    --muted: 0 0% 94%; /* #F0F0F0 */
+    --muted-foreground: 0 0% 69%; /* #B0B0B0 */
+    
+    /* Text Gray (#6B7280) */
+    --text-secondary: 220 9% 46%;
+    
+    /* Package Status Colors */
+    --status-info: 199 98% 41%;        /* #0288D1 - Received/Info */
+    --status-processing: 187 100% 38%; /* #00ACC1 - Ready/Processing */
+    --status-transit: 207 76% 47%;     /* #1976D2 - In Transit */
+    --status-delivered: 122 39% 38%;   /* #2E7D32 - Delivered */
+    --status-error: 4 90% 50%;         /* #D32F2F - Error/Dispute */
+    --status-warning: 36 100% 50%;     /* #FFA000 - Warning */
+    
+    /* Action Colors */
+    --action-primary: 215 80% 51%;     /* Primary blue for CTAs */
+    --success: 136 52% 43%;            /* #34A853 - Success/Paid */
+    
+    --card: 0 0% 100%;
+    --card-foreground: 210 17% 7%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 17% 7%;
+    
+    --accent: 37 90% 55%; /* Orange for highlights */
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 5 81% 56%; /* #EA4335 */
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 215 89% 51%;
+    
+    --radius: 0.75rem;
+    
+    --sidebar-background: 212 51% 11%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 215 89% 51%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 212 45% 18%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 212 45% 18%;
+    --sidebar-ring: 197 92% 64%;
+  }
+
+  .dark {
+    --background: 212 51% 11%;
+    --foreground: 0 0% 100%;
+    
+    --primary: 215 80% 51%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 37 90% 55%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --navy: 212 45% 15%;
+    --navy-foreground: 0 0% 100%;
+    
+    --muted: 212 45% 18%;
+    --muted-foreground: 220 9% 65%;
+    
+    --card: 212 45% 15%;
+    --card-foreground: 0 0% 100%;
+    
+    --popover: 212 45% 15%;
+    --popover-foreground: 0 0% 100%;
+    
+    --accent: 37 90% 55%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 5 81% 56%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 212 45% 25%;
+    --input: 212 45% 25%;
+    --ring: 197 92% 64%;
+    
+    --sidebar-background: 212 51% 11%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 215 89% 51%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 212 45% 18%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 212 45% 18%;
+    --sidebar-ring: 197 92% 64%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Smooth scroll */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  /* Loading skeleton */
+  .skeleton {
+    @apply animate-pulse bg-muted rounded;
+  }
+
+  /* Focus ring for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-background/80 backdrop-blur-sm;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+
+  /* Custom scrollbar for checkout summary */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.3);
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.5);
+  }
+
+  /* Scroll animations */
+  .scroll-fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .scroll-fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+
+  .scroll-fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .scroll-slide-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+
+  .scroll-slide-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .scroll-slide-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+
+  .scroll-slide-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .scroll-scale-in {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-scale-in.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Staggered animations for children */
+  .stagger-children > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+
+  .stagger-children.visible > *:nth-child(1) { transition-delay: 0.1s; }
+  .stagger-children.visible > *:nth-child(2) { transition-delay: 0.2s; }
+  .stagger-children.visible > *:nth-child(3) { transition-delay: 0.3s; }
+  .stagger-children.visible > *:nth-child(4) { transition-delay: 0.4s; }
+  .stagger-children.visible > *:nth-child(5) { transition-delay: 0.5s; }
+  .stagger-children.visible > *:nth-child(6) { transition-delay: 0.6s; }
+
+  .stagger-children.visible > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Enhanced hover effects */
+  .hover-lift {
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -12px hsl(var(--primary) / 0.25);
+  }
+
+  .hover-glow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hover-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.1), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .hover-glow:hover::before {
+    left: 100%;
+  }
+
+  .hover-scale-sm {
+    transition: transform 0.2s ease-out;
+  }
+
+  .hover-scale-sm:hover {
+    transform: scale(1.05);
+  }
+
+  .hover-scale-md {
+    transition: transform 0.3s ease-out;
+  }
+
+  .hover-scale-md:hover {
+    transform: scale(1.1);
+  }
+}
