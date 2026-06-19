@@ -47,7 +47,7 @@ const PreguntasFrecuentes = () => {
         }
       ]
     },
-    {
+    /* {
       title: 'Personal Shopper',
       icon: ShoppingBag,
       color: 'text-purple-600',
@@ -69,8 +69,8 @@ const PreguntasFrecuentes = () => {
           a: 'Sí, tenemos chat en tiempo real dentro de la plataforma para coordinar detalles, cambios o dudas sobre tu compra.'
         }
       ]
-    },
-    {
+    }, */
+    /* {
       title: 'Viajero',
       icon: Plane,
       color: 'text-sky-600',
@@ -92,7 +92,7 @@ const PreguntasFrecuentes = () => {
           a: 'Todos los paquetes están declarados correctamente. Nuestra declaración jurada te protege legalmente. Además, brindamos soporte 24/7 ante cualquier consulta aduanal.'
         }
       ]
-    },
+    }, */
     {
       title: 'B2B / Aliado Comercial',
       icon: Building2,
