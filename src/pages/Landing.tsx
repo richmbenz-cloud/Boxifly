@@ -418,7 +418,7 @@ const Landing = () => {
               <h3 className="font-semibold mb-4">Servicios</h3>
               <ul className="space-y-2 text-sm text-white/70">
                 <li><Link to="/personas" className="hover:text-white transition-colors">Personas</Link></li>
-
+                <li><Link to="/cotizador" className="hover:text-white transition-colors">Cotizador</Link></li>
                 <li><Link to="/empresas" className="hover:text-white transition-colors">Empresas</Link></li>
               </ul>
             </div>

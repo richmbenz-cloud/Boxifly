@@ -1527,6 +1527,8 @@ const Inicio = () => {
 
                   <li><Link to="/personas" className="text-white/70 hover:text-white transition-colors">Personas</Link></li>
 
+                  <li><Link to="/cotizador" className="text-white/70 hover:text-white transition-colors">Cotizador</Link></li>
+
                   <li><Link to="/empresas" className="text-white/70 hover:text-white transition-colors">Empresas</Link></li>
 
                 </ul>
@@ -1540,8 +1542,6 @@ const Inicio = () => {
                 <h3 className="font-semibold mb-4">Recursos</h3>
 
                 <ul className="space-y-2 text-sm">
-
-                  <li><Link to="/cotizador" className="text-white/70 hover:text-white transition-colors">Cotizador</Link></li>
 
                   <li><Link to="/tariffs" className="text-white/70 hover:text-white transition-colors">Tarifas</Link></li>
 
