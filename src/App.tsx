@@ -124,12 +124,12 @@ function AppContent() {
         <Route path="/" element={<Inicio />} />
         <Route path="/landing" element={<Inicio />} />
         <Route path="/inicio" element={<Inicio />} />
-        <Route path="/calculator" element={<ShippingCalculator />} />
+        <Route path="/cotizador" element={<ShippingCalculator />} />
         <Route path="/tariffs" element={<Tariffs />} />
         <Route path="/restricted-products" element={<RestrictedProducts />} />
         
         {/* New Pages */}
-        <Route path="/casillero" element={<Casillero />} />
+        <Route path="/personas" element={<Casillero />} />
         <Route path="/personal-shopper" element={<PersonalShopperIndex />} />
         <Route path="/personal-shopper/landing" element={<PersonalShopperLanding />} />
         <Route path="/personal-shopper/solicitud" element={
@@ -142,7 +142,7 @@ function AppContent() {
         <Route path="/viajeros/cliente" element={<ViajerosCliente />} />
         <Route path="/viajeros/viajero" element={<ViajerosViajero />} />
         <Route path="/viajeros/legales" element={<ViajerosLegales />} />
-        <Route path="/b2b" element={<B2B />} />
+        <Route path="/empresas" element={<B2B />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/terminos-y-condiciones" element={<TerminosCondiciones />} />
