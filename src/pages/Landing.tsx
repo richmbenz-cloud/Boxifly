@@ -418,8 +418,7 @@ const Landing = () => {
               <h3 className="font-semibold mb-4">Servicios</h3>
               <ul className="space-y-2 text-sm text-white/70">
                 <li><Link to="/personas" className="hover:text-white transition-colors">Personas</Link></li>
-                <li><Link to="/personal-shopper" className="hover:text-white transition-colors">Personal Shopper</Link></li>
-                <li><Link to="/viajero" className="hover:text-white transition-colors">Viajero</Link></li>
+
                 <li><Link to="/empresas" className="hover:text-white transition-colors">Empresas</Link></li>
               </ul>
             </div>
@@ -428,7 +427,7 @@ const Landing = () => {
               <h3 className="font-semibold mb-4">Empresa</h3>
               <ul className="space-y-2 text-sm text-white/70">
                 <li><Link to="/nosotros" className="hover:text-white transition-colors">Nosotros</Link></li>
-                <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+                
                 <li><Link to="/afiliados" className="hover:text-white transition-colors">Afiliados</Link></li>
                 <li><Link to="/terminos-y-condiciones" className="hover:text-white transition-colors">Términos y condiciones</Link></li>
               </ul>

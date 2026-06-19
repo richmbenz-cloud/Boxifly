@@ -40,8 +40,6 @@ const Inicio = () => {
 
   const [calculation, setCalculation] = useState<TariffCalculation | null>(null);
 
-
-
   // Scroll animations
 
   const heroAnimation = useScrollAnimation({
@@ -110,8 +108,6 @@ const Inicio = () => {
 
   };
 
-
-
   // Services data
 
   const services = [{
@@ -151,8 +147,6 @@ const Inicio = () => {
     benefits: ['Tarifas corporativas', 'Dashboard exclusivo', 'Soporte dedicado']
 
   }];
-
-
 
   // How it works steps
 
@@ -197,8 +191,6 @@ const Inicio = () => {
     description: 'Entrega segura directo a tu puerta en 7-10 días'
 
   }];
-
-
 
   // Benefits
 
@@ -276,8 +268,6 @@ const Inicio = () => {
 
   }];
 
-
-
   // Featured products (mock data - replace with real data later)
 
   const featuredProducts = [{
@@ -321,8 +311,6 @@ const Inicio = () => {
     image: '/images/products/iphone-17-pro-max.jpg'
 
   }];
-
-
 
   // Testimonials by service
 
@@ -520,8 +508,6 @@ const Inicio = () => {
 
   }];
 
-
-
   // Blog posts (mock data)
 
   const blogPosts = [{
@@ -622,8 +608,6 @@ const Inicio = () => {
 
         <MainNavigation />
 
-
-
         {/* Hero Section */}
 
         <section ref={heroAnimation.ref} className={`relative overflow-hidden bg-gradient-to-br from-primary via-primary to-navy py-20 md:py-32 lg:py-40 transition-all duration-700 ${heroAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
@@ -635,8 +619,6 @@ const Inicio = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(245,166,35,0.15),transparent_50%)]" />
 
           </div>
-
-
 
           <div className="container mx-auto px-4 relative z-10">
 
@@ -652,8 +634,6 @@ const Inicio = () => {
 
               </div>
 
-
-
               <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 leading-tight">
 
                 Consigue tu dirección en
@@ -662,15 +642,11 @@ const Inicio = () => {
 
               </h1>
 
-
-
               <p className="text-xl md:text-2xl mb-10 text-white/90 max-w-3xl mx-auto leading-relaxed">
 
                 El casillero postal para comprar en tus tiendas favoritas de EE.UU. y recibir en Perú: rápido, seguro y sin complicaciones.
 
               </p>
-
-
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
 
@@ -691,8 +667,6 @@ const Inicio = () => {
                 </Button>
 
               </div>
-
-
 
               {/* Stats */}
 
@@ -730,8 +704,6 @@ const Inicio = () => {
 
         </section>
 
-
-
         {/* Nuestros Servicios */}
 
         <section ref={servicesAnimation.ref} className={`py-20 md:py-24 bg-white transition-all duration-700 delay-100 ${servicesAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
@@ -755,8 +727,6 @@ const Inicio = () => {
               </p>
 
             </div>
-
-
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
 
@@ -812,8 +782,6 @@ const Inicio = () => {
 
         </section>
 
-
-
         {/* Testimonios Carousel */}
 
         <section ref={testimonialsAnimation.ref} className={`py-20 md:py-24 bg-gradient-to-br from-muted/50 to-muted/30 transition-all duration-700 delay-150 ${testimonialsAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
@@ -837,8 +805,6 @@ const Inicio = () => {
               </p>
 
             </div>
-
-
 
             <div className="max-w-6xl mx-auto px-12">
 
@@ -904,8 +870,6 @@ const Inicio = () => {
 
             </div>
 
-
-
             <div className="text-center mt-12">
 
               <div className="inline-flex items-center gap-2 text-muted-foreground">
@@ -925,8 +889,6 @@ const Inicio = () => {
           </div>
 
         </section>
-
-
 
         {/* Mini Calculadora - Solo Casillero */}
 
@@ -953,8 +915,6 @@ const Inicio = () => {
                 </p>
 
               </div>
-
-
 
               <Card className="shadow-2xl border-2">
 
@@ -1003,8 +963,6 @@ const Inicio = () => {
                     </div>
 
                   </div>
-
-
 
                   <div className="p-8 md:p-10 bg-white flex flex-col justify-center">
 
@@ -1056,8 +1014,6 @@ const Inicio = () => {
 
               </Card>
 
-
-
               {/* <div className="text-center mt-8">
 
                 <p className="text-muted-foreground mb-4">
@@ -1096,13 +1052,7 @@ const Inicio = () => {
 
         </section>
 
-
-
         {/* Cómo funciona */}
-
-        
-
-
 
         {/* Beneficios */}
 
@@ -1127,8 +1077,6 @@ const Inicio = () => {
               </p>
 
             </div>
-
-
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
 
@@ -1160,8 +1108,6 @@ const Inicio = () => {
 
         </section>
 
-
-
         {/* Tienda Destacada - Ocultado Temporalmente para Fase 1 */}
 
         {/* <section ref={storeAnimation.ref} className={`py-20 md:py-24 bg-white transition-all duration-700 delay-500 ${storeAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
@@ -1184,8 +1130,6 @@ const Inicio = () => {
               </p>
 
             </div>
-
-
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto mb-10">
 
@@ -1223,8 +1167,6 @@ const Inicio = () => {
 
             </div>
 
-
-
             <div className="text-center">
 
               <Button size="lg" onClick={() => navigate('/shop')} className="shadow-lg hover:shadow-xl transition-all">
@@ -1240,7 +1182,6 @@ const Inicio = () => {
           </div>
 
         </section> */}
-
 
         {/* Blog / Tips */}
 
@@ -1265,8 +1206,6 @@ const Inicio = () => {
               </p>
 
             </div>
-
-
 
             <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-10">
 
@@ -1304,8 +1243,6 @@ const Inicio = () => {
 
             </div>
 
-
-
             <div className="text-center space-y-4">
 
               <Button variant="outline" size="lg" onClick={() => navigate('/blog')}>
@@ -1342,8 +1279,6 @@ const Inicio = () => {
 
         </section>
 
-
-
         {/* FAQs Destacadas */}
 
         <section className="py-20 bg-white">
@@ -1366,8 +1301,6 @@ const Inicio = () => {
 
             </div>
 
-
-
             <div className="max-w-4xl mx-auto space-y-4">
 
               <Accordion type="single" collapsible className="w-full">
@@ -1388,8 +1321,6 @@ const Inicio = () => {
 
                 </AccordionItem>
 
-
-
                 <AccordionItem value="item-2" className="border rounded-lg px-6">
 
                   <AccordionTrigger className="text-left text-lg font-medium hover:text-primary">
@@ -1405,8 +1336,6 @@ const Inicio = () => {
                   </AccordionContent>
 
                 </AccordionItem>
-
-
 
                 <AccordionItem value="item-3" className="border rounded-lg px-6">
 
@@ -1424,8 +1353,6 @@ const Inicio = () => {
 
                 </AccordionItem>
 
-
-
                 <AccordionItem value="item-4" className="border rounded-lg px-6">
 
                   <AccordionTrigger className="text-left text-lg font-medium hover:text-primary">
@@ -1441,8 +1368,6 @@ const Inicio = () => {
                   </AccordionContent>
 
                 </AccordionItem>
-
-
 
                 <AccordionItem value="item-5" className="border rounded-lg px-6">
 
@@ -1462,8 +1387,6 @@ const Inicio = () => {
 
               </Accordion>
 
-
-
               <div className="text-center mt-10">
 
                 <Button size="lg" variant="outline" onClick={() => navigate('/preguntas-frecuentes')} className="text-lg px-8 py-6 h-auto">
@@ -1482,8 +1405,6 @@ const Inicio = () => {
 
         </section>
 
-
-
         {/* CTA Final */}
 
         <section ref={ctaAnimation.ref} className={`py-20 md:py-24 bg-gradient-to-br from-primary to-navy relative overflow-hidden transition-all duration-700 ${ctaAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
@@ -1495,8 +1416,6 @@ const Inicio = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(245,166,35,0.15),transparent_50%)]" />
 
           </div>
-
-
 
           <div className="container mx-auto px-4 relative z-10">
 
@@ -1533,8 +1452,6 @@ const Inicio = () => {
                 </Button>
 
               </div>
-
-
 
               <div className="mt-12 pt-12 border-t border-white/20">
 
@@ -1576,8 +1493,6 @@ const Inicio = () => {
 
         </section>
 
-
-
         {/* Footer */}
 
         <footer className="bg-navy text-white py-12">
@@ -1602,8 +1517,6 @@ const Inicio = () => {
 
               </div>
 
-
-
               {/* Services */}
 
               <div>
@@ -1614,19 +1527,11 @@ const Inicio = () => {
 
                   <li><Link to="/personas" className="text-white/70 hover:text-white transition-colors">Personas</Link></li>
 
-                  <li><Link to="/personal-shopper" className="text-white/70 hover:text-white transition-colors">Personal Shopper</Link></li>
-
-                  <li><Link to="/viajeros" className="text-white/70 hover:text-white transition-colors">Viajero</Link></li>
-
                   <li><Link to="/empresas" className="text-white/70 hover:text-white transition-colors">Empresas</Link></li>
-
-                  <li><Link to="/shop" className="text-white/70 hover:text-white transition-colors">Tienda</Link></li>
 
                 </ul>
 
               </div>
-
-
 
               {/* Resources */}
 
@@ -1642,15 +1547,11 @@ const Inicio = () => {
 
                   <li><Link to="/restricted-products" className="text-white/70 hover:text-white transition-colors">Productos restringidos</Link></li>
 
-                  <li><Link to="/blog" className="text-white/70 hover:text-white transition-colors">Blog</Link></li>
-
                   <li><Link to="/centro-de-ayuda" className="text-white/70 hover:text-white transition-colors">Centro de ayuda</Link></li>
 
                 </ul>
 
               </div>
-
-
 
               {/* Legal */}
 
@@ -1679,8 +1580,6 @@ const Inicio = () => {
               </div>
 
             </div>
-
-
 
             {/* Contact info */}
 
@@ -1729,8 +1628,6 @@ const Inicio = () => {
               </div>
 
             </div>
-
-
 
             {/* Payment methods */}
 
@@ -1783,8 +1680,6 @@ const Inicio = () => {
               </div>
 
             </div>
-
-
 
             {/* Social media */}
 
@@ -1887,8 +1782,6 @@ const Inicio = () => {
               </div>
 
             </div>
-
-
 
             {/* Bottom bar */}
 
