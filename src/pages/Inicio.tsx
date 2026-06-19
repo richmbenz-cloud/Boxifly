@@ -610,7 +610,7 @@ const Inicio = () => {
         </section>
 
         {/* Tienda Destacada */}
-        <section ref={storeAnimation.ref} className={`py-20 md:py-24 bg-white transition-all duration-700 delay-500 ${storeAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+       {/*  <section ref={storeAnimation.ref} className={`py-20 md:py-24 bg-white transition-all duration-700 delay-500 ${storeAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <Badge className="mb-4 text-xs uppercase tracking-wider">Tienda online</Badge>
@@ -620,7 +620,7 @@ const Inicio = () => {
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Compra directamente sin preocuparte por el envío internacional
               </p>
-            </div>
+            </div>*/}
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto mb-10">
               {featuredProducts.map(product => <Card key={product.id} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer border-2 hover:border-primary/20" onClick={() => navigate('/shop')}>
