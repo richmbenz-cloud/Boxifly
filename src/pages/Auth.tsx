@@ -141,7 +141,7 @@ const Auth = ({ defaultView = 'login' }: AuthProps) => {
               </svg>
               {oauthLoading === 'google' ? 'Conectando...' : 'Continuar con Google'}
             </Button>
-
+{/*
             <Button
               type="button"
               variant="outline"
@@ -155,7 +155,7 @@ const Auth = ({ defaultView = 'login' }: AuthProps) => {
               {oauthLoading === 'apple' ? 'Conectando...' : 'Continuar con Apple'}
             </Button>
           </div>
-
+*/}
           {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
