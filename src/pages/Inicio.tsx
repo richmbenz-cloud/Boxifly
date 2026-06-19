@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 
@@ -1612,15 +1612,15 @@ const Inicio = () => {
 
                 <ul className="space-y-2 text-sm">
 
-                  <li><a href="/personas" className="text-white/70 hover:text-white transition-colors">Casillero</a></li>
+                  <li><Link to="/personas" className="text-white/70 hover:text-white transition-colors">Personas</Link></li>
 
-                  <li><a href="/personal-shopper" className="text-white/70 hover:text-white transition-colors">Personal Shopper</a></li>
+                  <li><Link to="/personal-shopper" className="text-white/70 hover:text-white transition-colors">Personal Shopper</Link></li>
 
-                  <li><a href="/viajeros" className="text-white/70 hover:text-white transition-colors">Viajero</a></li>
+                  <li><Link to="/viajeros" className="text-white/70 hover:text-white transition-colors">Viajero</Link></li>
 
-                  <li><a href="/empresas" className="text-white/70 hover:text-white transition-colors">Aliado Comercial B2B</a></li>
+                  <li><Link to="/empresas" className="text-white/70 hover:text-white transition-colors">Empresas</Link></li>
 
-                  <li><a href="/shop" className="text-white/70 hover:text-white transition-colors">Tienda</a></li>
+                  <li><Link to="/shop" className="text-white/70 hover:text-white transition-colors">Tienda</Link></li>
 
                 </ul>
 
@@ -1636,15 +1636,15 @@ const Inicio = () => {
 
                 <ul className="space-y-2 text-sm">
 
-                  <li><a href="/cotizador" className="text-white/70 hover:text-white transition-colors">Cotizador</a></li>
+                  <li><Link to="/cotizador" className="text-white/70 hover:text-white transition-colors">Cotizador</Link></li>
 
-                  <li><a href="/tariffs" className="text-white/70 hover:text-white transition-colors">Tarifas</a></li>
+                  <li><Link to="/tariffs" className="text-white/70 hover:text-white transition-colors">Tarifas</Link></li>
 
-                  <li><a href="/restricted-products" className="text-white/70 hover:text-white transition-colors">Productos restringidos</a></li>
+                  <li><Link to="/restricted-products" className="text-white/70 hover:text-white transition-colors">Productos restringidos</Link></li>
 
-                  <li><a href="/blog" className="text-white/70 hover:text-white transition-colors">Blog</a></li>
+                  <li><Link to="/blog" className="text-white/70 hover:text-white transition-colors">Blog</Link></li>
 
-                  <li><a href="/centro-de-ayuda" className="text-white/70 hover:text-white transition-colors">Centro de ayuda</a></li>
+                  <li><Link to="/centro-de-ayuda" className="text-white/70 hover:text-white transition-colors">Centro de ayuda</Link></li>
 
                 </ul>
 
@@ -1660,13 +1660,13 @@ const Inicio = () => {
 
                 <ul className="space-y-2 text-sm">
 
-                  <li><a href="/terminos-y-condiciones" className="text-white/70 hover:text-white transition-colors">Términos y condiciones</a></li>
+                  <li><Link to="/terminos-y-condiciones" className="text-white/70 hover:text-white transition-colors">Términos y condiciones</Link></li>
 
-                  <li><a href="/politica-privacidad" className="text-white/70 hover:text-white transition-colors">Política de privacidad</a></li>
+                  <li><Link to="/politica-privacidad" className="text-white/70 hover:text-white transition-colors">Política de privacidad</Link></li>
 
-                  <li><a href="/politica-cambios-devoluciones" className="text-white/70 hover:text-white transition-colors">Cambios y devoluciones</a></li>
+                  <li><Link to="/politica-cambios-devoluciones" className="text-white/70 hover:text-white transition-colors">Cambios y devoluciones</Link></li>
 
-                  <li className="md:hidden"><a href="/libro-de-reclamaciones" className="text-white/70 hover:text-white transition-colors">Libro de Reclamaciones</a></li>
+                  <li className="md:hidden"><Link to="/libro-de-reclamaciones" className="text-white/70 hover:text-white transition-colors">Libro de Reclamaciones</Link></li>
 
                 </ul>
 

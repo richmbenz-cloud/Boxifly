@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -417,20 +417,20 @@ const Landing = () => {
             <div>
               <h3 className="font-semibold mb-4">Servicios</h3>
               <ul className="space-y-2 text-sm text-white/70">
-                <li><a href="/personas" className="hover:text-white transition-colors">Casillero</a></li>
-                <li><a href="/personal-shopper" className="hover:text-white transition-colors">Personal Shopper</a></li>
-                <li><a href="/viajero" className="hover:text-white transition-colors">Viajero</a></li>
-                <li><a href="/empresas" className="hover:text-white transition-colors">Aliado comercial B2B</a></li>
+                <li><Link to="/personas" className="hover:text-white transition-colors">Personas</Link></li>
+                <li><Link to="/personal-shopper" className="hover:text-white transition-colors">Personal Shopper</Link></li>
+                <li><Link to="/viajero" className="hover:text-white transition-colors">Viajero</Link></li>
+                <li><Link to="/empresas" className="hover:text-white transition-colors">Empresas</Link></li>
               </ul>
             </div>
 
             <div>
               <h3 className="font-semibold mb-4">Empresa</h3>
               <ul className="space-y-2 text-sm text-white/70">
-                <li><a href="/nosotros" className="hover:text-white transition-colors">Nosotros</a></li>
-                <li><a href="/blog" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="/afiliados" className="hover:text-white transition-colors">Afiliados</a></li>
-                <li><a href="/terminos-y-condiciones" className="hover:text-white transition-colors">Términos y condiciones</a></li>
+                <li><Link to="/nosotros" className="hover:text-white transition-colors">Nosotros</Link></li>
+                <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+                <li><Link to="/afiliados" className="hover:text-white transition-colors">Afiliados</Link></li>
+                <li><Link to="/terminos-y-condiciones" className="hover:text-white transition-colors">Términos y condiciones</Link></li>
               </ul>
             </div>
 
