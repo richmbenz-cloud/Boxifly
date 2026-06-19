@@ -114,7 +114,7 @@ const PSAsistidoSolicitud = () => {
   const onSubmit = async (data: SolicitudFormData) => {
     if (!user) {
       toast.error('Debes iniciar sesión para enviar una solicitud');
-      navigate('/auth');
+      navigate('/iniciar-sesion');
       return;
     }
 

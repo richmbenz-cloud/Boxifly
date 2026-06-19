@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     setSession(null);
     setUserRole(null);
-    navigate('/auth');
+    navigate('/iniciar-sesion');
   };
 
   return (

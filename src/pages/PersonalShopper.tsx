@@ -98,7 +98,7 @@ const PersonalShopper = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-white text-secondary hover:bg-white/95 hover-scale-sm text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/auth')}>
+                <Button size="lg" className="bg-white text-secondary hover:bg-white/95 hover-scale-sm text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/iniciar-sesion')}>
                   Solicitar Personal Shopper
                 </Button>
                 
@@ -202,7 +202,7 @@ const PersonalShopper = () => {
                 Solicita tu Personal Shopper ahora y recibe tus productos en 7-10 días
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-white text-secondary hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/auth')}>
+                <Button size="lg" className="bg-white text-secondary hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/iniciar-sesion')}>
                   <ShoppingBag className="w-5 h-5 mr-2" />
                   Solicitar Ahora
                 </Button>

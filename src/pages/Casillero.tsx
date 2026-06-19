@@ -117,7 +117,7 @@ const Casillero = () => {
                 <Button 
                   size="lg" 
                   className="bg-white text-primary hover:bg-white/95 hover-scale-sm text-lg px-10 py-6 h-auto shadow-2xl font-semibold"
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate('/registrarse')}
                 >
                   Obtener mi Casillero Gratis
                 </Button>
@@ -220,7 +220,7 @@ const Casillero = () => {
                 <Button 
                   size="lg" 
                   className="bg-white text-primary hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold"
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate('/registrarse')}
                 >
                   <CheckCircle className="w-5 h-5 mr-2" />
                   Crear Cuenta Gratis

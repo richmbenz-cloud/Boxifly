@@ -164,7 +164,7 @@ const Blog = () => {
       <div class="bg-primary/10 border border-primary/20 rounded-lg p-6 mt-8">
         <h3 class="text-2xl font-bold mb-3">🚀 ¿Listo para el Black Friday 2025?</h3>
         <p class="mb-4">Registra tu casillero GRATIS en Boxifly y comienza a recibir tus compras en Miami hoy mismo.</p>
-        <a href="/auth" class="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+        <a href="/iniciar-sesion" class="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
           Obtener mi casillero gratis →
         </a>
       </div>
@@ -688,7 +688,7 @@ const Blog = () => {
         <div class="bg-primary/10 border border-primary/20 rounded-lg p-6 mt-8">
           <h3 class="text-2xl font-bold mb-3">🎉 ¿Listo para empezar?</h3>
           <p class="mb-4">Obtén tu casillero gratis en Miami y comienza a disfrutar de los precios de Estados Unidos hoy mismo.</p>
-          <a href="/auth" class="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+          <a href="/iniciar-sesion" class="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
             Registrarme ahora →
           </a>
         </div>

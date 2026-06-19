@@ -168,7 +168,7 @@ export function MainNavigation() {
               ) : (
                 <Button 
                   variant="outline" 
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate('/iniciar-sesion')}
                   className="text-sm font-medium h-10 px-5"
                 >
                   Iniciar Sesión
@@ -283,7 +283,7 @@ export function MainNavigation() {
                     ) : (
                       <Button 
                         onClick={() => {
-                          navigate('/auth');
+                          navigate('/iniciar-sesion');
                           setMobileOpen(false);
                         }}
                         className="w-full animate-fade-in"

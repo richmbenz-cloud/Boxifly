@@ -60,7 +60,7 @@ export default function MyOrders() {
             <p className="text-muted-foreground mb-4">
               Debes iniciar sesión para ver tus pedidos
             </p>
-            <Link to="/auth">
+            <Link to="/iniciar-sesion">
               <Button>Iniciar Sesión</Button>
             </Link>
           </CardContent>

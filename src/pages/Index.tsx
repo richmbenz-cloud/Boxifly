@@ -14,7 +14,7 @@ export default function Index() {
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate('/auth');
+      navigate('/iniciar-sesion');
     }
   }, [user, loading, navigate]);
 

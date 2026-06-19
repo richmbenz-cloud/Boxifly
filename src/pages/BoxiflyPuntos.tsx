@@ -28,7 +28,7 @@ const BoxiflyPuntos = () => {
           <p className="text-xl text-muted-foreground mb-8">
             Gana puntos con cada compra y obtén descuentos exclusivos
           </p>
-          <Link to="/auth">
+          <Link to="/iniciar-sesion">
             <Button size="lg" className="gap-2">
               <Star className="w-5 h-5" />
               Únete Ahora
@@ -228,7 +228,7 @@ const BoxiflyPuntos = () => {
             <p className="text-white/90 mb-6 max-w-2xl mx-auto">
               Únete a Boxifly Puntos hoy y empieza a acumular beneficios con cada compra
             </p>
-            <Link to="/auth">
+            <Link to="/iniciar-sesion">
               <Button size="lg" variant="secondary" className="gap-2">
                 Crear Cuenta Gratis
               </Button>

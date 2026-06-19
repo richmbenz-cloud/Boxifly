@@ -51,7 +51,7 @@ const ProtectedRoute = ({ children, requiredRole, allowedRoles }: ProtectedRoute
 
   // Redirect to auth if not logged in
   if (!user) {
-    return <Navigate to="/auth" state={{ from: location }} replace />;
+    return <Navigate to="/iniciar-sesion" state={{ from: location }} replace />;
   }
 
   // Check role permissions

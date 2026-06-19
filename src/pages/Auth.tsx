@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth, UserRole } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,11 @@ import { useToast } from '@/hooks/use-toast';
 import { X } from 'lucide-react';
 import logoFull from '@/assets/logo-boxifly-full.png';
 
-const Auth = () => {
+interface AuthProps {
+  defaultView?: 'login' | 'register';
+}
+
+const Auth = ({ defaultView = 'login' }: AuthProps) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -153,7 +157,7 @@ const Auth = () => {
           <div className="mt-6 text-center">
             <button
               type="button"
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => navigate(isLogin ? '/registrarse' : '/iniciar-sesion')}
               className="text-sm text-primary hover:text-secondary transition-colors"
             >
               {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}

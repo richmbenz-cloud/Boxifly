@@ -227,7 +227,7 @@ const Nosotros = () => {
                 <Button 
                   size="lg" 
                   className="text-lg px-10 py-6 h-auto shadow-xl font-semibold"
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate('/iniciar-sesion')}
                 >
                   Crear Cuenta Gratis
                 </Button>

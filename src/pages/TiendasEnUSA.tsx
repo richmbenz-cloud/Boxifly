@@ -332,7 +332,7 @@ const TiendasEnUSA = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <a href="/auth">Obtener mi casillero</a>
+              <a href="/registrarse">Obtener mi casillero</a>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <a href="/cotizador">Calcular envío</a>

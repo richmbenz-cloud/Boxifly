@@ -406,7 +406,7 @@ const Viajero = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                <Button size="lg" className="bg-white text-sky-500 hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/auth')}>
+                <Button size="lg" className="bg-white text-sky-500 hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/iniciar-sesion')}>
                   Registrarme como Viajero
                   <ChevronRight className="ml-2 w-5 h-5" />
                 </Button>
@@ -741,7 +741,7 @@ const Viajero = () => {
                 Únete a miles de viajeros que ya generan ingresos extra mientras viajan
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-white text-sky-500 hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/auth')}>
+                <Button size="lg" className="bg-white text-sky-500 hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/iniciar-sesion')}>
                   <Plane className="mr-2 w-5 h-5" />
                   Registrarme como Viajero
                 </Button>

@@ -650,7 +650,7 @@ const Inicio = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
 
-                <Button size="lg" className="bg-white text-primary hover:bg-white/95 hover:scale-105 transition-all text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/auth')}>
+                <Button size="lg" className="bg-white text-primary hover:bg-white/95 hover:scale-105 transition-all text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/iniciar-sesion')}>
 
                   Comienza ahora - Es gratis
 
@@ -1437,7 +1437,7 @@ const Inicio = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
 
-                <Button size="lg" className="bg-white text-primary hover:bg-white/95 hover:scale-105 transition-all text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/auth')}>
+                <Button size="lg" className="bg-white text-primary hover:bg-white/95 hover:scale-105 transition-all text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/iniciar-sesion')}>
 
                   Crear cuenta gratis
 

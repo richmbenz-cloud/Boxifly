@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/lib/auth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { CartButton } from "@/components/CartButton";
@@ -165,7 +165,9 @@ function AppContent() {
         <Route path="/shop" element={<Shop onCartOpen={() => setCartOpen(true)} />} />
         <Route path="/dashboard" element={<Index />} />
         <Route path="/cliente/dashboard" element={<Index />} />
-        <Route path="/auth" element={<Auth />} />
+        <Route path="/iniciar-sesion" element={<Auth defaultView="login" />} />
+        <Route path="/registrarse" element={<Auth defaultView="register" />} />
+        <Route path="/auth" element={<Navigate to="/iniciar-sesion" replace />} />
         
         {/* E-commerce Routes */}
         <Route path="/product/:id" element={<ProductDetail onCartOpen={() => setCartOpen(true)} />} />

@@ -99,7 +99,7 @@ const Landing = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center px-4 sm:px-0">
-              <Button size="lg" className="bg-white text-primary hover:bg-white/95 hover-scale-sm hover:shadow-2xl transition-all text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-6 h-auto shadow-2xl font-semibold w-full sm:w-auto" onClick={() => navigate('/auth')}>
+              <Button size="lg" className="bg-white text-primary hover:bg-white/95 hover-scale-sm hover:shadow-2xl transition-all text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-6 h-auto shadow-2xl font-semibold w-full sm:w-auto" onClick={() => navigate('/iniciar-sesion')}>
                 Empezar ahora - Es gratis
               </Button>
               <Button size="lg" variant="ghost" className="border-2 border-white/50 text-white hover:bg-white/10 hover:border-white hover-scale-sm text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-6 h-auto backdrop-blur-sm w-full sm:w-auto transition-all" onClick={() => navigate('/tariffs')}>
@@ -392,7 +392,7 @@ const Landing = () => {
             Únete a más de 10,000 peruanos que ya están comprando en USA con Boxifly
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center px-4 sm:px-0">
-            <Button size="lg" className="bg-white text-primary hover:bg-white/95 hover-scale-sm hover:shadow-2xl transition-all text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 h-auto shadow-2xl font-semibold w-full sm:w-auto" onClick={() => navigate('/auth')}>
+            <Button size="lg" className="bg-white text-primary hover:bg-white/95 hover-scale-sm hover:shadow-2xl transition-all text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 h-auto shadow-2xl font-semibold w-full sm:w-auto" onClick={() => navigate('/iniciar-sesion')}>
               Crear mi cuenta gratis
             </Button>
             <p className="text-xs sm:text-sm text-white/70">No requiere tarjeta de crédito</p>

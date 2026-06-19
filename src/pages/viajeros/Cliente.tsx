@@ -316,7 +316,7 @@ const ViajeroCliente = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                <Button size="lg" className="bg-white text-blue-500 hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/auth')}>
+                <Button size="lg" className="bg-white text-blue-500 hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/iniciar-sesion')}>
                   Solicitar un Viajero Ahora
                   <ChevronRight className="ml-2 w-5 h-5" />
                 </Button>
@@ -599,7 +599,7 @@ const ViajeroCliente = () => {
                 Solicita tu viajero ahora y ahorra hasta 60% en envíos internacionales
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-white text-blue-500 hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/auth')}>
+                <Button size="lg" className="bg-white text-blue-500 hover:bg-white/95 text-lg px-10 py-6 h-auto shadow-2xl font-semibold" onClick={() => navigate('/iniciar-sesion')}>
                   <Package className="mr-2 w-5 h-5" />
                   Solicitar un Viajero Ahora
                 </Button>
