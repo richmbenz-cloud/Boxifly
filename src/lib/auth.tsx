@@ -13,7 +13,6 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName: string, role: UserRole) => Promise<{ error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
   signInWithApple: () => Promise<{ error: any }>;
-  signInWithAmazon: () => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   loading: boolean;
 }
@@ -128,17 +127,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
-  const signInWithAmazon = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'amazon',
-      options: {
-        redirectTo: `${window.location.origin}/dashboard`,
-      },
-    });
-
-    return { error };
-  };
-
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -148,7 +136,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, userRole, signIn, signUp, signInWithGoogle, signInWithApple, signInWithAmazon, signOut, loading }}>
+    <AuthContext.Provider value={{ user, session, userRole, signIn, signUp, signInWithGoogle, signInWithApple, signOut, loading }}>
       {children}
     </AuthContext.Provider>
   );
