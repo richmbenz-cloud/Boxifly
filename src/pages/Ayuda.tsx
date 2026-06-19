@@ -21,53 +21,7 @@ const Ayuda = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const categories = [
-    {
-      title: "Personal Shopper",
-      icon: ShoppingBag,
-      color: "text-purple-600",
-      questions: [
-        {
-          q: "¿Cómo funciona el servicio de Personal Shopper?",
-          a: "El Personal Shopper es un servicio donde un comprador verificado adquiere productos en tu nombre en Estados Unidos. Tú envías la solicitud con el enlace del producto, el shopper lo compra, verifica la calidad y lo envía a nuestro almacén para ser consolidado con tus otros paquetes."
-        },
-        {
-          q: "¿Cuánto cobra el Personal Shopper?",
-          a: "El Personal Shopper cobra una comisión del 10% sobre el valor del producto, más los costos de envío desde la tienda hasta nuestro almacén. El precio final lo verás en la cotización antes de aceptar."
-        },
-        {
-          q: "¿Qué pasa si el producto llega dañado?",
-          a: "Si el producto llega dañado a la dirección del shopper, él lo reportará inmediatamente. Dependiendo del caso, se puede solicitar un cambio a la tienda o se procederá con el reembolso. Nuestros shoppers verifican la calidad antes de enviarlo al almacén."
-        },
-        {
-          q: "¿Puedo rastrear mi compra del Personal Shopper?",
-          a: "Sí, una vez que el shopper realiza la compra, te proporcionará el número de tracking. Puedes seguir el estado de tu pedido desde tu dashboard de cliente."
-        }
-      ]
-    },
-    {
-      title: "Servicio de Viajero",
-      icon: Plane,
-      color: "text-sky-600",
-      questions: [
-        {
-          q: "¿Cómo funciona el servicio de Viajero?",
-          a: "Conectamos a clientes con viajeros verificados que viajan de Estados Unidos a Perú. Los viajeros transportan paquetes pequeños en su equipaje, ofreciendo una alternativa más económica y rápida para ciertos productos."
-        },
-        {
-          q: "¿Qué garantías tengo con el servicio de Viajero?",
-          a: "Todos nuestros viajeros están verificados con KYC (verificación de identidad) y firma de declaración jurada. Además, ofrecemos un programa de protección que cubre pérdida o daño del paquete durante el viaje."
-        },
-        {
-          q: "¿Qué productos puedo enviar con un Viajero?",
-          a: "Productos pequeños y ligeros como ropa, accesorios, electrónicos pequeños, suplementos, cosméticos. No se permiten líquidos en gran cantidad, productos perecederos, ni artículos prohibidos por las aerolíneas."
-        },
-        {
-          q: "¿Cuánto tiempo demora la entrega con Viajero?",
-          a: "Depende de la fecha de viaje del viajero. Generalmente, entre 3-7 días desde que el viajero recibe el paquete hasta la entrega en Perú, mucho más rápido que el courier tradicional."
-        }
-      ]
-    },
-    {
+{
       title: "Casillero y Courier",
       icon: Package,
       color: "text-orange-600",
@@ -94,7 +48,7 @@ const Ayuda = () => {
         }
       ]
     },
-    {
+{
       title: "Aliado Comercial B2B",
       icon: Building2,
       color: "text-blue-600",
@@ -117,7 +71,7 @@ const Ayuda = () => {
         }
       ]
     },
-    {
+{
       title: "Pagos y Facturación",
       icon: CreditCard,
       color: "text-green-600",
@@ -140,7 +94,7 @@ const Ayuda = () => {
         }
       ]
     },
-    {
+{
       title: "Aduanas e Impuestos",
       icon: Shield,
       color: "text-red-600",
@@ -163,7 +117,7 @@ const Ayuda = () => {
         }
       ]
     },
-    {
+{
       title: "Seguimiento y Entregas",
       icon: MapPin,
       color: "text-indigo-600",
@@ -186,7 +140,7 @@ const Ayuda = () => {
         }
       ]
     },
-    {
+{
       title: "Cuenta y Seguridad",
       icon: FileText,
       color: "text-gray-600",
