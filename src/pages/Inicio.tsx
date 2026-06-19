@@ -66,24 +66,6 @@ const Inicio = () => {
     href: '/casillero',
     benefits: ['Consolidación gratis', 'Tracking 24/7', 'Entrega 7-10 días']
   }, {
-    icon: ShoppingBag,
-    title: 'Personal Shopper',
-    description: '¿No puedes comprar en USA? Nuestros shoppers compran por ti y gestionan todo el envío.',
-    gradient: 'from-purple-500/10 to-purple-600/5',
-    iconBg: 'bg-purple-500/10',
-    iconColor: 'text-purple-600',
-    href: '/personal-shopper',
-    benefits: ['Compras seguras', 'Sin comisiones ocultas', 'Asesoría experta']
-  }, {
-    icon: Plane,
-    title: 'Viajero',
-    description: 'Envía tus compras con viajeros verificados. Más rápido y económico que el courier tradicional.',
-    gradient: 'from-sky-500/10 to-sky-600/5',
-    iconBg: 'bg-sky-500/10',
-    iconColor: 'text-sky-600',
-    href: '/viajeros',
-    benefits: ['Viajeros verificados', 'Envío más rápido', 'Tarifas competitivas']
-  }, {
     icon: Building2,
     title: 'Aliado Comercial B2B',
     description: 'Soluciones corporativas para empresas que importan. Tarifas preferenciales y atención prioritaria.',
@@ -92,15 +74,6 @@ const Inicio = () => {
     iconColor: 'text-orange-600',
     href: '/b2b',
     benefits: ['Tarifas corporativas', 'Dashboard exclusivo', 'Soporte dedicado']
-  }, {
-    icon: Store,
-    title: 'Tienda Online',
-    description: 'Productos seleccionados listos para comprar. Sin preocuparte por el envío internacional.',
-    gradient: 'from-green-500/10 to-green-600/5',
-    iconBg: 'bg-green-500/10',
-    iconColor: 'text-green-600',
-    href: '/shop',
-    benefits: ['Stock disponible', 'Pago seguro', 'Entrega rápida en Perú']
   }];
 
   // How it works steps
@@ -310,7 +283,7 @@ const Inicio = () => {
         {/* Main Navigation */}
         <SEO
           title="Boxifly – Compra en EE.UU. y recibe en Perú"
-          description="Casillero gratis en Miami, Personal Shopper y red de viajeros. Envíos rápidos y seguros desde EE.UU. a Perú, sin complicaciones."
+          description="Tu dirección gratuita en Estados Unidos. El casillero postal definitivo para comprar en cualquier tienda de EE.UU. y recibir en Perú: rápido, seguro y sin complicaciones."
           path="/"
           jsonLd={[
             {
@@ -354,13 +327,12 @@ const Inicio = () => {
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 leading-tight">
-                Tus compras y envíos internacionales,
-                <span className="block text-secondary mt-2">fáciles y seguros</span>
+                Consigue tu dirección en
+                <span className="block text-secondary mt-2">Estados Unidos gratis</span>
               </h1>
 
               <p className="text-xl md:text-2xl mb-10 text-white/90 max-w-3xl mx-auto leading-relaxed">
-                Más que un casillero: tu solución completa para importar desde USA. 
-                Personal Shopper, envíos rápidos, tienda online y más.
+                El casillero postal para comprar en tus tiendas favoritas de EE.UU. y recibir en Perú: rápido, seguro y sin complicaciones.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -402,8 +374,7 @@ const Inicio = () => {
                 Todo lo que necesitas en un solo lugar
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Desde casillero virtual hasta personal shopper y tienda online. 
-                Boxifly es tu aliado completo para importar desde USA.
+                Tu dirección exclusiva en Miami para recibir tus compras y enviarlas a todo el Perú: rápido, seguro y sin complicaciones.
               </p>
             </div>
 
