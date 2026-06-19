@@ -26,13 +26,13 @@ import logoFull from '@/assets/logo-boxifly-full.png';
 
 const services = [
   {
-    title: 'Casillero',
+    title: 'Personas',
     description: 'Tu dirección en Miami para compras online',
     icon: Package,
     path: '/cliente/dashboard'
   },
   {
-    title: 'Aliado Comercial B2B',
+    title: 'Empresas',
     description: 'Soluciones corporativas y empresariales',
     icon: Building2,
     path: '/b2b/dashboard'
@@ -110,18 +110,8 @@ export function MainNavigation() {
               className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/casillero') ? 'text-primary' : ''}`}
             >
               <Package className="h-4 w-4 transition-transform group-hover:rotate-12" />
-              Casillero
+              Personas
             </Button>
-
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/b2b')}
-              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/b2b') ? 'text-primary' : ''}`}
-            >
-              <Building2 className="h-4 w-4 transition-transform group-hover:rotate-12" />
-              B2B
-            </Button>
-
 
             <Button 
               variant="ghost" 
@@ -130,6 +120,15 @@ export function MainNavigation() {
             >
               <Calculator className="h-4 w-4 transition-transform group-hover:rotate-12" />
               Cotizador
+            </Button>
+
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/b2b')}
+              className={`text-sm font-medium h-10 px-4 flex items-center gap-2 transition-all hover:scale-105 ${isActive('/b2b') ? 'text-primary' : ''}`}
+            >
+              <Building2 className="h-4 w-4 transition-transform group-hover:rotate-12" />
+              Empresas
             </Button>
           </div>
 
@@ -208,27 +207,8 @@ export function MainNavigation() {
                       <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
                         <Package className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
                       </div>
-                      <span>Casillero</span>
+                      <span>Personas</span>
                     </button>
-
-                    
-                    <button
-                      onClick={() => {
-                        navigate('/b2b');
-                        setMobileOpen(false);
-                      }}
-                      className={`group w-full flex items-center gap-4 text-left px-6 py-4 text-base font-medium rounded-xl hover:bg-primary/10 active:scale-95 transition-all animate-fade-in ${
-                        isActive('/b2b') ? 'text-primary bg-primary/10' : ''
-                      }`}
-                      style={{ animationDelay: '0.25s', animationFillMode: 'backwards' }}
-                    >
-                      <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                        <Building2 className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
-                      </div>
-                      <span>B2B</span>
-                    </button>
-
-  
 
                     <button
                       onClick={() => {
@@ -238,14 +218,30 @@ export function MainNavigation() {
                       className={`group w-full flex items-center gap-4 text-left px-6 py-4 text-base font-medium rounded-xl hover:bg-primary/10 active:scale-95 transition-all animate-fade-in ${
                         isActive('/calculator') ? 'text-primary bg-primary/10' : ''
                       }`}
-                      style={{ animationDelay: '0.35s', animationFillMode: 'backwards' }}
+                      style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}
                     >
                       <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
                         <Calculator className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
                       </div>
                       <span>Cotizador</span>
                     </button>
-                    
+
+                    <button
+                      onClick={() => {
+                        navigate('/b2b');
+                        setMobileOpen(false);
+                      }}
+                      className={`group w-full flex items-center gap-4 text-left px-6 py-4 text-base font-medium rounded-xl hover:bg-primary/10 active:scale-95 transition-all animate-fade-in ${
+                        isActive('/b2b') ? 'text-primary bg-primary/10' : ''
+                      }`}
+                      style={{ animationDelay: '0.3s', animationFillMode: 'backwards' }}
+                    >
+                      <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                        <Building2 className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
+                      </div>
+                      <span>Empresas</span>
+                    </button>
+
                     {user ? (
                       <>
                         <button
