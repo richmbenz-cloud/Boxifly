@@ -3,7 +3,7 @@
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 
-const BASE_URL = "https://boxifly.lovable.app";
+const BASE_URL = "https://www.boxifly.pe";
 
 interface SitemapEntry {
   path: string;
@@ -17,7 +17,7 @@ const today = new Date().toISOString().split("T")[0];
 const entries: SitemapEntry[] = [
   { path: "/", changefreq: "weekly", priority: "1.0", lastmod: today },
   { path: "/inicio", changefreq: "weekly", priority: "1.0", lastmod: today },
-  { path: "/casillero", changefreq: "monthly", priority: "0.9", lastmod: today },
+  { path: "/personas", changefreq: "monthly", priority: "0.9", lastmod: today },
   { path: "/personal-shopper", changefreq: "monthly", priority: "0.9", lastmod: today },
   { path: "/personal-shopper/landing", changefreq: "monthly", priority: "0.8" },
   { path: "/viajeros", changefreq: "monthly", priority: "0.9", lastmod: today },
@@ -25,13 +25,13 @@ const entries: SitemapEntry[] = [
   { path: "/viajeros/viajero", changefreq: "monthly", priority: "0.7" },
   { path: "/viajeros/legales", changefreq: "yearly", priority: "0.3" },
   { path: "/shop", changefreq: "daily", priority: "0.9", lastmod: today },
-  { path: "/calculator", changefreq: "monthly", priority: "0.8" },
+  { path: "/cotizador", changefreq: "monthly", priority: "0.8" },
   { path: "/tariffs", changefreq: "monthly", priority: "0.7" },
   { path: "/restricted-products", changefreq: "monthly", priority: "0.6" },
   { path: "/como-comprar-en-usa", changefreq: "monthly", priority: "0.8" },
   { path: "/tiendas-en-usa", changefreq: "monthly", priority: "0.7" },
   { path: "/tipos-de-entrega", changefreq: "monthly", priority: "0.6" },
-  { path: "/b2b", changefreq: "monthly", priority: "0.8" },
+  { path: "/empresas", changefreq: "monthly", priority: "0.8" },
   { path: "/blog", changefreq: "weekly", priority: "0.7" },
   { path: "/nosotros", changefreq: "monthly", priority: "0.6" },
   { path: "/contacto", changefreq: "monthly", priority: "0.6" },
@@ -47,20 +47,22 @@ const entries: SitemapEntry[] = [
   { path: "/politica-cambios-devoluciones", changefreq: "yearly", priority: "0.3" },
   { path: "/libro-de-reclamaciones", changefreq: "yearly", priority: "0.3" },
   { path: "/legales", changefreq: "yearly", priority: "0.3" },
+  { path: "/iniciar-sesion", changefreq: "monthly", priority: "0.8" },
+  { path: "/registrarse", changefreq: "monthly", priority: "0.8" }
 ];
 
 function generateSitemap(entries: SitemapEntry[]) {
   const urls = entries.map((e) =>
     [
       `  <url>`,
-      `    <loc>${BASE_URL}${e.path}</loc>`,
+      `    <loc>${BASE_URL}${e.path === "/" ? "" : e.path}</loc>`,
       e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
       e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
       e.priority ? `    <priority>${e.priority}</priority>` : null,
       `  </url>`,
     ]
       .filter(Boolean)
-      .join("\n"),
+      .join("\n")
   );
 
   return [
