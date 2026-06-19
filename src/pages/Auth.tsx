@@ -28,8 +28,9 @@ const Auth = ({ defaultView = 'login' }: AuthProps) => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [appleLoading, setAppleLoading] = useState(false);
+  const [amazonLoading, setAmazonLoading] = useState(false);
   
-  const { signIn, signUp, signInWithGoogle, signInWithApple } = useAuth();
+  const { signIn, signUp, signInWithGoogle, signInWithApple, signInWithAmazon } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -104,6 +105,22 @@ const Auth = ({ defaultView = 'login' }: AuthProps) => {
     }
   };
 
+  const handleAmazonSignIn = async () => {
+    setAmazonLoading(true);
+    try {
+      const { error } = await signInWithAmazon();
+      if (error) throw error;
+      // On success Supabase redirects to Amazon, no further action needed here.
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "No se pudo iniciar sesión con Amazon. Intenta nuevamente.",
+        variant: "destructive",
+      });
+      setAmazonLoading(false);
+    }
+  };
+
   const pageTitle = isLogin
     ? "Iniciar Sesión | Accede a tu Casillero Boxifly"
     : "Registrarse en Boxifly | Crea tu Casillero Gratis en USA";
@@ -147,7 +164,7 @@ const Auth = ({ defaultView = 'login' }: AuthProps) => {
               variant="outline"
               className="w-full flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors"
               onClick={handleGoogleSignIn}
-              disabled={googleLoading || appleLoading || loading}
+              disabled={googleLoading || appleLoading || amazonLoading || loading}
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -160,103 +177,27 @@ const Auth = ({ defaultView = 'login' }: AuthProps) => {
 
             <Button
               type="button"
+              className="w-full flex items-center justify-center gap-2 bg-[#FF9900] hover:bg-[#e68a00] text-black font-semibold border border-[#FF9900] hover:border-[#e68a00] transition-colors"
+              onClick={handleAmazonSignIn}
+              disabled={googleLoading || appleLoading || amazonLoading || loading}
+            >
+              <svg className="h-5 w-5 fill-current text-black" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.31 14.12c-2.31 1.6-6.18 1.63-8.48.06-.33-.22-.09-.59.27-.47 2.04.66 5.56.57 7.42-.14.33-.13.56.23.79.55zM17.1 13c-.23.16-.48.24-.73.24-.41 0-.8-.21-1.04-.59-1.2-1.92-3.82-1.92-5.01 0-.39.62-1.12.87-1.78.48-.65-.39-.9-1.12-.51-1.74 1.95-3.11 6.36-3.11 8.3 0 .39.62 1.13.87 1.77.49.65-.39.91-1.12.52-1.74z" />
+              </svg>
+              {amazonLoading ? 'Conectando...' : 'Continuar con Amazon'}
+            </Button>
+
+            {/* 
+            <Button
+              type="button"
               className="w-full flex items-center justify-center gap-2 bg-black hover:bg-zinc-900 text-white font-medium border border-black hover:border-zinc-900 transition-colors"
               onClick={handleAppleSignIn}
-              disabled={googleLoading || appleLoading || loading}
+              disabled={googleLoading || appleLoading || amazonLoading || loading}
             >
               <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.06 2.47.3 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42.73-.91 1.84M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.52-.64.75-1.2 1.88-1.05 3 .15.08.31.11.48.11.89 0 2.05-.56 2.52-1.57z" />
               </svg>
-              {appleLoading ? 'Conectando...' : 'Continuar con Apple'}
+              Continuar con Apple
             </Button>
+            */}
           </div>
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">O continúa con</span>
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {!isLogin && (
-              <>
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Nombre Completo</Label>
-                  <Input
-                    id="fullName"
-                    type="text"
-                    placeholder="Juan Pérez"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required={!isLogin}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="role">Tipo de Cuenta</Label>
-                  <Select value={role} onValueChange={(value) => setRole(value as UserRole)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona tu tipo de cuenta" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="customer">Cliente</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </>
-            )}
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Correo Electrónico</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="tu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Contraseña</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                disabled={loading || googleLoading || appleLoading}
-              />
-            </div>
-
-            <Button 
-              type="submit" 
-              className="w-full bg-action-primary hover:bg-primary" 
-              disabled={loading || googleLoading || appleLoading}
-            >
-              {loading ? 'Procesando...' : (isLogin ? 'Iniciar Sesión' : 'Crear Cuenta')}
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => navigate(isLogin ? '/registrarse' : '/iniciar-sesion')}
-              className="text-sm text-primary hover:text-secondary transition-colors"
-            >
-              {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
-            </button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-    </>
-  );
-};
-
-export default Auth;
