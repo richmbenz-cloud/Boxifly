@@ -580,8 +580,8 @@ const Inicio = () => {
           </div>
         </section>
 
-        {/* Tienda Destacada */}
-         <section ref={storeAnimation.ref} className={`py-20 md:py-24 bg-white transition-all duration-700 delay-500 ${storeAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        {/* Tienda Destacada - Ocultado Temporalmente para Fase 1 */}
+        {/* <section ref={storeAnimation.ref} className={`py-20 md:py-24 bg-white transition-all duration-700 delay-500 ${storeAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <Badge className="mb-4 text-xs uppercase tracking-wider">Tienda online</Badge>
@@ -619,7 +619,7 @@ const Inicio = () => {
               </Button>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Blog / Tips */}
         <section className="py-20 md:py-24 bg-gradient-to-br from-muted/50 to-muted/30">
@@ -657,7 +657,7 @@ const Inicio = () => {
               <Button variant="outline" size="lg" onClick={() => navigate('/blog')}>
                 Ver todos los artículos
               </Button>
-              <div className="flex flex-wrap justify-center gap-3">
+              {/* <div className="flex flex-wrap justify-center gap-3">
                 <Button variant="link" onClick={() => navigate('/guias-de-compras')}>
                   Guías de compras
                 </Button>
@@ -667,7 +667,7 @@ const Inicio = () => {
                 <Button variant="link" onClick={() => navigate('/tipos-de-entrega')}>
                   Tipos de entrega
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
