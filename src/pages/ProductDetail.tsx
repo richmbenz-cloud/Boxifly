@@ -218,7 +218,7 @@ export default function ProductDetail({ onCartOpen }: ProductDetailProps) {
     sku: product.id,
     offers: {
       "@type": "Offer",
-      url: `https://boxifly.lovable.app/product/${product.id}`,
+      url: `https://boxifly.pe/product/${product.id}`,
       priceCurrency: "PEN",
       price: finalPrice,
       availability: (product.stock ?? 1) > 0

@@ -568,9 +568,9 @@ const Inicio = () => {
 
               name: "Boxifly",
 
-              url: "https://boxifly.lovable.app",
+              url: "https://boxifly.pe",
 
-              logo: "https://storage.googleapis.com/gpt-engineer-file-uploads/WA0TUcnUbrPRoxk0ZwGxji4BOXB3/uploads/1764505580535-Boxifly.png",
+              logo: "https://boxifly.pe/images/logo-boxifly.png",
 
               sameAs: [],
 
@@ -598,7 +598,7 @@ const Inicio = () => {
 
               name: "Boxifly",
 
-              url: "https://boxifly.lovable.app"
+              url: "https://boxifly.pe"
 
             }
 
@@ -1573,7 +1573,7 @@ const Inicio = () => {
 
                 <a href="/libro-de-reclamaciones" className="hidden md:inline-block hover:opacity-90 transition-opacity mt-4">
 
-                  <img alt="Libro de Reclamaciones" src="/lovable-uploads/d323548f-c093-4d62-82b4-e971b100271e.png" className="h-12 w-auto object-contain" />
+                  <img alt="Libro de Reclamaciones" src="/images/libro-reclamaciones-icon.png" className="h-12 w-auto object-contain" />
 
                 </a>
 
