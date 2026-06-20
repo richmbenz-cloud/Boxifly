@@ -30,21 +30,26 @@ interface IzipayWebhookEvent {
 }
 
 /**
- * Verify Izipay webhook signature using HMAC-SHA256
- * Izipay sends a hash in kr-hash header that should be verified
+ * Verify Izipay (Lyra/Krypton) IPN signature using HMAC-SHA256.
+ *
+ * IMPORTANT: Izipay computes the hash over the *value of the `kr-answer`
+ * field only* (the raw JSON string as received), NOT over the whole body.
+ * The key depends on `kr-hash-key`:
+ *   - "password"     -> the REST API password (IZIPAY_TEST_API_KEY)
+ *   - "sha256_hmac"  -> the HMAC-SHA256 key (IZIPAY_WEBHOOK_SECRET)
+ * Server-to-server IPNs use "password"; browser return uses "sha256_hmac".
  */
 async function verifyIzipaySignature(
-  rawBody: string,
+  krAnswer: string,
   receivedHash: string | null,
   secret: string
 ): Promise<boolean> {
-  if (!receivedHash || !secret) {
-    console.warn('Missing hash or secret for verification');
+  if (!receivedHash || !secret || !krAnswer) {
+    console.warn('Missing kr-answer, hash or secret for verification');
     return false;
   }
 
   try {
-    // Izipay uses HMAC-SHA256 for signature verification
     const encoder = new TextEncoder();
     const key = await crypto.subtle.importKey(
       'raw',
@@ -54,14 +59,14 @@ async function verifyIzipaySignature(
       ['sign']
     );
 
-    const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(rawBody));
+    const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(krAnswer));
     const computedHash = Array.from(new Uint8Array(signature))
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
 
     const isValid = computedHash.toLowerCase() === receivedHash.toLowerCase();
     console.log('Signature verification:', { isValid, receivedHash: receivedHash.substring(0, 10) + '...' });
-    
+
     return isValid;
   } catch (error) {
     console.error('Error verifying signature:', error);
@@ -78,11 +83,39 @@ Deno.serve(async (req) => {
   try {
     console.log('Izipay webhook received');
 
-    // Get webhook secret for verification
-    const webhookSecret = Deno.env.get('IZIPAY_WEBHOOK_SECRET');
-    
-    if (!webhookSecret) {
-      console.error('IZIPAY_WEBHOOK_SECRET not configured');
+    // Get the raw body for signature verification
+    const rawBody = await req.text();
+
+    // Parse the form-encoded / JSON body FIRST so we can isolate `kr-answer`.
+    // Izipay sends the IPN as application/x-www-form-urlencoded with the
+    // field name `kr-answer` (hyphen, not underscore).
+    const contentType = req.headers.get('content-type') || '';
+
+    let krAnswerRaw: string | null = null;       // raw JSON string of kr-answer (used for signature)
+    let krHashKey: string | null = null;          // "password" | "sha256_hmac"
+    const formFields: Record<string, string> = {};
+
+    if (contentType.includes('application/json')) {
+      // JSON body: the whole body is the answer payload
+      krAnswerRaw = rawBody;
+    } else {
+      const params = new URLSearchParams(rawBody);
+      for (const [key, value] of params.entries()) {
+        formFields[key] = value;
+      }
+      // Izipay uses `kr-answer`; accept legacy `kr_answer` just in case
+      krAnswerRaw = formFields['kr-answer'] ?? formFields['kr_answer'] ?? null;
+      krHashKey = formFields['kr-hash-key'] ?? formFields['kr_hash_key'] ?? null;
+    }
+
+    // Resolve the signing secret based on kr-hash-key.
+    // For server-to-server IPN ("password") Izipay signs with the REST API password.
+    const apiPassword = Deno.env.get('IZIPAY_TEST_API_KEY') || '';
+    const hmacKey = Deno.env.get('IZIPAY_WEBHOOK_SECRET') || '';
+    const signingSecret = krHashKey === 'password' ? apiPassword : (hmacKey || apiPassword);
+
+    if (!signingSecret) {
+      console.error('No signing secret configured (IZIPAY_TEST_API_KEY / IZIPAY_WEBHOOK_SECRET)');
       return new Response(
         JSON.stringify({ ok: false, error: 'Webhook secret not configured' }),
         {
@@ -92,22 +125,20 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Get the raw body for signature verification
-    const rawBody = await req.text();
-    
-    // Get Izipay signature headers
-    // Izipay may use different header names depending on configuration
-    const receivedHash = req.headers.get('kr-hash') || 
-                         req.headers.get('kr-hash-key') || 
-                         req.headers.get('x-izipay-signature');
+    // Izipay sends the hash in the `kr-hash` field (body) or header
+    const receivedHash =
+      formFields['kr-hash'] ||
+      req.headers.get('kr-hash') ||
+      req.headers.get('kr-hash-key') ||
+      req.headers.get('x-izipay-signature');
 
-    // Verify signature before processing
-    const isValidSignature = await verifyIzipaySignature(rawBody, receivedHash, webhookSecret);
-    
+    // Verify signature over the kr-answer value (NOT the whole body)
+    const isValidSignature = await verifyIzipaySignature(krAnswerRaw ?? '', receivedHash, signingSecret);
+
     if (!isValidSignature) {
       console.error('Invalid webhook signature - rejecting request');
       console.log('Headers received:', Object.fromEntries(req.headers.entries()));
-      
+
       return new Response(
         JSON.stringify({ ok: false, error: 'Invalid signature' }),
         {
@@ -124,27 +155,19 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Parse webhook data - Izipay can send form-encoded or JSON
-    let webhookData: IzipayWebhookEvent;
-    const contentType = req.headers.get('content-type') || '';
-
-    if (contentType.includes('application/json')) {
-      webhookData = JSON.parse(rawBody);
-    } else {
-      // Parse form-encoded data
-      const params = new URLSearchParams(rawBody);
-      webhookData = {} as IzipayWebhookEvent;
-      for (const [key, value] of params.entries()) {
-        if (key === 'kr_answer' && typeof value === 'string') {
-          try {
-            webhookData.kr_answer = JSON.parse(value);
-          } catch (e) {
-            console.error('Error parsing kr_answer:', e);
-            (webhookData as any)[key] = value;
-          }
-        } else {
-          (webhookData as any)[key] = value;
-        }
+    // Build the typed webhook object from the parsed kr-answer
+    const webhookData: IzipayWebhookEvent = {};
+    if (krAnswerRaw) {
+      try {
+        webhookData.kr_answer = JSON.parse(krAnswerRaw);
+      } catch (e) {
+        console.error('Error parsing kr-answer JSON:', e);
+      }
+    }
+    // Keep any other form fields for logging/debugging
+    for (const [k, v] of Object.entries(formFields)) {
+      if (k !== 'kr-answer' && k !== 'kr_answer') {
+        (webhookData as any)[k] = v;
       }
     }
 
@@ -155,7 +178,7 @@ Deno.serve(async (req) => {
     const orderStatus = answer?.orderStatus;
     const orderId = answer?.orderDetails?.orderId;
     const transactions = answer?.transactions || [];
-    
+
     let transactionId = 'unknown';
     let amount = 0;
     let status = 'pending';
@@ -166,7 +189,7 @@ Deno.serve(async (req) => {
       transactionId = transaction.uuid || transactionId;
       amount = transaction.amount ? transaction.amount / 100 : 0; // Convert from cents
       detailedStatus = transaction.detailedStatus || '';
-      
+
       // Map Izipay status to internal status
       if (transaction.status === 'PAID' || orderStatus === 'PAID') {
         status = 'succeeded';
