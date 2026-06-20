@@ -1,73 +1,94 @@
-# Welcome to your Lovable project
+# Boxifly
 
-## Project info
+Plataforma de **casillero internacional, personal shopper y viajeros** para compras en EE.UU. con entrega en Perú.
 
-**URL**: https://lovable.dev/projects/60994dad-dbf6-46db-b324-d30587ac631d
+**Producción:** https://boxifly.pe
 
-## How can I edit this code?
+## Tecnologías
 
-There are several ways of editing your application.
+Este proyecto está construido con:
 
-**Use Lovable**
+- **Vite** — bundler y servidor de desarrollo
+- **TypeScript**
+- **React**
+- **shadcn-ui** — componentes de interfaz
+- **Tailwind CSS** — estilos
+- **Supabase** — base de datos, autenticación y edge functions
+- **Vercel** — hosting y despliegue continuo
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/60994dad-dbf6-46db-b324-d30587ac631d) and start prompting.
+## Requisitos
 
-Changes made via Lovable will be committed automatically to this repo.
+- [Node.js](https://nodejs.org/) y npm instalados (recomendado vía [nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Desarrollo local
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# 1. Clonar el repositorio
+git clone https://github.com/richmbenz-cloud/Boxifly.git
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 2. Entrar al directorio del proyecto
+cd Boxifly
 
-# Step 3: Install the necessary dependencies.
+# 3. Instalar dependencias
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 4. Iniciar el servidor de desarrollo (con recarga automática)
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+El servidor de desarrollo queda disponible en `http://localhost:8080`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Variables de entorno
 
-**Use GitHub Codespaces**
+Copia `.env.example` a `.env` y completa los valores:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```sh
+cp .env.example .env
+```
 
-## What technologies are used for this project?
+Las variables de Supabase requeridas son:
 
-This project is built with:
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `VITE_SUPABASE_PROJECT_ID`
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Entornos
 
-## How can I deploy this project?
+| Entorno | Supabase | Hosting |
+|---------|----------|---------|
+| Producción | Proyecto **Boxifly** | Vercel → `boxifly.pe`, `www.boxifly.pe` |
+| Staging | Proyecto **Boxifly Staging** | Vercel (preview deployments) |
 
-Simply open [Lovable](https://lovable.dev/projects/60994dad-dbf6-46db-b324-d30587ac631d) and click on Share -> Publish.
+## Despliegue
 
-## Can I connect a custom domain to my Lovable project?
+El despliegue es automático mediante **Vercel**:
 
-Yes, you can!
+1. Los cambios fusionados a la rama `main` disparan un despliegue de producción en Vercel.
+2. Cada Pull Request genera un *preview deployment* automático para revisión.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+La configuración de build vive en `vercel.json` y `vite.config.ts`.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Dominios
+
+Los dominios de producción se gestionan directamente en el panel de **Vercel** (Settings → Domains):
+
+- `boxifly.pe`
+- `www.boxifly.pe`
+
+## Documentación adicional
+
+- [`IZIPAY_INTEGRATION.md`](./IZIPAY_INTEGRATION.md) — documentación técnica de la integración de pagos con Izipay.
+- [`IZIPAY_SETUP.md`](./IZIPAY_SETUP.md) — guía de configuración paso a paso de Izipay.
+
+## Estructura del proyecto
+
+```
+.
+├── public/              # Activos estáticos
+├── scripts/             # Scripts auxiliares
+├── src/                 # Código fuente de la aplicación (React + TS)
+├── supabase/            # Edge functions y configuración de Supabase
+├── index.html           # Punto de entrada HTML
+├── vite.config.ts       # Configuración de Vite
+└── vercel.json          # Configuración de despliegue en Vercel
+```
