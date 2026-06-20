@@ -1,6 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
+// Genera una contraseña temporal criptográficamente aleatoria.
+// El usuario nunca la usa: recibe un email para establecer la suya propia.
+// Incluye mayúscula, minúscula, número y símbolo para cumplir requisitos de complejidad.
+function generateSecurePassword(): string {
+  const bytes = new Uint8Array(24);
+  crypto.getRandomValues(bytes);
+  const random = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+  return `Bx${random}Aa1!`;
+}
+
 interface UseCheckoutOrderParams {
   user: any;
   cartItems: any[] | undefined;
@@ -247,7 +257,7 @@ export function useCheckoutOrder({
         try {
           const { error: signUpError } = await supabase.auth.signUp({
             email: guestEmail,
-            password: `Boxifly${Date.now()}`, // Generate temporary password
+            password: generateSecurePassword(), // Contraseña aleatoria; el usuario la define por email
             options: {
               data: {
                 full_name: guestName,
