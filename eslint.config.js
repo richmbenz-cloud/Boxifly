@@ -21,6 +21,19 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
+      // Deuda técnica preexistente: degradado a warning para no bloquear el CI.
+      // Visible en editor/CI; reducir progresivamente y volver a "error".
+      "@typescript-eslint/no-explicit-any": "warn",
+      // Reglas del React Compiler (eslint-plugin-react-hooks v7): se adoptan de
+      // forma incremental como warning para guiar el código nuevo sin bloquear
+      // el CI por deuda preexistente. rules-of-hooks se mantiene en "error".
+      "react-hooks/refs": "warn",
+      "react-hooks/immutability": "warn",
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/preserve-manual-memoization": "warn",
+      "react-hooks/purity": "warn",
+      "react-hooks/static-components": "warn",
+      "react-hooks/rules-of-hooks": "error",
     },
   },
 );

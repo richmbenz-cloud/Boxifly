@@ -183,6 +183,30 @@ function useCountUp(end: number, duration: number = 2000, start: boolean = false
   return decimals > 0 ? count.toFixed(decimals) : Math.floor(count).toLocaleString();
 }
 
+type StatItem = (typeof STATS)[number];
+
+function StatCounter({ stat, hasAnimated }: { stat: StatItem; hasAnimated: boolean }) {
+  const Icon = stat.icon;
+  const animatedValue = useCountUp(stat.value, 2500, hasAnimated, stat.decimals || 0);
+
+  return (
+    <div className="text-center group animate-fade-in">
+      <div className="flex justify-center mb-3 sm:mb-4">
+        <div className="p-3 sm:p-4 rounded-2xl bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
+          <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+        </div>
+      </div>
+      <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-2 tabular-nums">
+        {animatedValue}
+        <span className="text-3xl sm:text-4xl md:text-5xl">{stat.suffix}</span>
+      </div>
+      <p className="text-xs sm:text-sm md:text-base text-muted-foreground font-medium px-2">
+        {stat.label}
+      </p>
+    </div>
+  );
+}
+
 export function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -265,35 +289,9 @@ export function TestimonialsSection() {
         {/* Contador animado de estadísticas */}
         <div ref={statsRef} className="mb-16 sm:mb-20">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-5xl mx-auto px-4 sm:px-0">
-            {STATS.map((stat) => {
-              const Icon = stat.icon;
-              const animatedValue = useCountUp(
-                stat.value,
-                2500,
-                hasAnimated,
-                stat.decimals || 0
-              );
-
-              return (
-                <div
-                  key={stat.label}
-                  className="text-center group animate-fade-in"
-                >
-                  <div className="flex justify-center mb-3 sm:mb-4">
-                    <div className="p-3 sm:p-4 rounded-2xl bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
-                      <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-                    </div>
-                  </div>
-                  <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-2 tabular-nums">
-                    {animatedValue}
-                    <span className="text-3xl sm:text-4xl md:text-5xl">{stat.suffix}</span>
-                  </div>
-                  <p className="text-xs sm:text-sm md:text-base text-muted-foreground font-medium px-2">
-                    {stat.label}
-                  </p>
-                </div>
-              );
-            })}
+            {STATS.map((stat) => (
+              <StatCounter key={stat.label} stat={stat} hasAnimated={hasAnimated} />
+            ))}
           </div>
         </div>
 
