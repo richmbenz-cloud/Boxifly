@@ -9,15 +9,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Upload, X } from 'lucide-react';
+import { ArrowLeft, Upload, X, CheckCircle2, AlertTriangle, Info, HelpCircle, ChevronDown } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
+import { detectTracking, TRACKING_HELP, type TrackingDetection } from '@/lib/trackingValidation';
 
 const NewPrealert = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  
+  const [showTrackingHelp, setShowTrackingHelp] = useState(false);
+
   const [formData, setFormData] = useState({
     storeName: '',
     trackingNumber: '',
@@ -27,9 +29,21 @@ const NewPrealert = () => {
     deliveryType: 'standard',
     notes: ''
   });
-  
+
+  const [tracking, setTracking] = useState<TrackingDetection>({
+    carrier: null,
+    isLikelyOrderNumber: false,
+    isValidCarrierFormat: false,
+    level: 'none',
+  });
+
   const [photos, setPhotos] = useState<File[]>([]);
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+
+  const handleTrackingChange = (value: string) => {
+    setFormData({ ...formData, trackingNumber: value });
+    setTracking(detectTracking(value));
+  };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -43,7 +57,7 @@ const NewPrealert = () => {
     }
 
     setPhotos(prev => [...prev, ...files]);
-    
+
     files.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -60,11 +74,22 @@ const NewPrealert = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.storeName || !formData.trackingNumber || !formData.estimatedValue) {
       toast({
         title: "Campos requeridos",
         description: "Por favor completa todos los campos obligatorios",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Bloqueo inteligente: no permitir números de orden como tracking.
+    if (tracking.isLikelyOrderNumber) {
+      toast({
+        title: "Eso parece un número de orden",
+        description:
+          "Ingresa el código de seguimiento de la transportadora (UPS, FedEx, USPS, DHL...), no el número de pedido de la tienda.",
         variant: "destructive"
       });
       return;
@@ -164,8 +189,8 @@ const NewPrealert = () => {
   return (
     <DashboardLayout title="Nueva Prealerta">
       <div className="max-w-3xl mx-auto">
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={() => navigate('/')}
           className="mb-4"
         >
@@ -195,16 +220,80 @@ const NewPrealert = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="trackingNumber">Tracking *</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="trackingNumber">Tracking *</Label>
+                    <button
+                      type="button"
+                      onClick={() => setShowTrackingHelp((v) => !v)}
+                      className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5" />
+                      ¿Dónde lo encuentro?
+                    </button>
+                  </div>
                   <Input
                     id="trackingNumber"
-                    placeholder="1234567890"
+                    placeholder="1Z999AA10123456784"
                     value={formData.trackingNumber}
-                    onChange={(e) => setFormData({ ...formData, trackingNumber: e.target.value })}
+                    onChange={(e) => handleTrackingChange(e.target.value)}
+                    aria-invalid={tracking.isLikelyOrderNumber}
+                    className={
+                      tracking.level === 'success'
+                        ? 'border-green-500 focus-visible:ring-green-500'
+                        : tracking.level === 'warning'
+                        ? 'border-amber-500 focus-visible:ring-amber-500'
+                        : ''
+                    }
                     required
                   />
-                </div>
 
+                  {/* Feedback en tiempo real de detección de tracking */}
+                  {tracking.level === 'success' && (
+                    <p className="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400">
+                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                      <span>Detectado: <strong>{tracking.carrier}</strong></span>
+                    </p>
+                  )}
+                  {tracking.level === 'warning' && (
+                    <p className="flex items-start gap-1.5 text-xs text-amber-600 dark:text-amber-400">
+                      <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                      <span>{tracking.message}</span>
+                    </p>
+                  )}
+                  {tracking.level === 'info' && (
+                    <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
+                      <Info className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                      <span>{tracking.message}</span>
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Panel de ayuda desplegable */}
+              {showTrackingHelp && (
+                <div className="rounded-lg border border-border bg-muted/40 p-4">
+                  <div className="flex items-center gap-2 mb-3 text-sm font-medium">
+                    <HelpCircle className="h-4 w-4 text-primary" />
+                    ¿Dónde encuentro mi código de rastreo?
+                    <ChevronDown className="h-4 w-4 ml-auto text-muted-foreground" />
+                  </div>
+                  <ul className="space-y-3">
+                    {TRACKING_HELP.map((item) => (
+                      <li key={item.store} className="text-sm">
+                        <span className="font-semibold text-foreground">{item.store}:</span>{' '}
+                        <span className="text-muted-foreground">{item.steps}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    💡 El código de rastreo es de la <strong>transportadora</strong> (UPS, FedEx, USPS, DHL),
+                    no el número de pedido de la tienda. El número de orden de Amazon
+                    (formato <code>112-3456789-1234567</code>) <strong>no</strong> sirve para rastrear.
+                  </p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="estimatedValue">Valor Declarado (USD) *</Label>
                   <Input
