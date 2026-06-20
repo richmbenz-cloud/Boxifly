@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/lib/auth";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { CartButton } from "@/components/CartButton";
 import { CartDrawer } from "@/components/CartDrawer";
 import { useLoyaltyNotifications } from "@/hooks/useLoyaltyNotifications";
@@ -119,6 +120,7 @@ function AppContent() {
     <>
       {!isLandingPage && <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />}
       
+      <ErrorBoundary key={location.pathname}>
       <Suspense fallback={
         <div className="flex h-[80vh] w-full items-center justify-center">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
@@ -431,6 +433,7 @@ function AppContent() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       </Suspense>
+      </ErrorBoundary>
     </>
   );
 }
