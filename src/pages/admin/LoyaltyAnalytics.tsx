@@ -484,7 +484,7 @@ const LoyaltyAnalytics = () => {
                         mode="single"
                         selected={dateRange.from}
                         onSelect={(date) => date && handleCustomDateChange(date, dateRange.to)}
-                        initialFocus
+                        autoFocus
                         className={cn("pointer-events-auto")}
                       />
                     </div>
