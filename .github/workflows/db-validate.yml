@@ -1,14 +1,11 @@
 name: DB · Validate migrations
 
-# Gate de PR: aplica TODAS las migraciones versionadas sobre una base
-# Postgres limpia y efímera. Si una migración no aplica desde cero
-# (orden, sintaxis, dependencias rotas) el PR no se puede mergear.
+# Gate de PR (status check requerido). Corre en TODOS los PRs para que el
+# check siempre reporte; el trabajo pesado solo se ejecuta si cambian
+# migraciones. Aplica todas las migraciones sobre Postgres limpia: si no
+# aplican desde cero (orden, sintaxis, dependencias) el PR no mergea.
 on:
   pull_request:
-    paths:
-      - 'supabase/migrations/**'
-      - 'supabase/config.toml'
-      - '.github/workflows/db-validate.yml'
 
 jobs:
   validate-migrations:
@@ -17,23 +14,39 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect migration changes
+        id: changes
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+          if git diff --name-only "$BASE" "$HEAD" | grep -E '^supabase/(migrations/|config.toml)'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No hay cambios de migraciones: validacion omitida (check verde)."
+          fi
 
       - name: Setup Supabase CLI
+        if: steps.changes.outputs.changed == 'true'
         uses: supabase/setup-cli@v1
         with:
           version: latest
 
       - name: Start local Postgres (Supabase)
+        if: steps.changes.outputs.changed == 'true'
         run: supabase db start
 
       - name: Apply ALL migrations from scratch
-        # `db reset` recrea la base local y aplica supabase/migrations/* en orden.
-        # Reproduce exactamente lo que debe pasar en staging/prod.
+        if: steps.changes.outputs.changed == 'true'
         run: supabase db reset --no-seed
 
       - name: Lint database
+        if: steps.changes.outputs.changed == 'true'
         run: supabase db lint --level warning
 
       - name: Stop
-        if: always()
+        if: always() && steps.changes.outputs.changed == 'true'
         run: supabase stop --no-backup
