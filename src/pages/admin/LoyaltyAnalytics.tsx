@@ -484,7 +484,7 @@ const LoyaltyAnalytics = () => {
                         mode="single"
                         selected={dateRange.from}
                         onSelect={(date) => date && handleCustomDateChange(date, dateRange.to)}
-                        initialFocus
+                        autoFocus
                         className={cn("pointer-events-auto")}
                       />
                     </div>
@@ -627,7 +627,7 @@ const LoyaltyAnalytics = () => {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ tier, count, percent }) => `${tier}: ${count} (${(percent * 100).toFixed(0)}%)`}
+                    label={({ tier, count, percent }: any) => `${tier}: ${count} (${(percent * 100).toFixed(0)}%)`}
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="count"

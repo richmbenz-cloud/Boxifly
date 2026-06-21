@@ -66,8 +66,8 @@ const calculateFreight = (roundedWeight: number): { cost: number; formula: strin
   
   // Calcular incremental
   let baseCost = 36.50; // Costo base hasta 3kg
-  let baseWeight = 3.0;
-  let currentWeight = roundedWeight;
+  const baseWeight = 3.0;
+  const currentWeight = roundedWeight;
   let formula = `Base 3kg = $36.50`;
   
   // 3kg - 10kg
