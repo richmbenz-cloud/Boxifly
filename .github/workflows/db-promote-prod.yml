@@ -1,0 +1,43 @@
+name: DB · Promote to PRODUCTION
+
+# Promoción manual y aprobada a PRODUCCIÓN. NUNCA automática.
+# Requiere haber validado antes en Staging (regla de oro de DEPLOYMENT.md).
+# La aprobación se exige vía el GitHub Environment "production"
+# (Settings -> Environments -> production -> Required reviewers).
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Escribe "PROMOTE" para confirmar el push a PRODUCCIÓN'
+        required: true
+        default: ''
+
+concurrency:
+  group: db-prod
+  cancel-in-progress: false
+
+env:
+  PROD_PROJECT_REF: pdnflyuuxstobkhtqutp
+
+jobs:
+  push-prod:
+    name: supabase db push (production)
+    if: ${{ github.event.inputs.confirm == 'PROMOTE' }}
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link & push to Production
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          PROD_DB_PASSWORD: ${{ secrets.PROD_DB_PASSWORD }}
+        run: |
+          supabase link --project-ref "$PROD_PROJECT_REF" --password "$PROD_DB_PASSWORD"
+          supabase db push --password "$PROD_DB_PASSWORD"
