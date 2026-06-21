@@ -247,7 +247,7 @@ export default function Shop({ onCartOpen }: ShopProps) {
     <>
       <NewsletterPopup />
       <ChatWidget />
-      <SEO title="Tienda online Boxifly: productos importados desde EE.UU." description="Compra productos importados desde EE.UU. con entrega en Perú. Catálogo curado, precios claros y pago seguro con Izipay." path="/shop" />
+      <SEO title="Tienda online Boxifly: productos importados desde EE.UU." description="Compra productos importados desde EE.UU. con entrega en Perú. Catálogo curado, precios claros y pago seguro con Izipay." path="/shop" noindex />
       <MainNavigation />
       
       {/* Header with Search and Categories */}

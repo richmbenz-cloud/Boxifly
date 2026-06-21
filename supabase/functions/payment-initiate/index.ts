@@ -1,4 +1,3 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.81.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -20,11 +19,6 @@ Deno.serve(async (req) => {
   try {
     console.log('Payment initiation request received');
 
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
-
     const body: PaymentInitiateRequest = await req.json();
     const { paymentId, method, amount } = body;
 
@@ -35,31 +29,9 @@ Deno.serve(async (req) => {
 
     // Simulate processing delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Auto-confirm payment after delay (simulate payment confirmation)
-    setTimeout(async () => {
-      console.log('Auto-confirming payment (simulated)...');
-      
-      try {
-        // Update payment status directly in database
-        const { error } = await supabaseClient
-          .from('payments')
-          .update({
-            payment_status: 'paid',
-            paid_at: new Date().toISOString(),
-            transaction_id: paymentData.transactionId,
-          })
-          .eq('id', paymentId);
-
-        if (error) {
-          console.error('Error updating payment status:', error);
-        } else {
-          console.log('Payment confirmed successfully:', paymentId);
-        }
-      } catch (err) {
-        console.error('Error in auto-confirmation:', err);
-      }
-    }, 3000); // Auto-confirm after 3 seconds
+    // [SEGURIDAD] Auto-confirmacion FALSA eliminada: antes marcaba el pago como 'paid'
+    // sin dinero real. El pago queda 'pending' hasta una confirmacion real
+    // (webhook del proveedor o confirmacion manual de admin).
 
     return new Response(
       JSON.stringify({
