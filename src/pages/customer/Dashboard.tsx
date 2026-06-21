@@ -7,6 +7,7 @@ import { Package, Plus, Clock, CheckCircle, Truck, AlertCircle, Gift } from 'luc
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
+import ImportCounter from '@/components/ImportCounter';
 
 interface PackageData {
   id: string;
@@ -111,6 +112,11 @@ const CustomerDashboard = () => {
             <Clock className="h-8 w-8 text-status-warning opacity-50" />
           </CardContent>
         </Card>
+      </div>
+
+      {/* Contador de importaciones SUNAT (Pilar #4) */}
+      <div className="mb-8">
+        <ImportCounter packages={packages} />
       </div>
 
       {/* Actions */}

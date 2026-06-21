@@ -410,7 +410,7 @@ const Landing = () => {
                 Tu solución logística para envíos de Estados Unidos a Perú. Rápido, seguro y sin complicaciones.
               </p>
               <a href="/libro-de-reclamaciones" className="hidden md:inline-block hover:opacity-90 transition-opacity">
-                <img alt="Libro de Reclamaciones" src="/lovable-uploads/d323548f-c093-4d62-82b4-e971b100271e.png" className="h-12 w-auto object-contain" />
+                <img alt="Libro de Reclamaciones" src="/images/libro-reclamaciones-icon.png" className="h-12 w-auto object-contain" />
               </a>
             </div>
             
