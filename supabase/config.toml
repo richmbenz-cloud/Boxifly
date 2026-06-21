@@ -1,4 +1,16 @@
-project_id = "ivkfyzdsfpcjymlzerxf"
+# Supabase CLI configuration.
+#
+# project_id is the DEFAULT linked project for the Supabase CLI.
+# We develop against STAGING first, then promote to production.
+#
+#   STAGING (default):  liszyjbqdyjtitamtrnt   -> https://liszyjbqdyjtitamtrnt.supabase.co
+#   PRODUCTION:         pdnflyuuxstobkhtqutp   -> https://pdnflyuuxstobkhtqutp.supabase.co
+#
+# To target production explicitly (promotion step), link with:
+#   supabase link --project-ref pdnflyuuxstobkhtqutp
+#
+# See supabase/DEPLOYMENT.md for the full staging -> production workflow.
+project_id = "liszyjbqdyjtitamtrnt"
 
 [functions.izipay-webhook]
 verify_jwt = false
