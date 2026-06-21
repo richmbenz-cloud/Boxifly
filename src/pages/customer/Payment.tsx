@@ -56,7 +56,13 @@ const Payment = () => {
     let interval: ReturnType<typeof setInterval>;
 
     if (showPaymentDialog && paymentId) {
+      // Stop polling after ~5 minutes (100 attempts x 3s) so the dialog never
+      // spins forever if the Izipay IPN webhook is delayed or never arrives.
+      const MAX_ATTEMPTS = 100;
+      let attempts = 0;
+
       interval = setInterval(async () => {
+        attempts += 1;
         setCheckingStatus(true);
         const { data, error } = await supabase
           .from('payments')
@@ -72,6 +78,17 @@ const Payment = () => {
           toast({
             title: '¡Pago Confirmado!',
             description: 'Tu pago ha sido procesado exitosamente',
+          });
+          return;
+        }
+
+        if (attempts >= MAX_ATTEMPTS) {
+          clearInterval(interval);
+          setShowPaymentDialog(false);
+          toast({
+            title: 'Estamos confirmando tu pago',
+            description:
+              'Si completaste el pago, lo confirmaremos en breve y verás tu paquete actualizado. No vuelvas a pagar.',
           });
         }
       }, 3000); // Check every 3 seconds
@@ -233,17 +250,17 @@ const Payment = () => {
                             : `${packageData.actual_weight}kg`}
                         </span>
                       </div>
-                      <span className="font-medium">${packageData.weight_cost?.toFixed(2)}</span>
+                      <span className="font-medium">US$ {packageData.weight_cost?.toFixed(2)}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
                       <div className="flex flex-col">
                         <span className="text-muted-foreground">Aduanas e Impuestos</span>
                         <span className="text-xs text-muted-foreground">
-                          18% sobre valor declarado (${packageData.estimated_value})
+                          18% sobre valor declarado (US$ {packageData.estimated_value})
                         </span>
                       </div>
-                      <span className="font-medium">${packageData.customs_cost?.toFixed(2)}</span>
+                      <span className="font-medium">US$ {packageData.customs_cost?.toFixed(2)}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
@@ -253,7 +270,7 @@ const Payment = () => {
                           Tipo: {packageData.delivery_type || 'pickup'}
                         </span>
                       </div>
-                      <span className="font-medium">${packageData.delivery_cost?.toFixed(2)}</span>
+                      <span className="font-medium">US$ {packageData.delivery_cost?.toFixed(2)}</span>
                     </div>
                   </div>
 
@@ -262,7 +279,7 @@ const Payment = () => {
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-lg font-semibold">Total a Pagar</span>
                     <span className="text-3xl font-bold text-primary">
-                      ${packageData.final_cost?.toFixed(2)}
+                      US$ {packageData.final_cost?.toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -398,7 +415,7 @@ const Payment = () => {
             </div>
             <DialogTitle className="text-center text-2xl">¡Pago Exitoso!</DialogTitle>
             <DialogDescription className="text-center space-y-2">
-              <span className="block">Tu pago de <span className="font-bold">${packageData?.final_cost?.toFixed(2)}</span> ha sido procesado</span>
+              <span className="block">Tu pago de <span className="font-bold">US$ {packageData?.final_cost?.toFixed(2)}</span> ha sido procesado</span>
               <span className="block text-sm">Tracking: <span className="font-semibold">{packageData?.tracking_number}</span></span>
             </DialogDescription>
           </DialogHeader>
