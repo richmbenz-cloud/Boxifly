@@ -187,7 +187,7 @@ Deno.serve(async (req) => {
     if (transactions.length > 0) {
       const transaction = transactions[0];
       transactionId = transaction.uuid || transactionId;
-      amount = transaction.amount ? transaction.amount / 100 : 0; // Convert from cents
+      amount = transaction.amount ?? 0; // Stored in cents (integer), consistent with izipay-initiate and the integer column
       detailedStatus = transaction.detailedStatus || '';
 
       // Map Izipay status to internal status
