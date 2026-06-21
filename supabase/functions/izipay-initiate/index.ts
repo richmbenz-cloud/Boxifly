@@ -13,6 +13,10 @@ interface IzipayPaymentRequest {
   firstName?: string;
   lastName?: string;
   description?: string;
+  // FX audit: effective PEN->USD rate applied (null/undefined for native PEN charges)
+  // and the canonical order total in soles.
+  exchangeRate?: number | null;
+  baseAmountPen?: number;
 }
 
 interface IzipayPaymentResponse {
@@ -37,7 +41,7 @@ Deno.serve(async (req) => {
     );
 
     const body: IzipayPaymentRequest = await req.json();
-    const { amount, orderId, currency = 'PEN', email, firstName, lastName, description } = body;
+    const { amount, orderId, currency = 'PEN', email, firstName, lastName, description, exchangeRate, baseAmountPen } = body;
 
     console.log('Initiating Izipay payment:', { amount, orderId, currency, email });
 
@@ -135,10 +139,16 @@ Deno.serve(async (req) => {
         charge_id: transactionId,
         amount: amountInCents, // cents (integer)
         status: 'pending',
+        currency, // PEN or USD
+        exchange_rate: exchangeRate ?? null, // effective PEN->USD rate (null for native PEN)
+        base_amount_pen: baseAmountPen ?? null, // canonical order total in soles
         raw: {
           orderId,
           email,
           amount_original: amount,
+          currency,
+          exchange_rate: exchangeRate ?? null,
+          base_amount_pen: baseAmountPen ?? null,
           formToken: formToken.substring(0, 20) + '...', // Log partial token for security
           timestamp: new Date().toISOString(),
         },
