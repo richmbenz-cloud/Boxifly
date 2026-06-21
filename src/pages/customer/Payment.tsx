@@ -139,7 +139,7 @@ const Payment = () => {
       const paymentResponse = await initiatePayment({
         amount: packageData.final_cost!,
         orderId: payment.id, // el webhook actualiza payments por este id
-        currency: 'PEN',
+        currency: 'USD',
         email: user?.email || '',
         firstName: fullName.split(' ')[0] || '',
         lastName: fullName.split(' ').slice(1).join(' ') || '',
