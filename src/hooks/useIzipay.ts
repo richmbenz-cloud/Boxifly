@@ -77,7 +77,13 @@ export const useIzipay = () => {
         'https://static.micuentaweb.pe/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js';
       script.async = true;
       script.setAttribute('data-izipay-script', 'true');
-      script.setAttribute('kr-public-key', '35764467:testpublickey_XdcR04Uy7qPN7Cy2VfoqeG2etnqB4ksajdOAMnvDPZQGm');
+      // Public key for the embedded Krypton form. Configurable per environment
+      // via VITE_IZIPAY_PUBLIC_KEY (set in Vercel: test key for preview, prod key for production).
+      // Falls back to the test public key for local/dev if the env var is absent.
+      const izipayPublicKey =
+        (import.meta.env.VITE_IZIPAY_PUBLIC_KEY as string | undefined) ||
+        '35764467:testpublickey_XdcR04Uy7qPN7Cy2VfoqeG2etnqB4ksajdOAMnvDPZQGm';
+      script.setAttribute('kr-public-key', izipayPublicKey);
       script.setAttribute('kr-language', 'es-ES');
 
       script.onload = () => {

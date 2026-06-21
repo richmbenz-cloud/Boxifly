@@ -190,6 +190,16 @@ function AppContent() {
         } />
         
         {/* Cliente Routes */}
+        <Route path="/payment/:id" element={
+          <ProtectedRoute requiredRole="customer">
+            <Payment />
+          </ProtectedRoute>
+        } />
+        <Route path="/package/:id" element={
+          <ProtectedRoute requiredRole="customer">
+            <PackageDetail />
+          </ProtectedRoute>
+        } />
         <Route path="/cliente/disputes" element={
           <ProtectedRoute requiredRole="customer">
             <Disputes />

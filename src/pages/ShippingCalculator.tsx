@@ -229,7 +229,7 @@ export default function ShippingCalculator() {
                           </td>
                         </tr>
                         {includeGuarantee && calculation.guarantee_cost > 0 && <tr style={{ backgroundColor: '#E9F2F5' }}>
-                            <td className="py-3 px-4">Cobertura del Paquete</td>
+                            <td className="py-3 px-4">Cobertura del Paquete </td>
                             <td className="py-3 px-4 text-right font-medium">
                               ${calculation.guarantee_cost.toFixed(2)}
                             </td>

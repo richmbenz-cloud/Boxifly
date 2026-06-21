@@ -185,9 +185,14 @@ function useCountUp(end: number, duration: number = 2000, start: boolean = false
 
 type StatItem = (typeof STATS)[number];
 
-function StatCounter({ stat, hasAnimated }: { stat: StatItem; hasAnimated: boolean }) {
+function StatCard({ stat, hasAnimated }: { stat: StatItem; hasAnimated: boolean }) {
   const Icon = stat.icon;
-  const animatedValue = useCountUp(stat.value, 2500, hasAnimated, stat.decimals || 0);
+  const animatedValue = useCountUp(
+    stat.value,
+    2500,
+    hasAnimated,
+    ("decimals" in stat ? stat.decimals : 0) || 0
+  );
 
   return (
     <div className="text-center group animate-fade-in">
@@ -290,7 +295,7 @@ export function TestimonialsSection() {
         <div ref={statsRef} className="mb-16 sm:mb-20">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-5xl mx-auto px-4 sm:px-0">
             {STATS.map((stat) => (
-              <StatCounter key={stat.label} stat={stat} hasAnimated={hasAnimated} />
+              <StatCard key={stat.label} stat={stat} hasAnimated={hasAnimated} />
             ))}
           </div>
         </div>
