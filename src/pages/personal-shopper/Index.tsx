@@ -13,7 +13,7 @@ const PersonalShopperIndex = () => {
     <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
-        <SEO title="Personal Shopper en EE.UU. | Boxifly" description="Compramos por ti en tiendas de EE.UU. Modo asistido o en vivo, con cotización clara y entrega a Perú. Seguro y profesional." path="/personal-shopper" />
+        <SEO title="Personal Shopper en EE.UU. | Boxifly" description="Compramos por ti en tiendas de EE.UU. Modo asistido o en vivo, con cotización clara y entrega a Perú. Seguro y profesional." path="/personal-shopper" noindex />
         <MainNavigation />
 
         {/* Hero Section */}

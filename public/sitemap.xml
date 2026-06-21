@@ -19,38 +19,6 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.boxifly.pe/personal-shopper</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.boxifly.pe/personal-shopper/landing</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.boxifly.pe/viajeros</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.boxifly.pe/viajeros/cliente</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.boxifly.pe/viajeros/viajero</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.boxifly.pe/viajeros/legales</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
     <loc>https://www.boxifly.pe/cotizador</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

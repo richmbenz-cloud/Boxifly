@@ -262,7 +262,7 @@ Estos términos constituyen el acuerdo completo entre el usuario y Boxifly, reem
     <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
-        <SEO title="Términos del programa de Viajeros Boxifly" description="Condiciones legales y responsabilidades del programa de viajeros de Boxifly." path="/viajeros/legales" />
+        <SEO title="Términos del programa de Viajeros Boxifly" description="Condiciones legales y responsabilidades del programa de viajeros de Boxifly." path="/viajeros/legales" noindex />
         <MainNavigation />
 
         {/* Hero Section */}
