@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               .from('user_roles')
               .select('role')
               .eq('user_id', session.user.id)
-              .single();
+              .maybeSingle();
             
             if (roleData) {
               setUserRole(roleData.role as UserRole);
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           .from('user_roles')
           .select('role')
           .eq('user_id', session.user.id)
-          .single()
+          .maybeSingle()
           .then(({ data: roleData }) => {
             if (roleData) {
               setUserRole(roleData.role as UserRole);

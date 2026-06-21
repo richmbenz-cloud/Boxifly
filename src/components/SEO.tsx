@@ -9,6 +9,7 @@ interface SEOProps {
   ogType?: "website" | "article" | "product";
   image?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
 }
 
 /**
@@ -23,6 +24,7 @@ export const SEO = ({
   ogType = "website",
   image,
   jsonLd,
+  noindex = false,
 }: SEOProps) => {
   const url = `${BASE_URL}${path}`;
   const truncatedTitle = title.length > 60 ? title.slice(0, 57) + "..." : title;
@@ -33,6 +35,7 @@ export const SEO = ({
     <Helmet>
       <title>{truncatedTitle}</title>
       <meta name="description" content={truncatedDesc} />
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
       <link rel="canonical" href={url} />
       <meta property="og:title" content={truncatedTitle} />
       <meta property="og:description" content={truncatedDesc} />

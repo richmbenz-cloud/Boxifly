@@ -24,7 +24,6 @@ const entries: SitemapEntry[] = [
   { path: "/viajeros/cliente", changefreq: "monthly", priority: "0.7" },
   { path: "/viajeros/viajero", changefreq: "monthly", priority: "0.7" },
   { path: "/viajeros/legales", changefreq: "yearly", priority: "0.3" },
-  { path: "/shop", changefreq: "daily", priority: "0.9", lastmod: today },
   { path: "/cotizador", changefreq: "monthly", priority: "0.8" },
   { path: "/tariffs", changefreq: "monthly", priority: "0.7" },
   { path: "/restricted-products", changefreq: "monthly", priority: "0.6" },

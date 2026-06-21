@@ -101,6 +101,10 @@ const ComoComprarUSAPDF = lazy(() => import("./pages/ComoComprarUSAPDF"));
 
 const queryClient = new QueryClient();
 
+// Phase 2 personas (viajero / shopper): deshabilitadas para el lanzamiento.
+// Reactivar poniendo este flag en true cuando llegue su fase.
+const PHASE_2_ENABLED = false;
+
 function AppContent() {
   const [cartOpen, setCartOpen] = useState(false);
   const location = useLocation();
@@ -330,6 +334,7 @@ function AppContent() {
           </ProtectedRoute>
         } />
         
+        {PHASE_2_ENABLED && <>
         <Route path="/traveler" element={
           <ProtectedRoute>
             <TravelerDashboard />
@@ -381,6 +386,7 @@ function AppContent() {
             <PSShopperDashboard />
           </ProtectedRoute>
         } />
+        </>}
         
         {/* E-commerce Admin Routes */}
         <Route path="/admin/products" element={
