@@ -19,9 +19,6 @@ autogenerados) y debe regenerarse tras cada cambio de esquema.
 | **Staging** (desarrollo/QA) | Boxifly Staging | `liszyjbqdyjtitamtrnt` | https://liszyjbqdyjtitamtrnt.supabase.co |
 | **Producción** (clientes reales) | Boxifly | `pdnflyuuxstobkhtqutp` | https://pdnflyuuxstobkhtqutp.supabase.co |
 
-> ⚠️ El `project_id` que estaba en `config.toml` (`ivkfyzdsfpcjymlzerxf`) era un proyecto
-> heredado de Lovable **ajeno a esta cuenta** (devuelve 403). Ya fue corregido a Staging.
-
 Cada entorno usa **sus propias claves**. En Vercel se separan por target:
 - **Preview** → claves de Staging
 - **Production** → claves de Producción
