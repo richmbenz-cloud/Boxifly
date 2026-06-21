@@ -76,7 +76,7 @@ const PersonalShopper = () => {
   return <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
-        <SEO title="Personal Shopper: compramos por ti en EE.UU." description="Te compramos en tiendas de Estados Unidos y lo enviamos a Perú. Sin tarjeta internacional ni complicaciones." path="/personal-shopper/landing" />
+        <SEO title="Personal Shopper: compramos por ti en EE.UU." description="Te compramos en tiendas de Estados Unidos y lo enviamos a Perú. Sin tarjeta internacional ni complicaciones." path="/personal-shopper/landing" noindex />
         <MainNavigation />
 
         {/* Hero Section */}
