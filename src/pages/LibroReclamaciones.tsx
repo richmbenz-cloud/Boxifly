@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from '@/components/SEO';
 import { Mail, Phone, MapPin, FileText, Send, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,6 +63,7 @@ const LibroReclamaciones = () => {
     }));
   };
   return <div className="min-h-screen bg-background">
+      <SEO title="Libro de reclamaciones virtual" description="Registra tu reclamo o queja en el libro de reclamaciones virtual de Boxifly." path="/libro-de-reclamaciones" />
       <MainNavigation />
       <ChatWidget />
 

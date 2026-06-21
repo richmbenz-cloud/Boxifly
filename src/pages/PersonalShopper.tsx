@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ShoppingBag, Search, CreditCard, Package, CheckCircle, Star, Clock, Shield, MessageCircle, Sparkles } from 'lucide-react';
@@ -75,6 +76,7 @@ const PersonalShopper = () => {
   return <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
+        <SEO title="Personal Shopper: compramos por ti en EE.UU." description="Te compramos en tiendas de Estados Unidos y lo enviamos a Perú. Sin tarjeta internacional ni complicaciones." path="/personal-shopper/landing" />
         <MainNavigation />
 
         {/* Hero Section */}

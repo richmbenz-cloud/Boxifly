@@ -1,4 +1,5 @@
 import { MessageCircle, Clock, CheckCircle, Smartphone } from "lucide-react";
+import { SEO } from '@/components/SEO';
 import { MainNavigation } from "@/components/MainNavigation";
 import { ChatWidget } from "@/components/ChatWidget";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -14,6 +15,7 @@ const AtencionWhatsApp = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
+      <SEO title="Atención al cliente por WhatsApp" description="Resuelve tus dudas y gestiona tus envíos por WhatsApp con el equipo de soporte de Boxifly." path="/atencion-por-whatsapp" />
       <MainNavigation />
       
       {/* Hero Section */}

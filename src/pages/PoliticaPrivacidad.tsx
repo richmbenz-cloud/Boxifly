@@ -1,4 +1,5 @@
 import { MainNavigation } from "@/components/MainNavigation";
+import { SEO } from '@/components/SEO';
 import { ChatWidget } from "@/components/ChatWidget";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -10,6 +11,7 @@ const PoliticaPrivacidad = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      <SEO title="Política de privacidad" description="Conoce cómo Boxifly protege, usa y trata tus datos personales." path="/politica-privacidad" />
       <MainNavigation />
       
       {/* Hero Section */}

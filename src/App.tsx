@@ -188,6 +188,11 @@ function AppContent() {
             <MyOrders />
           </ProtectedRoute>
         } />
+        <Route path="/new-prealert" element={
+          <ProtectedRoute allowedRoles={['customer', 'b2b']}>
+            <NewPrealert />
+          </ProtectedRoute>
+        } />
         
         {/* Cliente Routes */}
         <Route path="/payment/:id" element={

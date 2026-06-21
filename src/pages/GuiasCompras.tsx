@@ -1,4 +1,5 @@
 import { BookOpen, Package, CreditCard, MapPin, Shield, TrendingUp, Store } from "lucide-react";
+import { SEO } from '@/components/SEO';
 import { Link } from "react-router-dom";
 import { MainNavigation } from "@/components/MainNavigation";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -11,6 +12,7 @@ const GuiasCompras = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
+      <SEO title="Guías de compras en tiendas de EE.UU." description="Aprende a comprar en las mejores tiendas de Estados Unidos y recibe tus productos en Perú con Boxifly." path="/guias-de-compras" />
       <MainNavigation />
       
       {/* Hero Section */}

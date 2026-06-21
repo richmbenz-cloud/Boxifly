@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { 
@@ -293,6 +294,7 @@ const ViajeroCliente = () => {
     <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
+        <SEO title="Viajeros: trae tus compras de EE.UU. a Perú" description="Conecta con viajeros verificados para traer tus compras de Estados Unidos a Perú de forma rápida y segura." path="/viajeros/cliente" />
         <MainNavigation />
 
         {/* Hero Section */}

@@ -1,4 +1,5 @@
 import { MainNavigation } from "@/components/MainNavigation";
+import { SEO } from '@/components/SEO';
 import { ChatWidget } from "@/components/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -92,6 +93,7 @@ const Afiliados = () => {
     answer: "Sí, tendrás acceso a un dashboard completo donde podrás ver en tiempo real tus referidos, conversiones, comisiones ganadas y estadísticas detalladas de rendimiento."
   }];
   return <div className="min-h-screen bg-background">
+      <SEO title="Programa de Afiliados Boxifly" description="Gana comisiones de hasta 15% refiriendo clientes a Boxifly. Únete a nuestro programa de afiliados." path="/afiliados" />
       <MainNavigation />
       
       {/* Hero Section */}

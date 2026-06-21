@@ -1,4 +1,5 @@
 import { Scale, FileText, Shield } from "lucide-react";
+import { SEO } from '@/components/SEO';
 import { MainNavigation } from "@/components/MainNavigation";
 import { ChatWidget } from "@/components/ChatWidget";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -10,6 +11,7 @@ const Legales = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
+      <SEO title="Información legal de Boxifly" description="Información legal, términos y políticas de Boxifly." path="/legales" />
       <MainNavigation />
       
       {/* Hero Section */}

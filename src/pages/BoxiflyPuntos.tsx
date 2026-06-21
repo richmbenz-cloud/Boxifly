@@ -1,4 +1,5 @@
 import { Gift, TrendingUp, Award, Star } from "lucide-react";
+import { SEO } from '@/components/SEO';
 import { MainNavigation } from "@/components/MainNavigation";
 import { ChatWidget } from "@/components/ChatWidget";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -11,6 +12,7 @@ const BoxiflyPuntos = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
+      <SEO title="Boxifly Puntos: gana y canjea recompensas" description="Acumula puntos con cada envío y canjéalos por descuentos y beneficios exclusivos en Boxifly." path="/boxifly-puntos" />
       <MainNavigation />
       
       {/* Hero Section */}
