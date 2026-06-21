@@ -20,10 +20,14 @@ export const useNotifications = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      fetchNotifications();
-      subscribeToNotifications();
-    }
+    if (!user) return;
+    fetchNotifications();
+    // Importante: conservar y ejecutar la función de limpieza para remover el
+    // canal de realtime. Si no se remueve, al re-ejecutarse el efecto (p. ej.
+    // refresh de sesión) se reutiliza el mismo canal ya suscrito y llamar .on()
+    // tras .subscribe() lanza un error que tumba todo el dashboard.
+    const unsubscribe = subscribeToNotifications();
+    return unsubscribe;
   }, [user]);
 
   const fetchNotifications = async () => {
@@ -47,7 +51,7 @@ export const useNotifications = () => {
     if (!user) return;
 
     const channel = supabase
-      .channel('notifications-changes')
+      .channel(`notifications-changes-${user.id}`)
       .on(
         'postgres_changes',
         {
