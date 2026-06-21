@@ -13,7 +13,7 @@ const ViajeroIndex = () => {
     <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
-        <SEO title="Viajeros: encomiendas EE.UU.–Perú | Boxifly" description="Conectamos clientes con viajeros verificados que traen encomiendas desde EE.UU. a Perú. Más rápido y económico que el envío tradicional." path="/viajeros" />
+        <SEO title="Viajeros: encomiendas EE.UU.–Perú | Boxifly" description="Conectamos clientes con viajeros verificados que traen encomiendas desde EE.UU. a Perú. Más rápido y económico que el envío tradicional." path="/viajeros" noindex />
         <MainNavigation />
 
         {/* Hero Section */}

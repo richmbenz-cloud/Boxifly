@@ -384,7 +384,7 @@ const Viajero = () => {
     <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
-        <SEO title="Sé viajero Boxifly y gana dinero extra" description="Aprovecha tu equipaje disponible: transporta paquetes a Perú y genera ingresos extra con Boxifly." path="/viajeros/viajero" />
+        <SEO title="Sé viajero Boxifly y gana dinero extra" description="Aprovecha tu equipaje disponible: transporta paquetes a Perú y genera ingresos extra con Boxifly." path="/viajeros/viajero" noindex />
         <MainNavigation />
 
         {/* Hero Section */}

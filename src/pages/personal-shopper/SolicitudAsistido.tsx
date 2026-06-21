@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { SEO } from '@/components/SEO';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -168,6 +169,7 @@ const PSAsistidoSolicitud = () => {
 
   return (
     <>
+      <SEO title="Solicitud Personal Shopper" description="Solicitud de Personal Shopper Boxifly." path="/personal-shopper/solicitud" noindex />
       <ChatWidget />
       <div className="min-h-screen bg-background">
         <MainNavigation />

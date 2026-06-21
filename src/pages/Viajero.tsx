@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Plane, DollarSign, Shield, Clock, CheckCircle, MapPin, Briefcase, TrendingUp, FileText, Camera } from 'lucide-react';
 import { MainNavigation } from '@/components/MainNavigation';
 import { ChatWidget } from '@/components/ChatWidget';
+import { SEO } from '@/components/SEO';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const Viajero = () => {
   const navigate = useNavigate();
@@ -86,6 +87,7 @@ const Viajero = () => {
     description: 'Viajeros activos ganan hasta $600/mes en promedio.'
   }];
   return <>
+      <SEO title="Sé viajero Boxifly" description="Programa de viajeros Boxifly." path="/viajero" noindex />
       <ChatWidget />
       <div className="min-h-screen bg-background">
         <MainNavigation />
