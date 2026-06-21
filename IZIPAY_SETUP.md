@@ -28,13 +28,14 @@ Si ves este error al probar la integración, significa que estás usando la **cl
 - Copia la **Clave Privada** o **Password** (NO la pública)
 - Esta clave suele ser diferente y más larga que la pública
 
-### Paso 4: Actualizar el Secreto en Lovable
-1. En tu proyecto Lovable, ve a **Settings** → **Integrations** → **Cloud**
-2. Busca **Secrets** o **Secretos**
-3. Encuentra el secreto `IZIPAY_TEST_API_KEY`
-4. Haz clic en **Edit** o **Actualizar**
-5. Reemplaza el valor con tu **clave privada de test**
-6. Guarda los cambios
+### Paso 4: Actualizar el Secreto en Supabase
+1. En el [Dashboard de Supabase](https://supabase.com/dashboard) del proyecto **Boxifly**, ve a **Edge Functions** → **Secrets** (o **Project Settings** → **Edge Functions** → **Secrets**)
+2. Encuentra el secreto `IZIPAY_TEST_API_KEY`
+3. Haz clic en **Edit** o **Actualizar**
+4. Reemplaza el valor con tu **clave privada de test**
+5. Guarda los cambios
+
+> Nota: los secretos de las edge functions se gestionan en Supabase. Las variables de entorno del frontend (`VITE_*`) se configuran en **Vercel** (Settings → Environment Variables).
 
 ## ✅ Verificar la Configuración
 
@@ -49,8 +50,8 @@ Después de actualizar el secreto:
 
 ### Ver Logs de la Edge Function
 ```bash
-# En el panel de Lovable
-Settings → Cloud → Edge Functions → izipay-initiate → View Logs
+# En el Dashboard de Supabase
+Edge Functions → izipay-initiate → Logs
 ```
 
 ### Errores Comunes y Soluciones

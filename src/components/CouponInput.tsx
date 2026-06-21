@@ -48,12 +48,10 @@ export function CouponInput({ subtotal, onCouponApplied }: CouponInputProps) {
       return data;
     },
     onSuccess: (data) => {
-      let discount = 0;
-      if (data.discount_type === "percentage") {
-        discount = subtotal * (data.discount_value / 100);
-      } else {
-        discount = data.discount_value;
-      }
+      const discount =
+        data.discount_type === "percentage"
+          ? subtotal * (data.discount_value / 100)
+          : data.discount_value;
 
       setAppliedCoupon(data);
       onCouponApplied(discount, data.code);

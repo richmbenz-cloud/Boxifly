@@ -41,6 +41,10 @@ Deno.serve(async (req) => {
 
     console.log('Initiating Izipay payment:', { amount, orderId, currency, email });
 
+    // Amount in the smallest currency unit (cents). Round to avoid
+    // floating-point artifacts (e.g. 19.99 * 100 = 1998.9999...).
+    const amountInCents = Math.round(amount * 100);
+
     // Get Izipay credentials from secrets
     const izipaySecret = Deno.env.get('IZIPAY_TEST_API_KEY');
     if (!izipaySecret) {
@@ -59,7 +63,7 @@ Deno.serve(async (req) => {
 
     // Prepare payment data for Izipay
     const paymentData = {
-      amount: amount * 100, // Izipay expects amount in cents
+      amount: amountInCents, // Izipay expects amount in cents (integer)
       currency: currency,
       orderId: orderId,
       customer: {
@@ -92,9 +96,9 @@ Deno.serve(async (req) => {
     if (izipayResult.status === 'ERROR' && izipayResult.answer?.errorCode) {
       const errorCode = izipayResult.answer.errorCode;
       const errorMessage = izipayResult.answer.errorMessage;
-      
+
       console.error('Izipay API Error:', { errorCode, errorMessage });
-      
+
       // Provide helpful error messages
       if (errorCode === 'INT_905') {
         throw new Error(
@@ -104,7 +108,7 @@ Deno.serve(async (req) => {
           'mientras que la clave privada es diferente y se obtiene del dashboard de Izipay.'
         );
       }
-      
+
       throw new Error(`Error de Izipay [${errorCode}]: ${errorMessage}`);
     }
 
@@ -120,16 +124,16 @@ Deno.serve(async (req) => {
       console.error('No formToken in response. Full response:', izipayResult);
       throw new Error('No form token received from Izipay. Check logs for details.');
     }
-    
+
     console.log('Payment created successfully. Transaction ID:', transactionId);
 
-    // Log payment initiation in database (convert amount to cents/integer)
+    // Log payment initiation in database (amount stored in cents/integer)
     const { error: logError } = await supabaseClient
       .from('payments_webhooks')
       .insert({
         event_type: 'izipay.payment.initiated',
         charge_id: transactionId,
-        amount: Math.round(amount * 100), // Convert to cents (integer)
+        amount: amountInCents, // cents (integer)
         status: 'pending',
         raw: {
           orderId,
@@ -160,7 +164,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Error in Izipay payment initiation:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    
+
     const response: IzipayPaymentResponse = {
       success: false,
       error: errorMessage,

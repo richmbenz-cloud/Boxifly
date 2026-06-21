@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,97 +6,98 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/lib/auth";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { CartButton } from "@/components/CartButton";
 import { CartDrawer } from "@/components/CartDrawer";
 import { useLoyaltyNotifications } from "@/hooks/useLoyaltyNotifications";
-import Index from "./pages/Index";
-import Landing from "./pages/Landing";
-import Inicio from "./pages/Inicio";
-import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
-import ShippingCalculator from "./pages/ShippingCalculator";
-import Tariffs from "./pages/Tariffs";
-import RestrictedProducts from "./pages/RestrictedProducts";
-import NewPrealert from "./pages/customer/NewPrealert";
-import PackageDetail from "./pages/customer/PackageDetail";
-import Payment from "./pages/customer/Payment";
-import Consolidation from "./pages/warehouse/Consolidation";
-import TariffManagement from "./pages/admin/TariffManagement";
-import B2BRatesManagement from "./pages/admin/B2BRatesManagement";
-import UserManagement from "./pages/admin/UserManagement";
-import PackageHistory from "./pages/admin/PackageHistory";
-import WhatsAppSimulator from "./pages/admin/WhatsAppSimulator";
-import DisputeManagement from "./pages/admin/DisputeManagement";
-import InternationalTracking from "./pages/warehouse/InternationalTracking";
-import Disputes from "./pages/customer/Disputes";
-import WhatsAppHistory from "./pages/admin/WhatsAppHistory";
-import WarehouseInventory from "./pages/warehouse/Inventory";
-import WarehouseIncidents from "./pages/warehouse/Incidents";
-import B2BBulkUpload from "./pages/b2b/BulkUpload";
-import B2BDashboard from "./pages/b2b/Dashboard";
-import AdminReports from "./pages/admin/Reports";
-import AdminAuditLogs from "./pages/admin/AuditLogs";
-import TravelerDashboard from "./pages/traveler/Dashboard";
-import AvailablePackages from "./pages/traveler/AvailablePackages";
-import TripHistory from "./pages/traveler/TripHistory";
-import TravelerAffidavit from "./pages/traveler/TravelerAffidavit";
-import ShopperDashboard from "./pages/shopper/Dashboard";
-import AvailableRequests from "./pages/shopper/AvailableRequests";
-import MyRequests from "./pages/shopper/MyRequests";
-import PSShopperDashboard from "./pages/personal-shopper/ShopperDashboard";
-import Shop from "./pages/Shop";
-import ProductDetail from "./pages/ProductDetail";
-import Cart from "./pages/Cart";
-import Checkout from "./pages/Checkout";
-import MyOrders from "./pages/MyOrders";
-import ProductsManagement from "./pages/admin/ProductsManagement";
-import OrdersManagement from "./pages/admin/OrdersManagement";
-import CustomerReferrals from "./pages/customer/Referrals";
-import B2BReferrals from "./pages/b2b/Referrals";
-import CustomerShoppingRequests from "./pages/customer/ShoppingRequests";
-import ShopperVerification from "./pages/admin/ShopperVerification";
-import KYCVerification from "./pages/admin/KYCVerification";
-import TrackOrder from "./pages/TrackOrder";
-import OrderConfirmation from "./pages/OrderConfirmation";
-import LoyaltyPoints from "./pages/customer/LoyaltyPoints";
-import Profile from "./pages/customer/Profile";
-import VIPBenefits from "./pages/customer/VIPBenefits";
-import CustomerPSDashboard from "./pages/customer/PersonalShopperDashboard";
-import PersonalShopperAdmin from "./pages/admin/PersonalShopperAdmin";
-import LoyaltyAnalytics from "./pages/admin/LoyaltyAnalytics";
-import UpdateProductImage from "./pages/admin/UpdateProductImage";
+const Index = lazy(() => import("./pages/Index"));
+const Landing = lazy(() => import("./pages/Landing"));
+const Inicio = lazy(() => import("./pages/Inicio"));
+const Auth = lazy(() => import("./pages/Auth"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ShippingCalculator = lazy(() => import("./pages/ShippingCalculator"));
+const Tariffs = lazy(() => import("./pages/Tariffs"));
+const RestrictedProducts = lazy(() => import("./pages/RestrictedProducts"));
+const NewPrealert = lazy(() => import("./pages/customer/NewPrealert"));
+const PackageDetail = lazy(() => import("./pages/customer/PackageDetail"));
+const Payment = lazy(() => import("./pages/customer/Payment"));
+const Consolidation = lazy(() => import("./pages/warehouse/Consolidation"));
+const TariffManagement = lazy(() => import("./pages/admin/TariffManagement"));
+const B2BRatesManagement = lazy(() => import("./pages/admin/B2BRatesManagement"));
+const UserManagement = lazy(() => import("./pages/admin/UserManagement"));
+const PackageHistory = lazy(() => import("./pages/admin/PackageHistory"));
+const WhatsAppSimulator = lazy(() => import("./pages/admin/WhatsAppSimulator"));
+const DisputeManagement = lazy(() => import("./pages/admin/DisputeManagement"));
+const InternationalTracking = lazy(() => import("./pages/warehouse/InternationalTracking"));
+const Disputes = lazy(() => import("./pages/customer/Disputes"));
+const WhatsAppHistory = lazy(() => import("./pages/admin/WhatsAppHistory"));
+const WarehouseInventory = lazy(() => import("./pages/warehouse/Inventory"));
+const WarehouseIncidents = lazy(() => import("./pages/warehouse/Incidents"));
+const B2BBulkUpload = lazy(() => import("./pages/b2b/BulkUpload"));
+const B2BDashboard = lazy(() => import("./pages/b2b/Dashboard"));
+const AdminReports = lazy(() => import("./pages/admin/Reports"));
+const AdminAuditLogs = lazy(() => import("./pages/admin/AuditLogs"));
+const TravelerDashboard = lazy(() => import("./pages/traveler/Dashboard"));
+const AvailablePackages = lazy(() => import("./pages/traveler/AvailablePackages"));
+const TripHistory = lazy(() => import("./pages/traveler/TripHistory"));
+const TravelerAffidavit = lazy(() => import("./pages/traveler/TravelerAffidavit"));
+const ShopperDashboard = lazy(() => import("./pages/shopper/Dashboard"));
+const AvailableRequests = lazy(() => import("./pages/shopper/AvailableRequests"));
+const MyRequests = lazy(() => import("./pages/shopper/MyRequests"));
+const PSShopperDashboard = lazy(() => import("./pages/personal-shopper/ShopperDashboard"));
+const Shop = lazy(() => import("./pages/Shop"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const MyOrders = lazy(() => import("./pages/MyOrders"));
+const ProductsManagement = lazy(() => import("./pages/admin/ProductsManagement"));
+const OrdersManagement = lazy(() => import("./pages/admin/OrdersManagement"));
+const CustomerReferrals = lazy(() => import("./pages/customer/Referrals"));
+const B2BReferrals = lazy(() => import("./pages/b2b/Referrals"));
+const CustomerShoppingRequests = lazy(() => import("./pages/customer/ShoppingRequests"));
+const ShopperVerification = lazy(() => import("./pages/admin/ShopperVerification"));
+const KYCVerification = lazy(() => import("./pages/admin/KYCVerification"));
+const TrackOrder = lazy(() => import("./pages/TrackOrder"));
+const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation"));
+const LoyaltyPoints = lazy(() => import("./pages/customer/LoyaltyPoints"));
+const Profile = lazy(() => import("./pages/customer/Profile"));
+const VIPBenefits = lazy(() => import("./pages/customer/VIPBenefits"));
+const CustomerPSDashboard = lazy(() => import("./pages/customer/PersonalShopperDashboard"));
+const PersonalShopperAdmin = lazy(() => import("./pages/admin/PersonalShopperAdmin"));
+const LoyaltyAnalytics = lazy(() => import("./pages/admin/LoyaltyAnalytics"));
+const UpdateProductImage = lazy(() => import("./pages/admin/UpdateProductImage"));
 import { CartProvider } from "@/context/CartContext";
-import GenerateProfileImages from "./pages/admin/GenerateProfileImages";
-import Casillero from "./pages/Casillero";
-import PersonalShopperLanding from "./pages/PersonalShopper";
-import PersonalShopperIndex from "./pages/personal-shopper/Index";
-import PSAsistidoSolicitud from "./pages/personal-shopper/SolicitudAsistido";
-import Viajero from "./pages/Viajero";
-import B2B from "./pages/B2B";
-import Blog from "./pages/Blog";
-import Nosotros from "./pages/Nosotros";
-import TerminosCondiciones from "./pages/TerminosCondiciones";
-import Contacto from "./pages/Contacto";
-import Afiliados from "./pages/Afiliados";
-import LibroReclamaciones from "./pages/LibroReclamaciones";
-import PoliticaCambiosDevoluciones from "./pages/PoliticaCambiosDevoluciones";
-import PoliticaPrivacidad from "./pages/PoliticaPrivacidad";
-import Ayuda from "./pages/Ayuda";
-import PreguntasFrecuentes from "./pages/PreguntasFrecuentes";
-import TiposEntrega from "./pages/TiposEntrega";
-import Legales from "./pages/Legales";
-import AtencionWhatsApp from "./pages/AtencionWhatsApp";
-import BoxiflyPuntos from "./pages/BoxiflyPuntos";
-import GuiasCompras from "./pages/GuiasCompras";
-import GanadoresConcursos from "./pages/GanadoresConcursos";
-import TiendasEnUSA from "./pages/TiendasEnUSA";
-import ViajerosIndex from "./pages/viajeros/Index";
-import ViajerosCliente from "./pages/viajeros/Cliente";
-import ViajerosViajero from "./pages/viajeros/Viajero";
-import ViajerosLegales from "./pages/viajeros/Legales";
-import IzipayTest from "./pages/IzipayTest";
-import ComoComprarUSA from "./pages/ComoComprarUSA";
-import ComoComprarUSAPDF from "./pages/ComoComprarUSAPDF";
+const GenerateProfileImages = lazy(() => import("./pages/admin/GenerateProfileImages"));
+const Casillero = lazy(() => import("./pages/Casillero"));
+const PersonalShopperLanding = lazy(() => import("./pages/PersonalShopper"));
+const PersonalShopperIndex = lazy(() => import("./pages/personal-shopper/Index"));
+const PSAsistidoSolicitud = lazy(() => import("./pages/personal-shopper/SolicitudAsistido"));
+const Viajero = lazy(() => import("./pages/Viajero"));
+const B2B = lazy(() => import("./pages/B2B"));
+const Blog = lazy(() => import("./pages/Blog"));
+const Nosotros = lazy(() => import("./pages/Nosotros"));
+const TerminosCondiciones = lazy(() => import("./pages/TerminosCondiciones"));
+const Contacto = lazy(() => import("./pages/Contacto"));
+const Afiliados = lazy(() => import("./pages/Afiliados"));
+const LibroReclamaciones = lazy(() => import("./pages/LibroReclamaciones"));
+const PoliticaCambiosDevoluciones = lazy(() => import("./pages/PoliticaCambiosDevoluciones"));
+const PoliticaPrivacidad = lazy(() => import("./pages/PoliticaPrivacidad"));
+const Ayuda = lazy(() => import("./pages/Ayuda"));
+const PreguntasFrecuentes = lazy(() => import("./pages/PreguntasFrecuentes"));
+const TiposEntrega = lazy(() => import("./pages/TiposEntrega"));
+const Legales = lazy(() => import("./pages/Legales"));
+const AtencionWhatsApp = lazy(() => import("./pages/AtencionWhatsApp"));
+const BoxiflyPuntos = lazy(() => import("./pages/BoxiflyPuntos"));
+const GuiasCompras = lazy(() => import("./pages/GuiasCompras"));
+const GanadoresConcursos = lazy(() => import("./pages/GanadoresConcursos"));
+const TiendasEnUSA = lazy(() => import("./pages/TiendasEnUSA"));
+const ViajerosIndex = lazy(() => import("./pages/viajeros/Index"));
+const ViajerosCliente = lazy(() => import("./pages/viajeros/Cliente"));
+const ViajerosViajero = lazy(() => import("./pages/viajeros/Viajero"));
+const ViajerosLegales = lazy(() => import("./pages/viajeros/Legales"));
+const IzipayTest = lazy(() => import("./pages/IzipayTest"));
+const ComoComprarUSA = lazy(() => import("./pages/ComoComprarUSA"));
+const ComoComprarUSAPDF = lazy(() => import("./pages/ComoComprarUSAPDF"));
 
 const queryClient = new QueryClient();
 
@@ -119,7 +120,13 @@ function AppContent() {
     <>
       {!isLandingPage && <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />}
       
-      <Routes>
+      <ErrorBoundary key={location.pathname}>
+      <Suspense fallback={
+        <div className="flex h-[80vh] w-full items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      }>
+        <Routes>
         {/* Main routes */}
         <Route path="/" element={<Inicio />} />
         
@@ -183,6 +190,16 @@ function AppContent() {
         } />
         
         {/* Cliente Routes */}
+        <Route path="/payment/:id" element={
+          <ProtectedRoute requiredRole="customer">
+            <Payment />
+          </ProtectedRoute>
+        } />
+        <Route path="/package/:id" element={
+          <ProtectedRoute requiredRole="customer">
+            <PackageDetail />
+          </ProtectedRoute>
+        } />
         <Route path="/cliente/disputes" element={
           <ProtectedRoute requiredRole="customer">
             <Disputes />
@@ -425,6 +442,8 @@ function AppContent() {
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
+      </ErrorBoundary>
     </>
   );
 }
