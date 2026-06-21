@@ -1,7 +1,28 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreditCard, Shield } from "lucide-react";
+import { CreditCard, Shield, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { Currency } from "@/lib/currency";
 
-export const PaymentMethodCard = () => {
+interface PaymentMethodCardProps {
+  currency: Currency;
+  setCurrency: (currency: Currency) => void;
+  sbsVenta?: number;
+  margin?: number;
+  rateLoading?: boolean;
+  rateError?: boolean;
+}
+
+export const PaymentMethodCard = ({
+  currency,
+  setCurrency,
+  sbsVenta,
+  margin,
+  rateLoading,
+  rateError,
+}: PaymentMethodCardProps) => {
+  const marginPct = margin != null ? Math.round(margin * 1000) / 10 : 2;
+  const usdDisabled = rateError || (rateLoading && sbsVenta == null);
+
   return (
     <>
              <Card className="shadow-md hover:shadow-lg transition-shadow">
@@ -18,7 +39,7 @@ export const PaymentMethodCard = () => {
                    </div>
                  </div>
                </CardHeader>
-               <CardContent>
+               <CardContent className="space-y-4">
                  <div className="flex items-center space-x-3 p-3 border-2 rounded-lg">
                    <div className="p-2 rounded-lg bg-primary/10">
                      <CreditCard className="h-5 w-5 text-primary" />
@@ -29,6 +50,58 @@ export const PaymentMethodCard = () => {
                        Visa, Mastercard y Amex a través de la pasarela segura de Izipay
                      </div>
                    </div>
+                 </div>
+
+                 {/* Currency selector: pay in soles (native) or US dollars */}
+                 <div>
+                   <div className="text-sm font-medium mb-2">Moneda de pago</div>
+                   <div className="grid grid-cols-2 gap-2">
+                     <button
+                       type="button"
+                       onClick={() => setCurrency('PEN')}
+                       aria-pressed={currency === 'PEN'}
+                       className={cn(
+                         "flex flex-col items-start rounded-lg border-2 p-3 text-left transition-colors",
+                         currency === 'PEN'
+                           ? "border-primary bg-primary/5"
+                           : "border-muted hover:border-primary/40"
+                       )}
+                     >
+                       <span className="font-semibold text-sm">Soles</span>
+                       <span className="text-xs text-muted-foreground">S/ · PEN</span>
+                     </button>
+                     <button
+                       type="button"
+                       onClick={() => !usdDisabled && setCurrency('USD')}
+                       aria-pressed={currency === 'USD'}
+                       disabled={usdDisabled}
+                       className={cn(
+                         "flex flex-col items-start rounded-lg border-2 p-3 text-left transition-colors",
+                         currency === 'USD'
+                           ? "border-primary bg-primary/5"
+                           : "border-muted hover:border-primary/40",
+                         usdDisabled && "opacity-50 cursor-not-allowed hover:border-muted"
+                       )}
+                     >
+                       <span className="font-semibold text-sm flex items-center gap-1">
+                         Dólares
+                         {rateLoading && <Loader2 className="h-3 w-3 animate-spin" />}
+                       </span>
+                       <span className="text-xs text-muted-foreground">US$ · USD</span>
+                     </button>
+                   </div>
+
+                   {currency === 'USD' && sbsVenta != null && (
+                     <p className="text-xs text-muted-foreground mt-2">
+                       Tipo de cambio SBS/SUNAT venta S/ {sbsVenta.toFixed(3)} + {marginPct}% margen.
+                       El total se cobra en dólares al tipo de cambio del día.
+                     </p>
+                   )}
+                   {rateError && (
+                     <p className="text-xs text-destructive mt-2">
+                       No se pudo obtener el tipo de cambio. Puedes pagar en soles.
+                     </p>
+                   )}
                  </div>
                </CardContent>
              </Card>

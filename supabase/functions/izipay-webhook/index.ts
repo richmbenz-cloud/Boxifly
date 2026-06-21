@@ -126,10 +126,11 @@ Deno.serve(async (req) => {
     }
 
     // Izipay sends the hash in the `kr-hash` field (body) or header
+    // NOTE: `kr-hash-key` is the key TYPE ("password" | "sha256_hmac"), not a
+    // hash, so it is intentionally NOT used as a signature source here.
     const receivedHash =
       formFields['kr-hash'] ||
       req.headers.get('kr-hash') ||
-      req.headers.get('kr-hash-key') ||
       req.headers.get('x-izipay-signature');
 
     // Verify signature over the kr-answer value (NOT the whole body)
@@ -236,17 +237,78 @@ Deno.serve(async (req) => {
 
     if (insertError) {
       console.error('Error saving Izipay webhook event:', insertError);
+      // Real DB failure: return 5xx so Izipay retries the IPN instead of
+      // silently dropping the event.
       return new Response(
-        JSON.stringify({ ok: false }),
+        JSON.stringify({ ok: false, error: 'webhook_persist_failed' }),
         {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 200, // Always return 200 to Izipay
+          status: 500,
         }
       );
     }
 
-    // If payment succeeded, update order status
+    // If payment succeeded, validate the paid amount THEN update status.
     if (status === 'succeeded' && orderId) {
+      // Defense-in-depth: confirm the amount Izipay reports as PAID matches the
+      // amount WE initiated for this order (recorded server-side at initiation).
+      // Prevents marking an order 'paid' on an underpaid / tampered transaction.
+      let initiated: { amount: number; currency: string | null } | null = null;
+      {
+        const byCharge = await supabaseClient
+          .from('payments_webhooks')
+          .select('amount, currency')
+          .eq('event_type', 'izipay.payment.initiated')
+          .eq('charge_id', transactionId)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        initiated = (byCharge.data as any) ?? null;
+
+        if (!initiated) {
+          // Fallback: match by orderId stored in the initiation `raw` payload.
+          const byOrder = await supabaseClient
+            .from('payments_webhooks')
+            .select('amount, currency')
+            .eq('event_type', 'izipay.payment.initiated')
+            .eq('raw->>orderId', orderId)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          initiated = (byOrder.data as any) ?? null;
+        }
+      }
+
+      if (initiated) {
+        const expectedCents = Number(initiated.amount);
+        const paidCents = Number(amount); // already in cents
+        const paidCurrency = transactions[0]?.currency;
+        const currencyOk =
+          !initiated.currency ||
+          !paidCurrency ||
+          String(initiated.currency).toUpperCase() === String(paidCurrency).toUpperCase();
+
+        // Allow a 1-cent rounding tolerance.
+        if (Math.abs(paidCents - expectedCents) > 1 || !currencyOk) {
+          console.error('AMOUNT MISMATCH — refusing to mark paid', {
+            orderId,
+            transactionId,
+            expectedCents,
+            paidCents,
+            expectedCurrency: initiated.currency,
+            paidCurrency,
+          });
+          // Signature was valid, so ACK with 200 (retrying won't fix a
+          // mismatch), but do NOT mark as paid. Flagged in logs for review.
+          return new Response(
+            JSON.stringify({ ok: false, error: 'amount_mismatch' }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+          );
+        }
+      } else {
+        console.warn('No initiation record to validate amount for:', { orderId, transactionId });
+      }
+
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({
@@ -258,9 +320,33 @@ Deno.serve(async (req) => {
 
       if (updateError) {
         console.error('Error updating order status:', updateError);
-      } else {
-        console.log('Order status updated successfully:', orderId);
+        // Real DB failure: return 5xx so Izipay retries the IPN.
+        return new Response(
+          JSON.stringify({ ok: false, error: 'order_update_failed' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        );
       }
+      console.log('Order status updated successfully:', orderId);
+
+      // Pagos de paquetes (tabla `payments`): el mismo orderId puede ser un payment.id.
+      // Update idempotente: si orderId era un order.id esto no afecta filas (y viceversa).
+      const { error: paymentUpdateError } = await supabaseClient
+        .from('payments')
+        .update({
+          payment_status: 'paid',
+          paid_at: new Date().toISOString(),
+          transaction_id: transactionId,
+        })
+        .eq('id', orderId);
+
+      if (paymentUpdateError) {
+        console.error('Error updating package payment status:', paymentUpdateError);
+        return new Response(
+          JSON.stringify({ ok: false, error: 'payment_update_failed' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        );
+      }
+      console.log('Package payment status check completed for:', orderId);
     }
 
     console.log('Izipay webhook processed successfully');

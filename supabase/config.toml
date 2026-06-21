@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.generate-profile-images]
 verify_jwt = true
+
+[functions.exchange-rate]
+verify_jwt = false

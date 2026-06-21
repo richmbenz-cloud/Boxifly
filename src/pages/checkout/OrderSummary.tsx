@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Package, Gift, CheckCircle, CreditCard } from "lucide-react";
 import { CouponInput } from "@/components/CouponInput";
+import { formatMoney, type Currency } from "@/lib/currency";
 
 interface OrderSummaryProps {
   cartItems: any[];
@@ -24,6 +25,9 @@ interface OrderSummaryProps {
   isPending: boolean;
   handleCouponApplied: (discount: number, code: string) => void;
   onPay: () => void;
+  // Charge currency and the total expressed in that currency (USD when selected).
+  currency: Currency;
+  displayTotal: number;
 }
 
 export const OrderSummary = ({
@@ -44,6 +48,8 @@ export const OrderSummary = ({
   isPending,
   handleCouponApplied,
   onPay,
+  currency,
+  displayTotal,
 }: OrderSummaryProps) => {
   return (
           <div>
@@ -223,9 +229,15 @@ export const OrderSummary = ({
                   disabled={!isFormValid || isPending}
                 >
                   <CreditCard className="h-4 w-4 mr-2" />
-                  {isPending ? "Procesando..." : `Pagar S/ ${total.toFixed(2)}`}
+                  {isPending ? "Procesando..." : `Pagar ${formatMoney(displayTotal, currency)}`}
                 </Button>
-                
+
+                {currency === 'USD' && (
+                  <p className="text-xs text-center text-muted-foreground">
+                    Equivale a S/ {total.toFixed(2)} · cobrado en dólares
+                  </p>
+                )}
+
                 <p className="text-xs text-center text-muted-foreground">
                   Compra 100% segura
                 </p>

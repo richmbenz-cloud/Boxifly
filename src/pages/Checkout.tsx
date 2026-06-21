@@ -10,6 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useGuestCart } from "@/hooks/useGuestCart";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useIzipay } from "@/hooks/useIzipay";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { convertPenToUsd, type Currency } from "@/lib/currency";
 import { z } from "zod";
 import { guestInfoSchema, shippingSchema } from "./checkout/schemas";
 import { GuestInfoForm } from "./checkout/GuestInfoForm";
@@ -49,6 +51,11 @@ export default function Checkout() {
   const [orderId, setOrderId] = useState<string | null>(null);
   const paymentFormRef = useRef<HTMLDivElement>(null);
   const { initiatePayment, renderPaymentForm, loading: izipayLoading } = useIzipay();
+
+  // Charge currency + daily SBS/SUNAT rate (with margin) for USD payments.
+  const [currency, setCurrency] = useState<Currency>("PEN");
+  const { data: fxRate, isLoading: fxLoading, isError: fxError } = useExchangeRate();
+  const effectiveRate = fxRate?.effective_rate;
 
   const deliveryEstimate = getDeliveryEstimate(shippingCity || city);
 
@@ -205,6 +212,8 @@ export default function Checkout() {
     couponDiscount,
     pointsToUse,
     createAccount,
+    currency,
+    exchangeRate: effectiveRate,
     validateField,
     initiatePayment,
     renderPaymentForm,
@@ -223,6 +232,10 @@ export default function Checkout() {
   const pointsDiscount = pointsToUse; // 1 point = S/1
   const total = subtotal - couponDiscount - pointsDiscount;
   const itemCount = cartItems?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+
+  // Total expressed in the selected charge currency (USD uses the daily rate + margin).
+  const displayTotal =
+    currency === "USD" && effectiveRate ? convertPenToUsd(total, effectiveRate) : total;
 
   // Calculate max points that can be used (can't exceed total after coupon discount)
   const maxPointsUsable = Math.min(userPoints || 0, Math.floor(subtotal - couponDiscount));
@@ -328,11 +341,20 @@ export default function Checkout() {
               handleDetectLocation={handleDetectLocation}
             />
 
-            <PaymentMethodCard />
+            <PaymentMethodCard
+              currency={currency}
+              setCurrency={setCurrency}
+              sbsVenta={fxRate?.sbs_venta}
+              margin={fxRate?.margin}
+              rateLoading={fxLoading}
+              rateError={fxError}
+            />
           </div>
 
           <OrderSummary
             cartItems={cartItems}
+            currency={currency}
+            displayTotal={displayTotal}
             user={user}
             userPoints={userPoints}
             maxPointsUsable={maxPointsUsable}

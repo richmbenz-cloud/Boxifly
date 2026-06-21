@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { convertPenToUsd, type Currency } from "@/lib/currency";
 
 // Genera una contraseña temporal criptográficamente aleatoria.
 // El usuario nunca la usa: recibe un email para establecer la suya propia.
@@ -23,6 +24,9 @@ interface UseCheckoutOrderParams {
   couponDiscount: number;
   pointsToUse: number;
   createAccount: boolean;
+  // Selected charge currency and effective PEN->USD rate (from useExchangeRate).
+  currency: Currency;
+  exchangeRate?: number | null;
   validateField: (field: string, value: string) => boolean;
   initiatePayment: (data: any) => Promise<any>;
   renderPaymentForm: (formToken: string, containerId: string) => Promise<void>;
@@ -46,6 +50,8 @@ export function useCheckoutOrder({
   couponDiscount,
   pointsToUse,
   createAccount,
+  currency,
+  exchangeRate,
   validateField,
   initiatePayment,
   renderPaymentForm,
@@ -147,10 +153,28 @@ export function useCheckoutOrder({
 
        // In this version, all payments se procesan con tarjeta (Izipay)
         {
+         // The order total is always canonical in soles (finalTotal). If the
+         // customer chose to pay in USD, convert using the effective rate
+         // (SBS venta + margin) so the FX spread never causes a loss.
+         let chargeAmount = finalTotal;
+         let chargeCurrency: Currency = 'PEN';
+         let appliedRate: number | null = null;
+
+         if (currency === 'USD') {
+           if (!exchangeRate || exchangeRate <= 0) {
+             throw new Error('Tipo de cambio no disponible. Intenta nuevamente o paga en soles.');
+           }
+           chargeAmount = convertPenToUsd(finalTotal, exchangeRate);
+           chargeCurrency = 'USD';
+           appliedRate = exchangeRate;
+         }
+
          const paymentData = {
-           amount: finalTotal,
+           amount: chargeAmount,
            orderId: order.id,
-           currency: 'PEN',
+           currency: chargeCurrency,
+           exchangeRate: appliedRate,
+           baseAmountPen: finalTotal,
            email: user ? user.email! : guestEmail,
            firstName: user ? (user.user_metadata?.full_name?.split(' ')[0] || guestName.split(' ')[0]) : guestName.split(' ')[0],
            lastName: user ? (user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '') : guestName.split(' ').slice(1).join(' '),
