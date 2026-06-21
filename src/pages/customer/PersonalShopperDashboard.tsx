@@ -339,7 +339,7 @@ const CustomerPSDashboard = () => {
                       {getStatusBadge(request.estado)}
                       <div className="text-right hidden md:block">
                         <p className="text-sm font-semibold text-navy">
-                          ${request.presupuesto_max.toLocaleString()}
+                          ${(request.presupuesto_max ?? 0).toLocaleString()}
                         </p>
                         <p className="text-xs text-muted-foreground">Presupuesto máx.</p>
                       </div>

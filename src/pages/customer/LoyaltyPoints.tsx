@@ -187,7 +187,7 @@ export default function LoyaltyPoints() {
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
-              Equivale a S/ {activePoints.toFixed(2)} en descuentos
+              Equivale a S/ {(activePoints ?? 0).toFixed(2)} en descuentos
             </p>
           </CardContent>
         </Card>

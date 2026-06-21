@@ -244,7 +244,7 @@ const PackageDetail = () => {
                     <div className="flex justify-between items-center">
                       <span className="font-semibold">Total</span>
                       <span className="text-2xl font-bold text-primary">
-                        ${packageData.final_cost.toFixed(2)}
+                        ${packageData.final_cost?.toFixed(2) ?? '0.00'}
                       </span>
                     </div>
                   </div>
