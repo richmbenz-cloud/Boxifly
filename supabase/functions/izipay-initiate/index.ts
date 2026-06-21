@@ -6,15 +6,17 @@ const corsHeaders = {
 };
 
 interface IzipayPaymentRequest {
-  amount: number;
   orderId: string;
+  // Customer-selected charge currency. The AMOUNT is ALWAYS resolved
+  // server-side from the order/payment record — never trusted from the client.
   currency?: string;
   email: string;
   firstName?: string;
   lastName?: string;
   description?: string;
-  // FX audit: effective PEN->USD rate applied (null/undefined for native PEN charges)
-  // and the canonical order total in soles.
+  // Deprecated client-provided fields. Kept only for backwards compatibility /
+  // tamper detection logging. They are NEVER used to compute the charge.
+  amount?: number;
   exchangeRate?: number | null;
   baseAmountPen?: number;
 }
@@ -24,6 +26,75 @@ interface IzipayPaymentResponse {
   formToken?: string;
   transactionId?: string;
   error?: string;
+}
+
+// YYYY-MM-DD in America/Lima (matches the exchange-rate edge function).
+function limaToday(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Lima' });
+}
+
+/**
+ * Resolve the canonical order total in soles (PEN) from the database.
+ * The same orderId can reference either an `orders` row (store checkout) or a
+ * `payments` row (package payment). Returns null if neither exists.
+ */
+async function resolveCanonicalPen(
+  // deno-lint-ignore no-explicit-any
+  supabase: any,
+  orderId: string
+): Promise<number | null> {
+  const { data: order } = await supabase
+    .from('orders')
+    .select('total_amount')
+    .eq('id', orderId)
+    .maybeSingle();
+  if (order && order.total_amount != null) return Number(order.total_amount);
+
+  const { data: payment } = await supabase
+    .from('payments')
+    .select('amount')
+    .eq('id', orderId)
+    .maybeSingle();
+  if (payment && payment.amount != null) return Number(payment.amount);
+
+  return null;
+}
+
+/**
+ * Fetch today's effective PEN->USD rate SERVER-SIDE (SBS venta + margin).
+ * Reads the daily cache first; if missing, invokes the `exchange-rate`
+ * function (which fetches + caches it). Returns null if unavailable.
+ */
+async function getEffectiveRate(
+  // deno-lint-ignore no-explicit-any
+  supabase: any
+): Promise<number | null> {
+  const today = limaToday();
+  const { data: cached } = await supabase
+    .from('exchange_rates')
+    .select('effective_rate')
+    .eq('rate_date', today)
+    .eq('base_currency', 'USD')
+    .eq('quote_currency', 'PEN')
+    .maybeSingle();
+  if (cached && cached.effective_rate) return Number(cached.effective_rate);
+
+  try {
+    const url = `${Deno.env.get('SUPABASE_URL')}/functions/v1/exchange-rate`;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+      },
+      body: JSON.stringify({ base: 'USD', quote: 'PEN' }),
+    });
+    const body = await resp.json();
+    return body?.effective_rate ? Number(body.effective_rate) : null;
+  } catch (err) {
+    console.error('Failed to fetch effective rate from exchange-rate function:', err);
+    return null;
+  }
 }
 
 Deno.serve(async (req) => {
@@ -41,13 +112,67 @@ Deno.serve(async (req) => {
     );
 
     const body: IzipayPaymentRequest = await req.json();
-    const { amount, orderId, currency = 'PEN', email, firstName, lastName, description, exchangeRate, baseAmountPen } = body;
+    const {
+      orderId,
+      currency = 'PEN',
+      email,
+      firstName,
+      lastName,
+      description,
+      amount: clientAmount, // only for tamper logging
+    } = body;
 
-    console.log('Initiating Izipay payment:', { amount, orderId, currency, email });
+    if (!orderId) {
+      throw new Error('orderId es requerido');
+    }
+
+    // --- SERVER-AUTHORITATIVE AMOUNT ---------------------------------------
+    // Resolve the canonical PEN total from the DB. The client NEVER dictates
+    // the charge amount (prevents payment tampering, e.g. paying S/1).
+    const canonicalPen = await resolveCanonicalPen(supabaseClient, orderId);
+    if (canonicalPen == null || !(canonicalPen > 0)) {
+      throw new Error('Orden no encontrada o con monto inválido');
+    }
+
+    // Compute the charge amount/currency server-side.
+    let chargeAmount = canonicalPen;
+    let chargeCurrency = 'PEN';
+    let effectiveRate: number | null = null;
+
+    if (currency === 'USD') {
+      effectiveRate = await getEffectiveRate(supabaseClient);
+      if (!effectiveRate || effectiveRate <= 0) {
+        throw new Error('Tipo de cambio no disponible. Intenta nuevamente o paga en soles.');
+      }
+      // amount_usd = amount_pen / effective_rate (effective_rate already
+      // includes the margin so the FX spread never produces a loss).
+      chargeAmount = Math.round((canonicalPen / effectiveRate) * 100) / 100;
+      chargeCurrency = 'USD';
+    }
+
+    // Defense-in-depth: log if the (ignored) client amount diverges from the
+    // server-computed charge — a strong tamper signal worth auditing.
+    if (typeof clientAmount === 'number' && Math.abs(clientAmount - chargeAmount) > 0.01) {
+      console.warn('Client amount mismatch (ignored, using server value):', {
+        orderId,
+        client: clientAmount,
+        server: chargeAmount,
+        currency: chargeCurrency,
+      });
+    }
+
+    console.log('Initiating Izipay payment (server-authoritative):', {
+      orderId,
+      chargeAmount,
+      chargeCurrency,
+      canonicalPen,
+      effectiveRate,
+      email,
+    });
 
     // Amount in the smallest currency unit (cents). Round to avoid
     // floating-point artifacts (e.g. 19.99 * 100 = 1998.9999...).
-    const amountInCents = Math.round(amount * 100);
+    const amountInCents = Math.round(chargeAmount * 100);
 
     // Get Izipay credentials from secrets
     const izipaySecret = Deno.env.get('IZIPAY_TEST_API_KEY');
@@ -68,16 +193,16 @@ Deno.serve(async (req) => {
     // Prepare payment data for Izipay
     const paymentData = {
       amount: amountInCents, // Izipay expects amount in cents (integer)
-      currency: currency,
+      currency: chargeCurrency,
       orderId: orderId,
       customer: {
         email: email,
         billingDetails: {
           firstName: firstName || '',
           lastName: lastName || '',
-        }
+        },
       },
-      ...(description && { description })
+      ...(description && { description }),
     };
 
     console.log('Sending request to Izipay:', paymentData);
@@ -131,7 +256,8 @@ Deno.serve(async (req) => {
 
     console.log('Payment created successfully. Transaction ID:', transactionId);
 
-    // Log payment initiation in database (amount stored in cents/integer)
+    // Log payment initiation in database (amount stored in cents/integer).
+    // All audit values are SERVER-computed, not client-provided.
     const { error: logError } = await supabaseClient
       .from('payments_webhooks')
       .insert({
@@ -139,16 +265,17 @@ Deno.serve(async (req) => {
         charge_id: transactionId,
         amount: amountInCents, // cents (integer)
         status: 'pending',
-        currency, // PEN or USD
-        exchange_rate: exchangeRate ?? null, // effective PEN->USD rate (null for native PEN)
-        base_amount_pen: baseAmountPen ?? null, // canonical order total in soles
+        currency: chargeCurrency, // PEN or USD
+        exchange_rate: effectiveRate, // effective PEN->USD rate (null for native PEN)
+        base_amount_pen: canonicalPen, // canonical order total in soles
         raw: {
           orderId,
           email,
-          amount_original: amount,
-          currency,
-          exchange_rate: exchangeRate ?? null,
-          base_amount_pen: baseAmountPen ?? null,
+          charge_amount: chargeAmount,
+          currency: chargeCurrency,
+          exchange_rate: effectiveRate,
+          base_amount_pen: canonicalPen,
+          client_amount: clientAmount ?? null, // recorded for audit only
           formToken: formToken.substring(0, 20) + '...', // Log partial token for security
           timestamp: new Date().toISOString(),
         },
