@@ -261,6 +261,23 @@ Deno.serve(async (req) => {
       } else {
         console.log('Order status updated successfully:', orderId);
       }
+
+      // Pagos de paquetes (tabla `payments`): el mismo orderId puede ser un payment.id.
+      // Update idempotente: si orderId era un order.id esto no afecta filas (y viceversa).
+      const { error: paymentUpdateError } = await supabaseClient
+        .from('payments')
+        .update({
+          payment_status: 'paid',
+          paid_at: new Date().toISOString(),
+          transaction_id: transactionId,
+        })
+        .eq('id', orderId);
+
+      if (paymentUpdateError) {
+        console.error('Error updating package payment status:', paymentUpdateError);
+      } else {
+        console.log('Package payment status check completed for:', orderId);
+      }
     }
 
     console.log('Izipay webhook processed successfully');
