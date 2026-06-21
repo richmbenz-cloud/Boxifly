@@ -157,9 +157,3 @@ export const useIzipay = () => {
   };
 };
 
-// Extend Window interface for potential future Izipay globals
-declare global {
-  interface Window {
-    // KR?: any; // Not used currently, HTML integration is declarative
-  }
-}
