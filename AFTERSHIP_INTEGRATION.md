@@ -38,14 +38,15 @@ supabase db push          # habilita pg_cron/pg_net y programa el job
 supabase secrets set AFTERSHIP_API_KEY="<tu-api-key-de-aftership>"
 ```
 
-### 3. Decirle al cron a qué URL llamar
+### 3. Config del cron (Supabase Vault)
+El cron lee `project_url` + `service_role_key` desde **Supabase Vault** (los mismos
+secretos del Pilar #1; no usa GUCs `app.*`, que requieren superusuario y fallaban).
+Si ya los creaste para WhatsApp, no hace falta repetirlos. Si no:
 ```sql
-ALTER DATABASE postgres
-  SET app.sync_tracking_url = 'https://<proj>.supabase.co/functions/v1/sync-tracking';
--- app.service_role_key ya debería estar seteado (Pilar #1). Si no:
-ALTER DATABASE postgres
-  SET app.service_role_key = '<SERVICE_ROLE_KEY>';
+SELECT vault.create_secret('https://<proj>.supabase.co', 'project_url',      'URL base del proyecto para pg_net');
+SELECT vault.create_secret('<SERVICE_ROLE_KEY>',          'service_role_key', 'Service role key para llamar Edge Functions');
 ```
+La URL del cron se construye sola: `project_url || '/functions/v1/sync-tracking'`.
 
 ### 4. (Opcional) Ajustar la frecuencia
 Por defecto corre **cada 2 horas** (`0 */2 * * *`). Para cambiarla:
@@ -80,7 +81,7 @@ SELECT * FROM net._http_response ORDER BY created DESC LIMIT 20;
 
 ## Notas
 - **Idempotente y reversible:** la migración re-programa el job de forma segura.
-- **Degradación segura:** si no configuras `app.sync_tracking_url`, el cron no
+- **Degradación segura:** si no existe el secreto `project_url` en Vault, el cron no
   hace nada; si falta `AFTERSHIP_API_KEY`, la función responde 500 sin tocar datos.
 - Reutiliza la tabla `tracking_events` (historial de checkpoints) tal como la
   función `aftership-tracking` original.

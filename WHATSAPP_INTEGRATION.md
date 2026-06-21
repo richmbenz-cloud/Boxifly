@@ -56,19 +56,24 @@ supabase secrets set N8N_WHATSAPP_WEBHOOK_URL="https://<tu-n8n-publico>/webhook/
 > - Hostear n8n en un VPS para producción 24/7 (recomendado).
 > Si NO seteas esta variable, la función corre en **modo mock** (registra pero no envía).
 
-### 3. Permitir que el trigger invoque la Edge Function
-El trigger necesita la URL de la función y una credencial para llamarla. Setéalas
-una sola vez (reemplaza `<proj>` y `<SERVICE_ROLE_KEY>`):
+### 3. Permitir que el trigger invoque la Edge Function (Supabase Vault)
+El trigger lee la config desde **Supabase Vault**. No usa GUCs `app.*`: en
+PostgreSQL 15+ un `ALTER DATABASE ... SET app.*` requiere superusuario (el rol
+`postgres` de Supabase no lo es), por lo que esos GUCs quedaban en NULL y el
+disparo nunca ocurría. Guarda UNA sola vez **por proyecto** (staging y prod por
+separado) dos secretos: `project_url` y `service_role_key`. La URL de la Edge
+Function se construye sola (`project_url || '/functions/v1/whatsapp-notify'`).
 ```sql
-ALTER DATABASE postgres
-  SET app.whatsapp_notify_url = 'https://<proj>.supabase.co/functions/v1/whatsapp-notify';
-ALTER DATABASE postgres
-  SET app.service_role_key = '<SERVICE_ROLE_KEY>';
+-- Reemplaza <proj> y <SERVICE_ROLE_KEY> (Supabase -> Project Settings -> API).
+SELECT vault.create_secret('https://<proj>.supabase.co', 'project_url',      'URL base del proyecto para pg_net');
+SELECT vault.create_secret('<SERVICE_ROLE_KEY>',          'service_role_key', 'Service role key para llamar Edge Functions');
+-- Rotar un secreto existente:
+--   SELECT vault.update_secret((SELECT id FROM vault.secrets WHERE name='service_role_key'), '<NUEVO_KEY>');
 ```
 > El `SERVICE_ROLE_KEY` está en *Supabase → Project Settings → API*.
-> 🔒 Endurecimiento opcional: en vez de `ALTER DATABASE`, guarda estos valores en
-> **Supabase Vault** (`vault.create_secret`) y léelos en la función con
-> `vault.decrypted_secrets`.
+> Mismo código en staging y prod; solo cambia el contenido del Vault.
+> Degradación segura: si los secretos no están, el trigger registra el historial
+> pero no realiza el POST.
 
 ### 4. Configurar el flujo en n8n
 Tu n8n recibe un POST con este cuerpo:
