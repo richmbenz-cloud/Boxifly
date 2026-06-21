@@ -1,4 +1,5 @@
 import { Trophy, Calendar, Gift, Users } from "lucide-react";
+import { SEO } from '@/components/SEO';
 import { MainNavigation } from "@/components/MainNavigation";
 import { ChatWidget } from "@/components/ChatWidget";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -36,6 +37,7 @@ const GanadoresConcursos = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
+      <SEO title="Ganadores de concursos y sorteos Boxifly" description="Conoce a los ganadores de los sorteos y concursos de Boxifly. ¡Participa y gana premios!" path="/ganadores-de-concursos" />
       <MainNavigation />
       
       {/* Hero Section */}

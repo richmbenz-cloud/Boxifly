@@ -1,4 +1,5 @@
 import { Package, Home, MapPin, Clock } from "lucide-react";
+import { SEO } from '@/components/SEO';
 import { MainNavigation } from "@/components/MainNavigation";
 import { ChatWidget } from "@/components/ChatWidget";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -9,6 +10,7 @@ const TiposEntrega = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
+      <SEO title="Tipos de entrega y opciones de envío" description="Conoce las modalidades de entrega de Boxifly: a domicilio, recojo en agencia y más opciones para tu envío." path="/tipos-de-entrega" />
       <MainNavigation />
       
       {/* Hero Section */}

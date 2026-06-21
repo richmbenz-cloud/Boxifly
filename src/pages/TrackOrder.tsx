@@ -266,7 +266,7 @@ export default function TrackOrder() {
               <CardContent className="pt-6">
                 <p className="text-sm text-center">
                   ¿Necesitas ayuda con tu pedido?{" "}
-                  <Button variant="link" className="p-0 h-auto" onClick={() => navigate("/landing#contacto")}>
+                  <Button variant="link" className="p-0 h-auto" onClick={() => navigate("/contacto")}>
                     Contáctanos aquí
                   </Button>
                 </p>

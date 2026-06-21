@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from '@/components/SEO';
 import { MainNavigation } from "@/components/MainNavigation";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -178,6 +179,7 @@ const Ayuda = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      <SEO title="Centro de ayuda Boxifly" description="Encuentra respuestas, guías y soporte para tus envíos internacionales con Boxifly." path="/centro-de-ayuda" />
       <MainNavigation />
       
       {/* Hero Section */}

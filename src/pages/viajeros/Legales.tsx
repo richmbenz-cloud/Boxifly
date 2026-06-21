@@ -1,4 +1,5 @@
 import { MainNavigation } from '@/components/MainNavigation';
+import { SEO } from '@/components/SEO';
 import { ChatWidget } from '@/components/ChatWidget';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -261,6 +262,7 @@ Estos términos constituyen el acuerdo completo entre el usuario y Boxifly, reem
     <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
+        <SEO title="Términos del programa de Viajeros Boxifly" description="Condiciones legales y responsabilidades del programa de viajeros de Boxifly." path="/viajeros/legales" />
         <MainNavigation />
 
         {/* Hero Section */}

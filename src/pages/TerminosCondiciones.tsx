@@ -1,4 +1,5 @@
 import { Card } from '@/components/ui/card';
+import { SEO } from '@/components/SEO';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MainNavigation } from '@/components/MainNavigation';
 import { ChatWidget } from '@/components/ChatWidget';
@@ -181,6 +182,7 @@ const TerminosCondiciones = () => {
     <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
+        <SEO title="Términos y condiciones de servicio" description="Lee los términos y condiciones de uso de los servicios de Boxifly." path="/terminos-y-condiciones" />
         <MainNavigation />
 
         {/* Hero Section */}

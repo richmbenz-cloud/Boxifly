@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { 
@@ -383,6 +384,7 @@ const Viajero = () => {
     <>
       <ChatWidget />
       <div className="min-h-screen bg-background">
+        <SEO title="Sé viajero Boxifly y gana dinero extra" description="Aprovecha tu equipaje disponible: transporta paquetes a Perú y genera ingresos extra con Boxifly." path="/viajeros/viajero" />
         <MainNavigation />
 
         {/* Hero Section */}
