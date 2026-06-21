@@ -173,7 +173,8 @@ function AppContent() {
           <Route path="/tiendas-en-usa" element={<TiendasEnUSA />} />
           <Route path="/como-comprar-en-usa" element={<ComoComprarUSA />} />
           <Route path="/como-comprar-en-usa-pdf" element={<ComoComprarUSAPDF />} />
-        <Route path="/shop" element={<Shop onCartOpen={() => setCartOpen(true)} />} />
+        {/* Tienda oculta: actualmente no operamos store propio. Redirige a inicio. */}
+        <Route path="/shop" element={<Navigate to="/" replace />} />
         <Route path="/dashboard" element={<Index />} />
         <Route path="/cliente/dashboard" element={<Index />} />
         <Route path="/iniciar-sesion" element={<Auth defaultView="login" />} />
