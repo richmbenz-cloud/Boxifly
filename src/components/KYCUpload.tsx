@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Upload, CheckCircle, XCircle, Clock, FileText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { FacialBiometry } from './FacialBiometry';
+import { DocumentVerification } from './DocumentVerification';
 
 interface KYCUploadProps {
   userRole: 'traveler' | 'shopper';
@@ -163,6 +164,8 @@ export function KYCUpload({ userRole }: KYCUploadProps) {
 
   return (
     <div className="space-y-6">
+      <DocumentVerification />
+
       {allRequiredApproved() && hasBiometryDocument() && (
         <Alert className="bg-success/10 border-success">
           <CheckCircle className="h-4 w-4 text-success" />
