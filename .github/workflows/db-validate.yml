@@ -1,0 +1,39 @@
+name: DB · Validate migrations
+
+# Gate de PR: aplica TODAS las migraciones versionadas sobre una base
+# Postgres limpia y efímera. Si una migración no aplica desde cero
+# (orden, sintaxis, dependencias rotas) el PR no se puede mergear.
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'supabase/config.toml'
+      - '.github/workflows/db-validate.yml'
+
+jobs:
+  validate-migrations:
+    name: validate-migrations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start local Postgres (Supabase)
+        run: supabase db start
+
+      - name: Apply ALL migrations from scratch
+        # `db reset` recrea la base local y aplica supabase/migrations/* en orden.
+        # Reproduce exactamente lo que debe pasar en staging/prod.
+        run: supabase db reset --no-seed
+
+      - name: Lint database
+        run: supabase db lint --level warning
+
+      - name: Stop
+        if: always()
+        run: supabase stop --no-backup
