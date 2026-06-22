@@ -1,0 +1,38 @@
+name: Functions · Deploy to STAGING
+
+# Al mergear a main: despliega automaticamente las Edge Functions a STAGING.
+# Complemento de "DB · Deploy to STAGING" para que el codigo de las funciones y
+# las migraciones avancen JUNTOS y no queden desincronizados (root cause del
+# incidente warehouse_logs: la migracion se aplico pero la funcion no se redesplego).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/**'
+      - 'supabase/config.toml'
+
+concurrency:
+  group: functions-staging
+  cancel-in-progress: false
+
+env:
+  STAGING_PROJECT_REF: liszyjbqdyjtitamtrnt
+
+jobs:
+  deploy-staging:
+    name: supabase functions deploy (staging)
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy Edge Functions to Staging
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: supabase functions deploy --project-ref "$STAGING_PROJECT_REF"
