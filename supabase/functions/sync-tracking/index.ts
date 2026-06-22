@@ -73,23 +73,46 @@ async function fetchAftershipTag(
   apiKey: string,
   trackingNumber: string
 ): Promise<{ tag: string | null; slug: string | null; checkpoints: any[] }> {
-  // 1) Crear tracking (idempotente: si ya existe, Aftership devuelve 4003 y seguimos).
-  const createRes = await fetch('https://api.aftership.com/v4/trackings', {
+  // AfterShip versioned Tracking API (la v4 + header `aftership-api-key` fue
+  // deprecada en 2023-10 y devuelve 404). Base versionada + header `as-api-key`.
+  const BASE = 'https://api.aftership.com/tracking/2025-07/trackings';
+  const headers = { 'Content-Type': 'application/json', 'as-api-key': apiKey };
+
+  // 1) Crear tracking (body PLANO, no anidado en `tracking`). Idempotente:
+  //    si ya existe, la API devuelve 4003 con el id en `data`.
+  let id: string | null = null;
+  let slug: string | null = null;
+  const createRes = await fetch(BASE, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'aftership-api-key': apiKey },
-    body: JSON.stringify({ tracking: { tracking_number: trackingNumber } }),
+    headers,
+    body: JSON.stringify({ tracking_number: trackingNumber }),
   });
   const createData = await createRes.json().catch(() => ({}));
-  const slug = createData?.data?.tracking?.slug || '';
+  if (createRes.status === 201 || createData?.meta?.code === 201) {
+    id = createData?.data?.id || null;
+    slug = createData?.data?.slug || null;
+  } else if (createData?.meta?.code === 4003) {
+    // Ya existe: el id viene en data.
+    id = createData?.data?.id || null;
+    slug = createData?.data?.slug || null;
+  }
 
-  // 2) Obtener el tracking. Si tenemos slug usamos la ruta directa; si no, buscamos por número.
-  const getUrl = slug
-    ? `https://api.aftership.com/v4/trackings/${slug}/${trackingNumber}`
-    : `https://api.aftership.com/v4/trackings?keyword=${encodeURIComponent(trackingNumber)}`;
-  const getRes = await fetch(getUrl, { method: 'GET', headers: { 'aftership-api-key': apiKey } });
-  const getData = await getRes.json().catch(() => ({}));
+  // 2) Obtener el detalle. Preferimos GET por id; si no, buscamos por número.
+  let tracking: any = null;
+  if (id) {
+    const r = await fetch(`${BASE}/${id}`, { method: 'GET', headers });
+    const j = await r.json().catch(() => ({}));
+    tracking = j?.data || null;
+  }
+  if (!tracking) {
+    const r = await fetch(
+      `${BASE}?tracking_numbers=${encodeURIComponent(trackingNumber)}`,
+      { method: 'GET', headers }
+    );
+    const j = await r.json().catch(() => ({}));
+    tracking = j?.data?.trackings?.[0] || null;
+  }
 
-  const tracking = getData?.data?.tracking || getData?.data?.trackings?.[0] || null;
   if (!tracking) return { tag: null, slug: slug || null, checkpoints: [] };
 
   return {
