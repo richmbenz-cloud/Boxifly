@@ -103,11 +103,30 @@ Deno.serve(async (req) => {
       console.log(`[MOCK WhatsApp] Sent to ${phone}:`, message);
     }
 
+    // Resolve the real package UUID from the tracking number before logging.
+    // warehouse_logs.package_id is a uuid FK -> packages.id. Previously this insert
+    // passed `parameters.trackingNumber || 'N/A'` (a tracking string, not a UUID),
+    // which violated the foreign key (SQLSTATE 23503) on every call, so no
+    // warehouse_logs row was ever written. We look up the package by tracking number
+    // and fall back to null (column is now nullable) so the log is never lost.
+    let resolvedPackageId: string | null = null;
+    if (parameters.trackingNumber) {
+      const { data: pkg, error: pkgLookupError } = await supabaseClient
+        .from('packages')
+        .select('id')
+        .eq('tracking_number', parameters.trackingNumber)
+        .maybeSingle();
+      if (pkgLookupError) {
+        console.error('Error resolving package by tracking number:', pkgLookupError);
+      }
+      resolvedPackageId = pkg?.id ?? null;
+    }
+
     // Log the notification attempt in the database
     const { error: logError } = await supabaseClient
       .from('warehouse_logs')
       .insert({
-        package_id: parameters.trackingNumber || 'N/A',
+        package_id: resolvedPackageId,
         logged_by: userId,
         action: 'whatsapp_notification_sent',
         details: {
