@@ -114,3 +114,59 @@ const asHeaders = { 'Content-Type': 'application/json', 'as-api-key': AFTERSHIP_
 - `tracking_events` recibiendo eventos reales de FedEx vía AfterShip.
 
 _Migración verificada contra el código desplegado y el estado real del proyecto PROD (`ref pdnflyuuxstobkhtqutp`)._
+
+
+## 🔔 Webhook en tiempo real (Fase 2)
+
+> Edge Function `aftership-webhook`. AfterShip llama a la función en el instante
+> en que hay un checkpoint nuevo (push), sin esperar al cron. El cron
+> `sync-tracking` (cada 10 min) queda como **red de seguridad / reconciliación**.
+
+```
+AfterShip  --POST (firmado HMAC)-->  aftership-webhook
+   ↓ verifica firma `aftership-hmac-sha256`
+   ↓ reemplaza checkpoints en `tracking_events`  (idempotente: trae la lista completa)
+   ↓ AVANZA packages.current_status  (mismo mapeo/orden que sync-tracking; nunca retrocede)
+   ↓ triggers existentes -> notificación in-app + WhatsApp 📲
+   ↓ Realtime (Fase 1) refresca el feed del cliente al instante
+```
+
+### 1. Desplegar
+```bash
+supabase functions deploy aftership-webhook
+# Declarada con verify_jwt = false en config.toml (AfterShip no envía JWT).
+```
+
+### 2. Configurar el secret de firma
+Obtén el secret en **AfterShip > Settings > Notifications** y guárdalo:
+```bash
+supabase secrets set AFTERSHIP_WEBHOOK_SECRET="<tu-webhook-secret>"
+```
+(`AFTERSHIP_API_KEY`, `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` ya están seteados.)
+
+### 3. Registrar la URL del webhook en AfterShip
+En **AfterShip > Settings > Notifications > Webhooks**, agrega:
+```
+https://<proj>.supabase.co/functions/v1/aftership-webhook
+```
+Selecciona el evento de actualización de tracking. AfterShip envía un POST de
+prueba; el webhook queda activo al responder 200.
+
+### Seguridad e idempotencia
+- **Firma HMAC-SHA256 (base64)** sobre el cuerpo crudo, comparada en tiempo
+  constante. Si no valida -> `401` (no toca datos). Sin secret -> `500`.
+- **Idempotente:** el payload trae el array completo de checkpoints, así que se
+  reemplaza el historial (DELETE + INSERT). Reprocesar el mismo evento converge
+  al mismo estado, sin duplicados ni constraints extra.
+- **No retrocede:** usa `STATUS_ORDER` y update race-safe (`.eq('current_status', previo)`).
+- Tracking sin paquete asociado o evento de prueba -> `200` (ack, sin reintentos).
+
+### Probar manualmente
+```bash
+BODY='{"msg":{"tracking_number":"<TN>","slug":"fedex","tag":"InTransit","checkpoints":[{"tag":"InTransit","message":"Departed FedEx hub","location":"Memphis, TN","checkpoint_time":"2026-06-22T10:00:00Z"}]}}'
+SIG=$(printf '%s' "$BODY" | openssl dgst -sha256 -hmac "<AFTERSHIP_WEBHOOK_SECRET>" -binary | base64)
+curl -X POST 'https://<proj>.supabase.co/functions/v1/aftership-webhook' \
+  -H "aftership-hmac-sha256: $SIG" \
+  -H 'Content-Type: application/json' \
+  -d "$BODY"
+```
