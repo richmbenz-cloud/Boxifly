@@ -10,6 +10,7 @@ on:
     paths:
       - 'supabase/functions/**'
       - 'supabase/config.toml'
+  workflow_dispatch:   # permite redeploy manual on-demand (p.ej. redesplegar whatsapp-notify sin cambios de codigo)
 
 concurrency:
   group: functions-staging
