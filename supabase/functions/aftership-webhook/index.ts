@@ -6,82 +6,37 @@
 //
 //   AfterShip  --POST (firmado HMAC)-->  aftership-webhook
 //       -> verifica firma `aftership-hmac-sha256`
+//       -> (opcional) descarta eventos del futuro / demasiado viejos (anti-replay)
 //       -> reemplaza los checkpoints del paquete en `tracking_events`
 //       -> AVANZA `packages.current_status` según el tramo (nunca retrocede)
 //       -> (triggers existentes) -> notificación in-app + WhatsApp (Pilar #1)
 //
-// El cron `sync-tracking` (cada 10 min) queda como RED DE SEGURIDAD /
-// reconciliación por si se pierde un webhook.
+// El cron `sync-tracking` queda como RED DE SEGURIDAD / reconciliación.
 //
-// Idempotencia: el webhook de AfterShip trae el ARRAY COMPLETO de checkpoints
-// (`msg.checkpoints`), así que reemplazamos el historial del paquete
-// (DELETE + INSERT), igual que `sync-tracking`. Reprocesar el mismo evento
-// converge al mismo estado, sin duplicados ni constraints extra.
+// Idempotencia: el webhook trae el ARRAY COMPLETO de checkpoints, así que
+// reemplazamos el historial (DELETE + INSERT), igual que `sync-tracking`.
 //
-// Seguridad: requiere el secret de firma de AfterShip en la variable de
-// entorno `AFTERSHIP_WEBHOOK_SECRET` (Settings > Notifications en AfterShip).
-//   supabase secrets set AFTERSHIP_WEBHOOK_SECRET="<secret>"
+// Lógica pura (firma, mapeo, frescura) en `./logic.ts`, cubierta por tests.
+//
+// Requiere `AFTERSHIP_WEBHOOK_SECRET` (Settings > Notifications en AfterShip).
+// Opcional: `AFTERSHIP_WEBHOOK_MAX_AGE_SEC` (default 86400) para el anti-replay.
 // Declarada con `verify_jwt = false` en config.toml (AfterShip no envía JWT).
 // ============================================================
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import {
+  mapTagToStatus,
+  statusAdvances,
+  extractTracking,
+  verifySignature,
+  checkFreshness,
+} from './logic.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers':
     'authorization, x-client-info, apikey, content-type, aftership-hmac-sha256',
 };
-
-// Orden del flujo para no retroceder nunca de estado (idéntico a sync-tracking).
-const STATUS_ORDER: Record<string, number> = {
-  prealerted: 0,
-  received_warehouse: 1,
-  ready_consolidation: 2,
-  consolidated: 3,
-  ready_international: 4,
-  in_transit: 5,
-  arrived_peru: 6,
-  ready_delivery: 7,
-  delivered: 8,
-};
-
-// Mapea el tag de AfterShip al estado de Boxifly según el tramo.
-function mapTagToStatus(tag: string, isInbound: boolean): string | null {
-  const t = (tag || '').toLowerCase();
-  if (isInbound) {
-    // Tramo entrante: solo nos interesa la entrega en el warehouse de Miami.
-    if (t === 'delivered') return 'received_warehouse';
-    return null;
-  }
-  // Tramo internacional (Miami -> Perú).
-  if (t === 'delivered' || t === 'availableforpickup') return 'arrived_peru';
-  if (t === 'intransit' || t === 'outfordelivery' || t === 'attemptfail') return 'in_transit';
-  return null;
-}
-
-// Verifica la firma HMAC-SHA256 (base64) que AfterShip envía en el header
-// `aftership-hmac-sha256`, calculada sobre el cuerpo CRUDO de la petición.
-async function verifySignature(rawBody: string, signature: string, secret: string): Promise<boolean> {
-  if (!signature) return false;
-  const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    'raw',
-    encoder.encode(secret),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign']
-  );
-  const mac = await crypto.subtle.sign('HMAC', key, encoder.encode(rawBody));
-  const computed = btoa(String.fromCharCode(...new Uint8Array(mac)));
-
-  // Comparación de tiempo constante para evitar timing attacks.
-  if (computed.length !== signature.length) return false;
-  let diff = 0;
-  for (let i = 0; i < computed.length; i++) {
-    diff |= computed.charCodeAt(i) ^ signature.charCodeAt(i);
-  }
-  return diff === 0;
-}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -130,11 +85,21 @@ serve(async (req) => {
       });
     }
 
-    const tracking = payload?.msg ?? payload?.data?.tracking ?? payload?.data ?? payload?.tracking ?? null;
+    // 3b) Guard de frescura / anti-replay (usa el `ts` del payload si existe).
+    const maxAgeSec = Number(Deno.env.get('AFTERSHIP_WEBHOOK_MAX_AGE_SEC') ?? '86400');
+    const freshness = checkFreshness(payload?.ts, Date.now(), maxAgeSec);
+    if (!freshness.ok) {
+      console.warn(`aftership-webhook: rejected (${freshness.reason}) ts=${payload?.ts}`);
+      return new Response(JSON.stringify({ error: 'Stale or future event', reason: freshness.reason }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const tracking = extractTracking(payload);
     const trackingNumber: string | null = tracking?.tracking_number ?? null;
 
     if (!tracking || !trackingNumber) {
-      // Eventos sin tracking (ej. ping de prueba): se acusan recibo con 200.
       return new Response(JSON.stringify({ success: true, note: 'no tracking in payload' }), {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -159,7 +124,6 @@ serve(async (req) => {
 
     const pkg = pkgs?.[0];
     if (!pkg) {
-      // Tracking que no corresponde a ningún paquete: ack 200 (no reintentar).
       return new Response(
         JSON.stringify({ success: true, note: 'no matching package', trackingNumber }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -171,8 +135,7 @@ serve(async (req) => {
     const slug: string = tracking?.slug || 'unknown';
     const checkpoints: any[] = tracking?.checkpoints || [];
 
-    // 5) Reemplazar el historial de checkpoints (idempotente: el webhook trae
-    //    la lista completa). Realtime (Fase 1) refresca el feed al instante.
+    // 5) Reemplazar el historial de checkpoints (idempotente).
     if (checkpoints.length > 0) {
       await supabase.from('tracking_events').delete().eq('package_id', pkg.id);
       await supabase.from('tracking_events').insert(
@@ -192,17 +155,14 @@ serve(async (req) => {
     // 6) Avanzar el estado (nunca retrocede; race-safe con el estado previo).
     const tag: string | null = tracking?.tag || null;
     const newStatus = tag ? mapTagToStatus(tag, isInbound) : null;
-    const advances =
-      newStatus !== null &&
-      (STATUS_ORDER[newStatus] ?? -1) > (STATUS_ORDER[pkg.current_status] ?? -1);
 
     let transition: Record<string, unknown> = { changed: false, status: pkg.current_status, tag };
-    if (advances) {
+    if (statusAdvances(pkg.current_status, newStatus)) {
       const { error: updErr } = await supabase
         .from('packages')
         .update({ current_status: newStatus, updated_at: new Date().toISOString() })
         .eq('id', pkg.id)
-        .eq('current_status', pkg.current_status); // solo si no cambió mientras tanto
+        .eq('current_status', pkg.current_status);
       if (updErr) throw updErr;
       transition = { changed: true, from: pkg.current_status, to: newStatus, tag };
     }
