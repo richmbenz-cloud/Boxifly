@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Package as PackageIcon, DollarSign } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
 import PackageTimeline from '@/components/PackageTimeline';
+import CheckpointFeed from '@/components/CheckpointFeed';
 import { useToast } from '@/hooks/use-toast';
 
 interface PackageData {
@@ -41,6 +42,34 @@ const PackageDetail = () => {
       fetchPackageDetails();
       fetchPhotos();
     }
+  }, [id]);
+
+  // Realtime: mantener el estado del paquete (badge de cabecera) en vivo
+  // sin recargar cuando el cron/webhook avanza `current_status`.
+  useEffect(() => {
+    if (!id) return;
+
+    const channel = supabase
+      .channel(`package-detail-${id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'packages',
+          filter: `id=eq.${id}`,
+        },
+        (payload) => {
+          setPackageData((prev) =>
+            prev ? { ...prev, ...(payload.new as Partial<PackageData>) } : prev
+          );
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [id]);
 
   const fetchPackageDetails = async () => {
@@ -189,6 +218,8 @@ const PackageDetail = () => {
             </Card>
 
             <PackageTimeline packageId={packageData.id} />
+
+            <CheckpointFeed packageId={packageData.id} />
           </div>
 
           {/* Costs Sidebar */}
