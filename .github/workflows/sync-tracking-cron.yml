@@ -1,0 +1,41 @@
+name: Tracking · Sync (cron)
+
+# Llama periodicamente a la Edge Function `sync-tracking` (modo batch) para que
+# los paquetes "en movimiento" consulten AfterShip y avancen de estado solos.
+#
+# Root cause del bug del dashboard: la funcion existia pero NADIE la disparaba,
+# por eso los estados nunca se actualizaban aunque AfterShip si tuviera novedades.
+# Solo afecta tramos que el carrier conoce (received_warehouse, in_transit,
+# arrived_peru). Los estados internos de warehouse siguen siendo manuales.
+on:
+  schedule:
+    - cron: '*/30 * * * *'   # cada 30 minutos (horario UTC)
+  workflow_dispatch:          # permite ejecutarlo manualmente on-demand
+
+concurrency:
+  group: sync-tracking
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: invoke sync-tracking (prod batch)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call sync-tracking
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_PROD_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_PROD_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /tmp/out.json -w "%{http_code}" -X POST \
+            "$SUPABASE_URL/functions/v1/sync-tracking" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json")
+          echo "HTTP $code"
+          cat /tmp/out.json
+          echo
+          if [ "$code" != "200" ]; then
+            echo "::error::sync-tracking respondio HTTP $code"
+            exit 1
+          fi
