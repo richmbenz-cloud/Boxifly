@@ -85,3 +85,32 @@ SELECT * FROM net._http_response ORDER BY created DESC LIMIT 20;
   hace nada; si falta `AFTERSHIP_API_KEY`, la función responde 500 sin tocar datos.
 - Reutiliza la tabla `tracking_events` (historial de checkpoints) tal como la
   función `aftership-tracking` original.
+
+## 🔄 Nota de migración de API (AfterShip)
+
+> Aplicada en las Edge Functions `aftership-tracking` y `sync-tracking` (v6 en PROD).
+
+**Qué cambió:** se migró del endpoint **AfterShip v4** (header `aftership-api-key`)
+a la **API de Tracking versionada**.
+
+- **Motivo:** la v4 + header `aftership-api-key` fue **deprecada (2023-10)** y ahora devuelve **404**.
+- **Base nueva:** `https://api.aftership.com/tracking/2025-07/trackings`
+- **Auth nueva:** header **`as-api-key`** (reemplaza `aftership-api-key`).
+- **Crear tracking:** body **plano** `{ "tracking_number": "..." }` (ya no anidado en `{ tracking: {...} }`); opcional `slug` = carrier.
+- **Idempotencia:** si ya existe, la API responde `meta.code = 4003` con el `id` en `data` → se reutiliza ese `id`.
+- **Lectura:** `GET {BASE}/{trackingId}` (con fallback por número de tracking).
+
+### Snippet de referencia
+```ts
+const BASE = 'https://api.aftership.com/tracking/2025-07/trackings';
+const asHeaders = { 'Content-Type': 'application/json', 'as-api-key': AFTERSHIP_API_KEY };
+// Crear (idempotente): HTTP 201 -> data.id ; meta.code 4003 -> ya existe, data.id
+// Leer:  GET `${BASE}/${trackingId}`
+```
+
+### Estado verificado (PROD · 2026-06-22)
+- `aftership-tracking` y `sync-tracking`: **ACTIVE**, v6.
+- Cron `sync-tracking-every-2h` (`0 */2 * * *`): activo; últimas corridas `succeeded`.
+- `tracking_events` recibiendo eventos reales de FedEx vía AfterShip.
+
+_Migración verificada contra el código desplegado y el estado real del proyecto PROD (`ref pdnflyuuxstobkhtqutp`)._
