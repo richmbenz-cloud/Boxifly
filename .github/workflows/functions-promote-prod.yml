@@ -1,0 +1,40 @@
+name: Functions · Promote to PRODUCTION
+
+# Promocion manual y aprobada de Edge Functions a PRODUCCION. NUNCA automatica.
+# Requiere haber validado antes en Staging (misma regla de oro que los workflows de DB).
+# La aprobacion se exige via el GitHub Environment "production"
+# (Settings -> Environments -> production -> Required reviewers).
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Escribe "PROMOTE" para confirmar el deploy a PRODUCCION'
+        required: true
+        default: ''
+
+concurrency:
+  group: functions-prod
+  cancel-in-progress: false
+
+env:
+  PROD_PROJECT_REF: pdnflyuuxstobkhtqutp
+
+jobs:
+  deploy-prod:
+    name: supabase functions deploy (production)
+    if: ${{ github.event.inputs.confirm == 'PROMOTE' }}
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy Edge Functions to Production
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: supabase functions deploy --project-ref "$PROD_PROJECT_REF"
