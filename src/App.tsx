@@ -447,6 +447,13 @@ function AppContent() {
             <Profile />
           </ProtectedRoute>
         } />
+
+        {/* B2B Profile Route */}
+        <Route path="/b2b/profile" element={
+          <ProtectedRoute requiredRole="b2b">
+            <Profile />
+          </ProtectedRoute>
+        } />
         
         {/* VIP Benefits Route */}
         <Route path="/cliente/vip-benefits" element={

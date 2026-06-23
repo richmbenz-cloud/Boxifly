@@ -882,16 +882,25 @@ export type Database = {
           affidavit_signature_url: string | null
           affidavit_signed: boolean | null
           affidavit_signed_at: string | null
+          apellido_materno: string | null
+          apellido_paterno: string | null
           avatar_url: string | null
           b2b_discount: number | null
           city: string | null
           country: string | null
           created_at: string | null
+          document_number: string | null
+          document_type: string | null
+          document_verified: boolean
+          document_verified_at: string | null
           email: string
           full_name: string
           id: string
           is_active: boolean
+          nombres: string | null
+          person_type: string
           phone: string | null
+          razon_social: string | null
           shopper_verified: boolean | null
           shopper_verified_at: string | null
           shopper_verified_by: string | null
@@ -909,16 +918,25 @@ export type Database = {
           affidavit_signature_url?: string | null
           affidavit_signed?: boolean | null
           affidavit_signed_at?: string | null
+          apellido_materno?: string | null
+          apellido_paterno?: string | null
           avatar_url?: string | null
           b2b_discount?: number | null
           city?: string | null
           country?: string | null
           created_at?: string | null
+          document_number?: string | null
+          document_type?: string | null
+          document_verified?: boolean
+          document_verified_at?: string | null
           email: string
           full_name: string
           id: string
           is_active?: boolean
+          nombres?: string | null
+          person_type?: string
           phone?: string | null
+          razon_social?: string | null
           shopper_verified?: boolean | null
           shopper_verified_at?: string | null
           shopper_verified_by?: string | null
@@ -936,16 +954,25 @@ export type Database = {
           affidavit_signature_url?: string | null
           affidavit_signed?: boolean | null
           affidavit_signed_at?: string | null
+          apellido_materno?: string | null
+          apellido_paterno?: string | null
           avatar_url?: string | null
           b2b_discount?: number | null
           city?: string | null
           country?: string | null
           created_at?: string | null
+          document_number?: string | null
+          document_type?: string | null
+          document_verified?: boolean
+          document_verified_at?: string | null
           email?: string
           full_name?: string
           id?: string
           is_active?: boolean
+          nombres?: string | null
+          person_type?: string
           phone?: string | null
+          razon_social?: string | null
           shopper_verified?: boolean | null
           shopper_verified_at?: string | null
           shopper_verified_by?: string | null

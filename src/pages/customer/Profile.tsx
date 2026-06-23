@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { VIPGradientBadge } from "@/components/VIPBadge";
-import { User, Mail, Phone, MapPin, Calendar, Crown, Save, Upload, Loader2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { User, Mail, Phone, MapPin, Calendar, Crown, Save, Upload, Loader2, Building2, Fingerprint, ShieldCheck, CheckCircle2, Search } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -62,6 +64,17 @@ export default function Profile() {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
 
+  // Identidad (persona natural / empresa)
+  const [personType, setPersonType] = useState<"natural" | "empresa">("natural");
+  const [documentNumber, setDocumentNumber] = useState("");
+  const [nombres, setNombres] = useState("");
+  const [apellidoPaterno, setApellidoPaterno] = useState("");
+  const [apellidoMaterno, setApellidoMaterno] = useState("");
+  const [razonSocial, setRazonSocial] = useState("");
+  const [documentVerified, setDocumentVerified] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
+
   // Update when profile loads
   useEffect(() => {
     if (profile) {
@@ -69,21 +82,107 @@ export default function Profile() {
       setPhone(profile.phone || "");
       setAddress(profile.address || "");
       setCity(profile.city || "");
+      setPersonType((profile.person_type as "natural" | "empresa") || "natural");
+      setDocumentNumber(profile.document_number || "");
+      setNombres(profile.nombres || "");
+      setApellidoPaterno(profile.apellido_paterno || "");
+      setApellidoMaterno(profile.apellido_materno || "");
+      setRazonSocial(profile.razon_social || "");
+      setDocumentVerified(!!profile.document_verified);
     }
   }, [profile]);
+
+  const docLabel = personType === "empresa" ? "RUC" : "DNI";
+  const docMaxLen = personType === "empresa" ? 11 : 8;
+
+  const handlePersonTypeChange = (value: string) => {
+    setPersonType(value as "natural" | "empresa");
+    // Cambiar de tipo invalida el documento previo.
+    setDocumentNumber("");
+    setNombres("");
+    setApellidoPaterno("");
+    setApellidoMaterno("");
+    setRazonSocial("");
+    setDocumentVerified(false);
+    setVerifyError(null);
+  };
+
+  const handleDocumentChange = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, docMaxLen);
+    setDocumentNumber(digits);
+    setDocumentVerified(false);
+    setVerifyError(null);
+  };
+
+  // Consulta RENIEC (DNI) / SUNAT (RUC) vía la Edge Function consultar-documento.
+  const handleVerifyDocument = async () => {
+    setVerifyError(null);
+    const type = personType === "empresa" ? "ruc" : "dni";
+    if (documentNumber.length !== docMaxLen) {
+      setVerifyError(`El ${docLabel} debe tener ${docMaxLen} dígitos.`);
+      return;
+    }
+    setVerifying(true);
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("consultar-documento", {
+        body: { type, numero: documentNumber },
+      });
+      if (fnError) throw new Error(fnError.message);
+      if (!data?.success) throw new Error(data?.error || "No se pudo verificar el documento.");
+
+      const d = data.data as Record<string, any>;
+      if (type === "dni") {
+        setNombres(d.firstName || "");
+        setApellidoPaterno(d.lastNameP || "");
+        setApellidoMaterno(d.lastNameM || "");
+        setRazonSocial("");
+      } else {
+        setRazonSocial(d.razonSocial || d.fullName || "");
+        setNombres("");
+        setApellidoPaterno("");
+        setApellidoMaterno("");
+      }
+      setDocumentVerified(true);
+      toast({
+        title: "Documento verificado ✅",
+        description: d.fullName || "Datos obtenidos desde RENIEC/SUNAT.",
+      });
+    } catch (e: any) {
+      setDocumentVerified(false);
+      setVerifyError(e?.message || "Error al verificar el documento.");
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   // Update profile mutation
   const updateProfile = useMutation({
     mutationFn: async () => {
       if (!user) return;
 
+      // full_name derivado de la identidad para mantener compatibilidad con
+      // notificaciones, etiquetas de aduana, etc.
+      const derivedFullName =
+        personType === "empresa"
+          ? razonSocial.trim()
+          : [nombres, apellidoPaterno, apellidoMaterno].filter(Boolean).join(" ").trim();
+
       const { error } = await supabase
         .from("profiles")
         .update({
-          full_name: fullName,
+          full_name: derivedFullName || fullName,
           phone: phone,
           address: address,
           city: city,
+          person_type: personType,
+          document_type: personType === "empresa" ? "ruc" : "dni",
+          document_number: documentNumber || null,
+          nombres: personType === "empresa" ? null : nombres || null,
+          apellido_paterno: personType === "empresa" ? null : apellidoPaterno || null,
+          apellido_materno: personType === "empresa" ? null : apellidoMaterno || null,
+          razon_social: personType === "empresa" ? razonSocial || null : null,
+          document_verified: documentVerified,
+          document_verified_at: documentVerified ? new Date().toISOString() : null,
         })
         .eq("id", user.id);
 
@@ -286,6 +385,14 @@ export default function Profile() {
                         setPhone(profile.phone || "");
                         setAddress(profile.address || "");
                         setCity(profile.city || "");
+                        setPersonType((profile.person_type as "natural" | "empresa") || "natural");
+                        setDocumentNumber(profile.document_number || "");
+                        setNombres(profile.nombres || "");
+                        setApellidoPaterno(profile.apellido_paterno || "");
+                        setApellidoMaterno(profile.apellido_materno || "");
+                        setRazonSocial(profile.razon_social || "");
+                        setDocumentVerified(!!profile.document_verified);
+                        setVerifyError(null);
                       }}
                     >
                       Cancelar
@@ -297,30 +404,122 @@ export default function Profile() {
           </CardContent>
         </Card>
 
+        {/* Identidad y Documento (RENIEC / SUNAT) */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+              Identidad y Documento
+            </CardTitle>
+            <CardDescription>
+              Verificamos tu {docLabel} contra {personType === "empresa" ? "SUNAT" : "RENIEC"} para
+              que tus datos coincidan con los registros oficiales y evitar retenciones en aduanas.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  {personType === "empresa" ? <Building2 className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                  Tipo de persona
+                </Label>
+                <Select value={personType} onValueChange={handlePersonTypeChange} disabled={!isEditing}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="natural">Persona natural (DNI)</SelectItem>
+                    <SelectItem value="empresa">Empresa (RUC)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="documentNumber" className="flex items-center gap-2">
+                  <Fingerprint className="h-4 w-4" />
+                  {docLabel}
+                </Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="documentNumber"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    value={documentNumber}
+                    onChange={(e) => handleDocumentChange(e.target.value)}
+                    disabled={!isEditing || documentVerified}
+                    placeholder={personType === "empresa" ? "20123456789" : "12345678"}
+                    className={documentVerified ? "bg-muted/50" : ""}
+                  />
+                  {isEditing && !documentVerified && (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={handleVerifyDocument}
+                      disabled={verifying || documentNumber.length !== docMaxLen}
+                    >
+                      {verifying ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+                      <span className="ml-2 hidden sm:inline">Verificar</span>
+                    </Button>
+                  )}
+                </div>
+                {documentVerified && (
+                  <p className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    Verificado contra {personType === "empresa" ? "SUNAT" : "RENIEC"}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {verifyError && (
+              <Alert variant="destructive">
+                <AlertDescription>{verifyError}</AlertDescription>
+              </Alert>
+            )}
+
+            {personType === "empresa" ? (
+              <div className="space-y-2">
+                <Label htmlFor="razonSocial" className="flex items-center gap-2">
+                  <Building2 className="h-4 w-4" />
+                  Razón social
+                </Label>
+                <Input
+                  id="razonSocial"
+                  value={razonSocial}
+                  readOnly
+                  placeholder="Se completa automáticamente al verificar el RUC"
+                  className="bg-muted/50"
+                />
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="nombres">Nombres</Label>
+                  <Input id="nombres" value={nombres} readOnly placeholder="—" className="bg-muted/50" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="apellidoPaterno">Apellido paterno</Label>
+                  <Input id="apellidoPaterno" value={apellidoPaterno} readOnly placeholder="—" className="bg-muted/50" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="apellidoMaterno">Apellido materno</Label>
+                  <Input id="apellidoMaterno" value={apellidoMaterno} readOnly placeholder="—" className="bg-muted/50" />
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Profile Information */}
         <Card>
           <CardHeader>
-            <CardTitle>Información Personal</CardTitle>
+            <CardTitle>Información de Contacto</CardTitle>
             <CardDescription>
               Actualiza tus datos de contacto y dirección
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="fullName" className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  Nombre completo
-                </Label>
-                <Input
-                  id="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  disabled={!isEditing}
-                  placeholder="Juan Pérez"
-                />
-              </div>
-
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2">
                   <Mail className="h-4 w-4" />
