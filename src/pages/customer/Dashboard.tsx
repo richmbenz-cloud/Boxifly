@@ -200,12 +200,26 @@ const CustomerDashboard = () => {
                       <p className="text-sm text-muted-foreground">{pkg.store_name}</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    {getStatusBadge(pkg.current_status)}
-                    {pkg.final_cost && (
-                      <p className="text-sm font-semibold mt-1 text-navy">
-                        ${pkg.final_cost.toFixed(2)}
-                      </p>
+                  <div className="flex flex-col items-end gap-2">
+                    <div className="text-right">
+                      {getStatusBadge(pkg.current_status)}
+                      {pkg.final_cost && (
+                        <p className="text-sm font-semibold mt-1 text-navy">
+                          ${pkg.final_cost.toFixed(2)}
+                        </p>
+                      )}
+                    </div>
+                    {pkg.current_status === 'ready_delivery' && (
+                      <Button
+                        size="sm"
+                        className="bg-action-primary hover:bg-primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/payment/${pkg.id}`);
+                        }}
+                      >
+                        Pagar
+                      </Button>
                     )}
                   </div>
                 </div>

@@ -87,6 +87,7 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
             label: "Principal",
             items: [
               { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+              { title: "Mi Perfil", url: "/b2b/profile", icon: User },
             ]
           },
           {
@@ -103,6 +104,7 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
             label: "Principal",
             items: [
               { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+              { title: "Mi Perfil", url: "/warehouse/profile", icon: User },
             ]
           },
           {
@@ -127,6 +129,7 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
             label: "Principal",
             items: [
               { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+              { title: "Mi Perfil", url: "/admin/profile", icon: User },
             ]
           },
           {

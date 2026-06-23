@@ -433,6 +433,27 @@ function AppContent() {
             <Profile />
           </ProtectedRoute>
         } />
+
+        {/* Warehouse Profile Route */}
+        <Route path="/warehouse/profile" element={
+          <ProtectedRoute requiredRole="warehouse">
+            <Profile />
+          </ProtectedRoute>
+        } />
+
+        {/* Admin Profile Route */}
+        <Route path="/admin/profile" element={
+          <ProtectedRoute requiredRole="admin">
+            <Profile />
+          </ProtectedRoute>
+        } />
+
+        {/* B2B Profile Route */}
+        <Route path="/b2b/profile" element={
+          <ProtectedRoute requiredRole="b2b">
+            <Profile />
+          </ProtectedRoute>
+        } />
         
         {/* VIP Benefits Route */}
         <Route path="/cliente/vip-benefits" element={
