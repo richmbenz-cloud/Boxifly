@@ -117,7 +117,7 @@ const Payment = () => {
       return;
     }
 
-    if (!data.final_cost || data.current_status === 'delivered') {
+    if (!data.final_cost || data.current_status !== 'ready_delivery') {
       toast({
         title: 'Pago no disponible',
         description: 'Este paquete no está listo para pago',
