@@ -5,6 +5,33 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Idioma de las plantillas aprobadas en Meta. Constante por requerimiento de n8n.
+const WHATSAPP_LANGUAGE = 'es_PE';
+
+// Mapa AUTORITATIVO: current_status (Boxifly) -> nombre EXACTO de la plantilla
+// aprobada en Meta. OJO: `consolidated` -> `package_consolidated_` (con guion
+// bajo final), tal como quedo registrada en Meta.
+const STATUS_TO_TEMPLATE: Record<string, string> = {
+  prealerted: 'package_prealerted',
+  received_warehouse: 'package_received',
+  ready_consolidation: 'package_ready_consolidation',
+  consolidated: 'package_consolidated_',
+  in_transit: 'package_in_transit',
+  arrived_peru: 'package_arrived_peru',
+  ready_delivery: 'package_ready_delivery',
+  delivered: 'package_delivered',
+};
+
+// Correccion de nombres heredados (el trigger envia `package_consolidated` sin
+// guion). Se normaliza al nombre real aprobado en Meta.
+const TEMPLATE_REMAP: Record<string, string> = {
+  package_consolidated: 'package_consolidated_',
+  package_received_warehouse: 'package_received',
+};
+
+// Plantillas que NO llevan statusMessage (solo customerName + trackingNumber).
+const TEMPLATES_WITHOUT_STATUS_MESSAGE = new Set(['package_delivered']);
+
 interface NotificationRequest {
   userId: string;
   phone: string;
@@ -15,6 +42,19 @@ interface NotificationRequest {
     status: string;
     statusMessage: string;
   };
+}
+
+// Normaliza el telefono a formato internacional SOLO digitos (sin '+', espacios,
+// guiones ni parentesis). Ej: '+51 913 343 202' -> '51913343202'.
+function normalizePhone(raw: string): string {
+  return (raw || '').replace(/\D/g, '');
+}
+
+// Resuelve el nombre de plantilla EXACTO de Meta a partir del status (preferido)
+// o del templateName entrante (con remapeo de nombres heredados).
+function resolveTemplateName(status: string | undefined, incoming: string): string {
+  if (status && STATUS_TO_TEMPLATE[status]) return STATUS_TO_TEMPLATE[status];
+  return TEMPLATE_REMAP[incoming] || incoming;
 }
 
 Deno.serve(async (req) => {
@@ -34,53 +74,68 @@ Deno.serve(async (req) => {
     const body: NotificationRequest = await req.json();
     const { userId, phone, templateName, parameters } = body;
 
-    console.log('Notification details:', { userId, phone, templateName });
+    // Nombre EXACTO de la plantilla aprobada en Meta + telefono normalizado.
+    const finalTemplate = resolveTemplateName(parameters?.status, templateName);
+    const cleanPhone = normalizePhone(phone);
 
-    // Define WhatsApp message templates
-    const templates: Record<string, string> = {
-      package_prealerted: `Hola ${parameters.customerName}! 📦 Tu paquete con tracking *${parameters.trackingNumber}* ha sido prealertado. Estado: ${parameters.statusMessage}`,
-      package_received: `Hola ${parameters.customerName}! ✅ Tu paquete *${parameters.trackingNumber}* ha sido recibido en nuestro warehouse de USA. Estado: ${parameters.statusMessage}`,
-      package_ready_consolidation: `Hola ${parameters.customerName}! 📦 Tu paquete *${parameters.trackingNumber}* está listo para ser consolidado. Estado: ${parameters.statusMessage}`,
-      package_consolidated: `Hola ${parameters.customerName}! 📦 Tu paquete *${parameters.trackingNumber}* ha sido consolidado. Estado: ${parameters.statusMessage}`,
-      package_in_transit: `Hola ${parameters.customerName}! ✈️ Tu paquete *${parameters.trackingNumber}* está en tránsito a Perú. Estado: ${parameters.statusMessage}`,
-      package_arrived_peru: `Hola ${parameters.customerName}! 🇵🇪 Tu paquete *${parameters.trackingNumber}* ha llegado a Perú. Estado: ${parameters.statusMessage}`,
-      package_ready_delivery: `Hola ${parameters.customerName}! 🚚 Tu paquete *${parameters.trackingNumber}* está listo para entrega. Por favor procede con el pago. Estado: ${parameters.statusMessage}`,
-      package_delivered: `Hola ${parameters.customerName}! 🎉 Tu paquete *${parameters.trackingNumber}* ha sido entregado exitosamente. Gracias por confiar en Boxifly!`,
+    console.log('Notification details:', {
+      userId,
+      phone: cleanPhone,
+      templateName: finalTemplate,
+      status: parameters?.status,
+    });
+
+    // Construir los parametros que espera n8n/Meta, EN ORDEN FIJO:
+    // customerName, trackingNumber, statusMessage. `package_delivered` solo
+    // lleva customerName + trackingNumber.
+    const n8nParameters: Record<string, string> = {
+      customerName: parameters?.customerName ?? 'Cliente',
+      trackingNumber: parameters?.trackingNumber ?? '',
+    };
+    if (!TEMPLATES_WITHOUT_STATUS_MESSAGE.has(finalTemplate)) {
+      n8nParameters.statusMessage = parameters?.statusMessage ?? '';
+    }
+
+    // Payload final hacia n8n (formato de plantillas aprobadas).
+    const n8nPayload = {
+      phone: cleanPhone,
+      templateName: finalTemplate,
+      language: WHATSAPP_LANGUAGE,
+      parameters: n8nParameters,
     };
 
-    const message = templates[templateName] || `Actualización de paquete ${parameters.trackingNumber}`;
     const n8nWebhookUrl = Deno.env.get('N8N_WHATSAPP_WEBHOOK_URL');
 
     let whatsappResponse;
 
     if (n8nWebhookUrl) {
-      console.log('Sending real WhatsApp notification via n8n webhook...');
+      console.log('Sending WhatsApp template notification via n8n webhook...', {
+        templateName: finalTemplate,
+        language: WHATSAPP_LANGUAGE,
+      });
       try {
         const response = await fetch(n8nWebhookUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            phone,
-            messageText: message,
-          }),
+          body: JSON.stringify(n8nPayload),
         });
 
         if (!response.ok) {
           throw new Error(`n8n webhook responded with status ${response.status}`);
         }
 
-        const responseData = await response.json();
+        const responseData = await response.json().catch(() => ({}));
         console.log('n8n response:', responseData);
 
         whatsappResponse = {
           status: 'sent',
           messageId: responseData.messageId || `wamid.n8n_${Date.now()}`,
-          phone,
-          template: templateName,
+          phone: cleanPhone,
+          template: finalTemplate,
+          language: WHATSAPP_LANGUAGE,
           sentAt: new Date().toISOString(),
-          message,
           viaN8n: true,
         };
       } catch (err) {
@@ -89,28 +144,23 @@ Deno.serve(async (req) => {
       }
     } else {
       console.log('[MOCK MODE] No N8N_WHATSAPP_WEBHOOK_URL set. Simulating send...');
-      // Generate mock message ID
       const messageId = `wamid.mock_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       whatsappResponse = {
         status: 'sent',
         messageId,
-        phone,
-        template: templateName,
+        phone: cleanPhone,
+        template: finalTemplate,
+        language: WHATSAPP_LANGUAGE,
         sentAt: new Date().toISOString(),
-        message,
         viaN8n: false,
       };
-      console.log(`[MOCK WhatsApp] Sent to ${phone}:`, message);
+      console.log(`[MOCK WhatsApp] Template ${finalTemplate} -> ${cleanPhone}:`, JSON.stringify(n8nPayload));
     }
 
     // Resolve the real package UUID from the tracking number before logging.
-    // warehouse_logs.package_id is a uuid FK -> packages.id. Previously this insert
-    // passed `parameters.trackingNumber || 'N/A'` (a tracking string, not a UUID),
-    // which violated the foreign key (SQLSTATE 23503) on every call, so no
-    // warehouse_logs row was ever written. We look up the package by tracking number
-    // and fall back to null (column is now nullable) so the log is never lost.
+    // warehouse_logs.package_id is a uuid FK -> packages.id (nullable).
     let resolvedPackageId: string | null = null;
-    if (parameters.trackingNumber) {
+    if (parameters?.trackingNumber) {
       const { data: pkg, error: pkgLookupError } = await supabaseClient
         .from('packages')
         .select('id')
@@ -122,7 +172,7 @@ Deno.serve(async (req) => {
       resolvedPackageId = pkg?.id ?? null;
     }
 
-    // Log the notification attempt in the database
+    // Log the notification attempt in the database.
     const { error: logError } = await supabaseClient
       .from('warehouse_logs')
       .insert({
@@ -130,11 +180,12 @@ Deno.serve(async (req) => {
         logged_by: userId,
         action: 'whatsapp_notification_sent',
         details: {
-          phone,
-          template: templateName,
+          phone: cleanPhone,
+          template: finalTemplate,
+          language: WHATSAPP_LANGUAGE,
           status: whatsappResponse.status,
           message_id: whatsappResponse.messageId,
-          parameters,
+          parameters: n8nParameters,
           via_n8n: whatsappResponse.viaN8n,
         },
       });
@@ -147,9 +198,9 @@ Deno.serve(async (req) => {
       JSON.stringify({
         success: true,
         data: whatsappResponse,
-        message: whatsappResponse.viaN8n 
-          ? 'Notificación enviada exitosamente vía n8n' 
-          : 'Notificación de WhatsApp enviada exitosamente (mock)',
+        message: whatsappResponse.viaN8n
+          ? 'Notificacion enviada exitosamente via n8n'
+          : 'Notificacion de WhatsApp enviada exitosamente (mock)',
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
