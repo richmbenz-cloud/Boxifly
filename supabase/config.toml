@@ -18,6 +18,9 @@ verify_jwt = false
 [functions.aftership-webhook]
 verify_jwt = false
 
+[functions.pending-monitor]
+verify_jwt = false
+
 [functions.loyalty-points-expiration-check]
 verify_jwt = false
 
