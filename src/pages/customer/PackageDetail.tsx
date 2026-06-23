@@ -280,7 +280,7 @@ const PackageDetail = () => {
                     </div>
                   </div>
 
-                  {packageData.current_status === 'ready_delivery' && (
+                  {packageData.current_status !== 'delivered' && (
                     <Button 
                       className="w-full bg-action-primary hover:bg-primary"
                       onClick={() => navigate(`/payment/${packageData.id}`)}
