@@ -1,9 +1,5 @@
 name: DB · Promote to PRODUCTION
 
-# Promoción manual y aprobada a PRODUCCIÓN. NUNCA automática.
-# Requiere haber validado antes en Staging (regla de oro de DEPLOYMENT.md).
-# La aprobación se exige vía el GitHub Environment "production"
-# (Settings -> Environments -> production -> Required reviewers).
 on:
   workflow_dispatch:
     inputs:
@@ -40,4 +36,5 @@ jobs:
           PROD_DB_PASSWORD: ${{ secrets.PROD_DB_PASSWORD }}
         run: |
           supabase link --project-ref "$PROD_PROJECT_REF" --password "$PROD_DB_PASSWORD"
+          supabase migration repair --status reverted 20260623120000 --password "$PROD_DB_PASSWORD"
           supabase db push --password "$PROD_DB_PASSWORD"
