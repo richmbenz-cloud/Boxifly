@@ -139,6 +139,47 @@ const WarehouseDashboard = () => {
     }
   };
 
+  const handleProcess = async (pkg: PackageData) => {
+    // Verifica que el paquete tenga costo calculado; si no, abre el diálogo de
+    // recepción para pesar y calcular el costo antes de avanzar.
+    const { data: full, error: fetchError } = await supabase
+      .from('packages')
+      .select('final_cost')
+      .eq('id', pkg.id)
+      .single();
+
+    if (fetchError) {
+      toast({ title: 'Error', description: fetchError.message, variant: 'destructive' });
+      return;
+    }
+
+    if (!full?.final_cost || full.final_cost <= 0) {
+      toast({
+        title: 'Falta calcular el costo',
+        description: 'Ingresa el peso real para calcular el costo antes de procesar.',
+      });
+      handleReceivePackage(pkg);
+      return;
+    }
+
+    // Avanza el paquete a "Listo para Entrega" → habilita el pago del cliente.
+    const { error } = await supabase
+      .from('packages')
+      .update({ current_status: 'ready_delivery' })
+      .eq('id', pkg.id);
+
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      return;
+    }
+
+    toast({
+      title: 'Paquete procesado',
+      description: `${pkg.tracking_number} está listo para entrega y disponible para pago.`,
+    });
+    fetchPackages();
+  };
+
   return (
     <DashboardLayout title="Warehouse Panel">
       {/* Stats */}
@@ -305,10 +346,21 @@ const WarehouseDashboard = () => {
                     <Button 
                       size="sm" 
                       className="bg-action-primary hover:bg-primary"
-                      onClick={() => handleReceivePackage(pkg)}
-                      disabled={pkg.current_status !== 'prealerted'}
+                      onClick={() =>
+                        pkg.current_status === 'prealerted'
+                          ? handleReceivePackage(pkg)
+                          : handleProcess(pkg)
+                      }
+                      disabled={
+                        pkg.current_status !== 'prealerted' &&
+                        pkg.current_status !== 'received_warehouse'
+                      }
                     >
-                      {pkg.current_status === 'prealerted' ? 'Recibir' : 'Procesar'}
+                      {pkg.current_status === 'prealerted'
+                        ? 'Recibir'
+                        : pkg.current_status === 'received_warehouse'
+                        ? 'Procesar'
+                        : 'Listo'}
                     </Button>
                   </div>
                 </div>

@@ -11,6 +11,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useIzipay } from '@/hooks/useIzipay';
 import { useAuth } from '@/lib/auth';
+import { useExchangeRate } from '@/hooks/useExchangeRate';
+import { formatMoney } from '@/lib/currency';
 
 interface PackageData {
   id: string;
@@ -34,6 +36,7 @@ const Payment = () => {
   const { toast } = useToast();
   const { user, userRole } = useAuth();
   const { initiatePayment, renderPaymentForm, loading: izipayLoading } = useIzipay();
+  const { data: fxRate } = useExchangeRate();
 
   const [packageData, setPackageData] = useState<PackageData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -157,16 +160,33 @@ const Payment = () => {
     if (!packageData) return;
 
     try {
-      // Monto a cobrar: total con descuento B2B aplicado (B2C = total íntegro)
-      const amountToCharge = computeAmount(packageData.final_cost!);
+      // Monto en USD (precio mostrado), con descuento B2B aplicado (B2C = íntegro)
+      const amountUsd = computeAmount(packageData.final_cost!);
 
-      // 1) Crear registro de pago pendiente (se confirma vía webhook de Izipay)
+      // Izipay (Perú) cobra en SOLES (PEN). Convertimos USD -> PEN usando el
+      // tipo de cambio efectivo (SBS venta + margen) del edge function
+      // exchange-rate. El merchant de test no acepta USD (PSP_610), por eso el
+      // cobro SIEMPRE se hace en PEN.
+      const effectiveRate = fxRate?.effective_rate;
+      if (!effectiveRate || effectiveRate <= 0) {
+        toast({
+          title: 'Tipo de cambio no disponible',
+          description: 'No pudimos obtener el tipo de cambio. Intenta de nuevo en unos segundos.',
+          variant: 'destructive',
+        });
+        return;
+      }
+      const amountPen = Math.round(amountUsd * effectiveRate * 100) / 100;
+
+      // 1) Crear registro de pago pendiente (se confirma vía webhook de Izipay).
+      //    Guardamos el monto en PEN: es lo que realmente se cobra y lo que el
+      //    webhook valida contra la transacción de Izipay.
       const { data: payment, error: paymentError } = await supabase
         .from('payments')
         .insert({
           package_id: packageData.id,
           user_id: packageData.user_id,
-          amount: amountToCharge,
+          amount: amountPen,
           payment_method: 'card',
           payment_status: 'pending',
         })
@@ -176,12 +196,12 @@ const Payment = () => {
       if (paymentError) throw paymentError;
       setPaymentId(payment.id);
 
-      // 2) Iniciar el pago con Izipay → formToken
+      // 2) Iniciar el pago con Izipay → formToken (cobro en PEN)
       const fullName = (user?.user_metadata?.full_name as string | undefined) || '';
       const paymentResponse = await initiatePayment({
-        amount: amountToCharge,
+        amount: amountPen,
         orderId: payment.id, // el webhook actualiza payments por este id
-        currency: 'USD',
+        currency: 'PEN',
         email: user?.email || '',
         firstName: fullName.split(' ')[0] || '',
         lastName: fullName.split(' ').slice(1).join(' ') || '',
@@ -369,6 +389,19 @@ const Payment = () => {
                     ${computeAmount(packageData.final_cost!).toFixed(2)}
                   </span>
                 </div>
+
+                {fxRate?.effective_rate && (
+                  <p className="text-xs text-center text-muted-foreground">
+                    Se cobrará en soles:{' '}
+                    <span className="font-semibold">
+                      {formatMoney(
+                        Math.round(computeAmount(packageData.final_cost!) * fxRate.effective_rate * 100) / 100,
+                        'PEN'
+                      )}
+                    </span>{' '}
+                    (T.C. {fxRate.effective_rate.toFixed(3)})
+                  </p>
+                )}
 
                 <Button
                   className="w-full bg-action-primary hover:bg-primary text-lg py-6"
