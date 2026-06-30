@@ -3,7 +3,7 @@ import { useAuth } from '@/lib/auth';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Package, Plus, Clock, CheckCircle, Truck, AlertCircle, Gift } from 'lucide-react';
+import { Package, Plus, Clock, CheckCircle, Truck, AlertCircle, Gift, CreditCard } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
@@ -206,6 +206,19 @@ const CustomerDashboard = () => {
                       <p className="text-sm font-semibold mt-1 text-navy">
                         ${pkg.final_cost.toFixed(2)}
                       </p>
+                    )}
+                    {pkg.current_status === 'ready_delivery' && pkg.final_cost && (
+                      <Button
+                        size="sm"
+                        className="mt-2 bg-action-primary hover:bg-primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/payment/${pkg.id}`);
+                        }}
+                      >
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        Pagar
+                      </Button>
                     )}
                   </div>
                 </div>
