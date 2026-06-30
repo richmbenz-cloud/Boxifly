@@ -280,7 +280,8 @@ const PackageDetail = () => {
                     </div>
                   </div>
 
-                  {packageData.current_status === 'ready_delivery' && (
+                  {(packageData.final_cost ?? 0) > 0 &&
+                    ['received_warehouse', 'ready_delivery'].includes(packageData.current_status) && (
                     <Button 
                       className="w-full bg-action-primary hover:bg-primary"
                       onClick={() => navigate(`/payment/${packageData.id}`)}
