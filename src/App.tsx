@@ -201,7 +201,7 @@ function AppContent() {
         
         {/* Cliente Routes */}
         <Route path="/payment/:id" element={
-          <ProtectedRoute requiredRole="customer">
+          <ProtectedRoute allowedRoles={['customer', 'b2b']}>
             <Payment />
           </ProtectedRoute>
         } />
