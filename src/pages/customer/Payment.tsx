@@ -124,10 +124,14 @@ const Payment = () => {
       return;
     }
 
-    if (!data.final_cost || data.current_status !== 'ready_delivery') {
+    // Un paquete es pagable una vez que el almacén lo recibió y calculó su
+    // costo (final_cost). No exigimos 'ready_delivery': basta con que el costo
+    // esté calculado y el paquete esté en un estado pagable.
+    const PAYABLE_STATUSES = ['received_warehouse', 'ready_delivery'];
+    if (!data.final_cost || data.final_cost <= 0 || !PAYABLE_STATUSES.includes(data.current_status)) {
       toast({
         title: 'Pago no disponible',
-        description: 'Este paquete no está listo para pago',
+        description: 'Este paquete aún no tiene un costo calculado para pago',
         variant: 'destructive',
       });
       navigate(`/package/${id}`);
