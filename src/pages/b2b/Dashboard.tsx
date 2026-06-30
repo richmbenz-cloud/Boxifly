@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Package, Plus, TrendingDown, DollarSign } from 'lucide-react';
+import { Package, Plus, TrendingDown, DollarSign, CreditCard } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 
@@ -201,6 +201,16 @@ const B2BDashboard = () => {
                           ${(pkg.final_cost * (1 - (profile?.b2b_discount || 0) / 100)).toFixed(2)}
                         </p>
                       </div>
+                    )}
+                    {pkg.current_status === 'ready_delivery' && pkg.final_cost && (
+                      <Button
+                        size="sm"
+                        className="mt-2 bg-action-primary hover:bg-primary"
+                        onClick={() => navigate(`/payment/${pkg.id}`)}
+                      >
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        Pagar
+                      </Button>
                     )}
                   </div>
                 </div>

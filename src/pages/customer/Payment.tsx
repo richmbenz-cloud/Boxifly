@@ -32,7 +32,7 @@ const Payment = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
   const { initiatePayment, renderPaymentForm, loading: izipayLoading } = useIzipay();
 
   const [packageData, setPackageData] = useState<PackageData | null>(null);
@@ -41,7 +41,14 @@ const Payment = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const [checkingStatus, setCheckingStatus] = useState(false);
+  const [b2bDiscount, setB2bDiscount] = useState(0);
   const paymentFormRef = useRef<HTMLDivElement>(null);
+
+  // Aplica el descuento B2B preferencial (si corresponde) sobre un monto base.
+  // Para clientes B2C el descuento es 0, así que devuelve el costo íntegro.
+  const isB2B = userRole === 'b2b';
+  const computeAmount = (base: number) =>
+    Math.round(base * (1 - (isB2B ? b2bDiscount : 0) / 100) * 100) / 100;
 
   useEffect(() => {
     if (id) {
@@ -128,6 +135,17 @@ const Payment = () => {
     }
 
     setPackageData(data);
+
+    // B2B: traer el descuento preferencial del perfil para cobrar el total con descuento
+    if (userRole === 'b2b' && user?.id) {
+      const { data: prof } = await supabase
+        .from('profiles')
+        .select('b2b_discount')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (prof?.b2b_discount) setB2bDiscount(Number(prof.b2b_discount) || 0);
+    }
+
     setLoading(false);
   };
 
@@ -135,13 +153,16 @@ const Payment = () => {
     if (!packageData) return;
 
     try {
+      // Monto a cobrar: total con descuento B2B aplicado (B2C = total íntegro)
+      const amountToCharge = computeAmount(packageData.final_cost!);
+
       // 1) Crear registro de pago pendiente (se confirma vía webhook de Izipay)
       const { data: payment, error: paymentError } = await supabase
         .from('payments')
         .insert({
           package_id: packageData.id,
           user_id: packageData.user_id,
-          amount: packageData.final_cost!,
+          amount: amountToCharge,
           payment_method: 'card',
           payment_status: 'pending',
         })
@@ -154,7 +175,7 @@ const Payment = () => {
       // 2) Iniciar el pago con Izipay → formToken
       const fullName = (user?.user_metadata?.full_name as string | undefined) || '';
       const paymentResponse = await initiatePayment({
-        amount: packageData.final_cost!,
+        amount: amountToCharge,
         orderId: payment.id, // el webhook actualiza payments por este id
         currency: 'USD',
         email: user?.email || '',
@@ -276,10 +297,19 @@ const Payment = () => {
 
                   <Separator />
 
+                  {isB2B && b2bDiscount > 0 && (
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-muted-foreground">Descuento B2B ({b2bDiscount}%)</span>
+                      <span className="font-medium text-success">
+                        - US$ {(packageData.final_cost! - computeAmount(packageData.final_cost!)).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-lg font-semibold">Total a Pagar</span>
                     <span className="text-3xl font-bold text-primary">
-                      US$ {packageData.final_cost?.toFixed(2)}
+                      US$ {computeAmount(packageData.final_cost!).toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -332,7 +362,7 @@ const Payment = () => {
                 <div className="flex justify-between items-center">
                   <span className="font-semibold">Total</span>
                   <span className="text-2xl font-bold text-primary">
-                    ${packageData.final_cost?.toFixed(2)}
+                    ${computeAmount(packageData.final_cost!).toFixed(2)}
                   </span>
                 </div>
 
@@ -415,7 +445,7 @@ const Payment = () => {
             </div>
             <DialogTitle className="text-center text-2xl">¡Pago Exitoso!</DialogTitle>
             <DialogDescription className="text-center space-y-2">
-              <span className="block">Tu pago de <span className="font-bold">US$ {packageData?.final_cost?.toFixed(2)}</span> ha sido procesado</span>
+              <span className="block">Tu pago de <span className="font-bold">US$ {packageData ? computeAmount(packageData.final_cost!).toFixed(2) : '0.00'}</span> ha sido procesado</span>
               <span className="block text-sm">Tracking: <span className="font-semibold">{packageData?.tracking_number}</span></span>
             </DialogDescription>
           </DialogHeader>
